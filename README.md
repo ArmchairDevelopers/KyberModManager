@@ -52,7 +52,7 @@
 * PRs are welcome
 ## Download
 
-#### [Windows ![windows](https://media.discordapp.net/attachments/810799100940255260/838488668816932965/ezgif-6-ac9683508192.png)](https://reax.at)
+#### [Windows ![windows](https://media.discordapp.net/attachments/810799100940255260/838488668816932965/ezgif-6-ac9683508192.png)](https://github.com/7reax/kyber-mod-manager/releases/download/latest)
 
 - Download the exe, click More Info > Run Anyway > Open Kyber Mod Manager
 
