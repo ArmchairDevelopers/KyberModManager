@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -56,7 +57,10 @@ Future<void> loadHive() async {
   await Hive.initFlutter(applicationDocumentsDirectory);
   Hive.registerAdapter(ModProfileAdapter(), override: true);
   Hive.registerAdapter(ModAdapter(), override: true);
-  box = await Hive.openBox('data');
+  box = await Hive.openBox('data').catchError((e) {
+    Logger.root.severe('Error while opening box: $e');
+    exit(1);
+  });
   if (box.isEmpty) {
     box.put('cosmetics', []);
     box.put('saveProfiles', true);
