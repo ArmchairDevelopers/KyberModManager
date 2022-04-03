@@ -98,7 +98,7 @@ class _AppState extends State<App> {
       title: 'Kyber Mod Manager',
       theme: ThemeData(
         accentColor: SystemTheme.accentInstance.accent.toAccentColor(),
-        brightness: brightness,
+        brightness: Brightness.dark,
       ),
       localizationsDelegates: [
         TranslationDelegate(),
