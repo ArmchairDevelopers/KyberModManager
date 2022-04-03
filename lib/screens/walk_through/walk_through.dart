@@ -116,6 +116,7 @@ class _WalkThroughState extends State<WalkThrough> {
       } else {
         await box.put('setup', true);
         await ModService.loadMods(context);
+        ModService.watchDirectory();
         Navigator.of(context).pop();
         showDialog(context: context, builder: (context) => const NexusmodsLogin());
       }
