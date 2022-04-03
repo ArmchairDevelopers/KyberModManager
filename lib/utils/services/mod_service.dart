@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
@@ -15,6 +16,7 @@ import 'package:path/path.dart' as p;
 class ModService {
   static final List<String> _kyberCategories = ['gameplay', 'server host'];
   static List<Mod> mods = [];
+  static StreamSubscription? _subscription;
 
   static Mod fromFilename(String filename) {
     for (Mod mod in mods) {
@@ -66,9 +68,13 @@ class ModService {
       return;
     }
 
+    if (_subscription != null) {
+      _subscription?.cancel();
+    }
+
     DateTime cooldown = DateTime.now();
     Logger.root.info('Watching directory for changes');
-    dir.watch(events: FileSystemEvent.all).listen((event) {
+    _subscription = dir.watch(events: FileSystemEvent.all).listen((event) {
       cooldown = DateTime.now();
       Future.delayed(const Duration(seconds: 2), () {
         if (DateTime.now().difference(cooldown).inSeconds != 2) {
