@@ -47,19 +47,31 @@
     * It creates a Frosty-Pack and applies the mods automatically.
 
 ## General Information
+
 * As soon as **Kyber v2** is getting released this Mod Manager will be updated.
 * For the best experience it is recommended to use **EA-Desktop**.
 * PRs are welcome
+
 ## Download
 
 #### [Windows ![windows](https://media.discordapp.net/attachments/810799100940255260/838488668816932965/ezgif-6-ac9683508192.png)](https://github.com/7reax/kyber-mod-manager/releases/latest)
 
 - Download the exe, click More Info > Run Anyway > Open Kyber Mod Manager
 
+## Screenshots
+
+| <p style="width: 30vw;">Pages</p> |                         <p></p>                     |
+|:---------------------------------:|:--------------------------------------------:|
+|          Server Browser           | <img src="https://share.reax.at/ghMCmR.png"> |
+|           Hosting Page            | <img src="https://share.reax.at/r05ytu.png"> |
+|       Mod Profile Edit Page       | <img src="https://share.reax.at/m52oM9.png"> |
+|       Settings                    | <img src="https://share.reax.at/IXpSOy.png"> |
+
 ## Questions
 
 ### How does the automatic mod download work?
-The Mod Manager opens NexusMods in the background during the login process. If you successfully logged in, it saves the cookies. If you now want to download mods, it opens the browser again (with the saved cookies) and clicks on the "Download" button on the mod page.
+The Mod Manager opens NexusMods in the background during the login process. If you successfully logged in, it saves the cookies. If you now want to download mods, it opens the browser again (with the saved cookies) and clicks on the "Download" button
+on the mod page.
 
 ## For developers: How to modify the Mod Manager
 
