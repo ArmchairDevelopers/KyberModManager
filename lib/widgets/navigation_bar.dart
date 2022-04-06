@@ -6,6 +6,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
+import 'package:kyber_mod_manager/screens/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
 import 'package:kyber_mod_manager/screens/saved_profiles.dart';
@@ -17,6 +18,7 @@ import 'package:kyber_mod_manager/screens/walk_through/walk_through.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
+import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 
 class NavigationBar extends StatefulWidget {
   const NavigationBar({Key? key, this.widget, this.index}) : super(key: key);
@@ -77,20 +79,23 @@ class _NavigationBarState extends State<NavigationBar> {
       timer?.cancel();
       return;
     }
-    setState(() => injectedDll = DllInjector.isInjected());
+    bool injected = DllInjector.isInjected();
+    if (injected == injectedDll) {
+      return;
+    }
+    setState(() => injectedDll = injected);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<WidgetCubit, dynamic>(
-      listener: (context, state) {
-        bool isFake = state.runtimeType != int && state.containsKey(state.keys.first);
-        setState(() {
-          index = !isFake ? state : 7;
-          fakeIndex = !isFake ? state : state.keys.toList().first;
-        });
-      },
-      builder: (context, widget) => NavigationView(
+    return BlocConsumer<WidgetCubit, dynamic>(listener: (context, state) {
+      bool isFake = state.runtimeType != int && state.containsKey(state.keys.first);
+      setState(() {
+        index = !isFake ? state : 7;
+        fakeIndex = !isFake ? state : state.keys.toList().first;
+      });
+    }, builder: (context, widget) {
+      return NavigationView(
         pane: NavigationPane(
           selected: fakeIndex,
           items: [
@@ -190,7 +195,7 @@ class _NavigationBarState extends State<NavigationBar> {
             widget.runtimeType != int ? widget.values.first : const SizedBox(height: 0),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }

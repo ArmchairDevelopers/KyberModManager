@@ -17,7 +17,7 @@ class _TranslationDelegate implements FluentLocalizations {
 
   @override
   String get closeButtonLabel => 'Close';
-  
+
   @override
   String get searchLabel => 'Search';
 
