@@ -46,6 +46,14 @@ class _NavigationBarState extends State<NavigationBar> {
 
   @override
   void initState() {
+    Timer.run(() {
+      try {
+        ProfileService.generateFiles();
+      } catch (e) {
+        Navigator.of(context).pushAndRemoveUntil(FluentPageRoute(builder: (context) => MissingPermissions()), (route) => false);
+        return;
+      }
+    });
     if (!box.containsKey('setup')) {
       Timer.run(() => openDialog());
     } else if (!box.containsKey('nexusmods_login')) {

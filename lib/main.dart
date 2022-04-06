@@ -12,7 +12,6 @@ import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/translation/translate_preferences.dart';
-import 'package:kyber_mod_manager/utils/translation/translation_delegate.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/widgets/navigation_bar.dart';
@@ -40,7 +39,6 @@ void main() async {
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
     await SystemTheme.accentInstance.load();
     await loadHive();
-    ProfileService.generateFiles();
     var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'en',
       supportedLocales: ['en', 'de', 'pl', 'ru'],
@@ -105,7 +103,7 @@ class _AppState extends State<App> {
         brightness: Brightness.dark,
       ),
       localizationsDelegates: [
-        TranslationDelegate(),
+        DefaultFluentLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         localizationDelegate,
