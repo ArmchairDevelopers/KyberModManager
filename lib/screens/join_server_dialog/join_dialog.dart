@@ -145,7 +145,7 @@ class _ServerDialogState extends State<ServerDialog> {
     } else if (!downloading) {
       if (!box.get('nexusmods_login', defaultValue: false)) {
         var links = await ApiService.getDownloadLinks(server.mods);
-        if (!links.unavailable.isNotEmpty) {
+        if (links.unavailable.isNotEmpty) {
           NotificationService.showNotification(message: translate('$prefix.required_mods.not_in_database'), color: Colors.red);
           await Future.delayed(const Duration(seconds: 1));
         }
