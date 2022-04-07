@@ -93,7 +93,7 @@ class _WalkThroughState extends State<WalkThrough> {
         String? valid = await PathHelper.isValidFrostyDir(selectedDirectory);
         if (valid != null) {
           NotificationService.showNotification(
-            message: '$prefix.select_frosty_path.error_messages.$valid',
+            message: translate('$prefix.select_frosty_path.error_messages.$valid'),
             color: Colors.red,
           );
           await box.delete('frostyPath');
