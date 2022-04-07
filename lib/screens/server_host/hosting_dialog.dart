@@ -31,7 +31,7 @@ class _HostingDialogState extends State<HostingDialog> {
   void initState() {
     Timer.run(() async {
       if (widget.kyberServer == null) {
-        bool isRunning = DllInjector.isInjected();
+        bool isRunning = DllInjector.getBattlefrontPID() != -1;
         if (isRunning) {
           setState(() => state = 1);
           bool s = await checkServer();
