@@ -71,19 +71,14 @@
       "login_success": "Login erfolgreich!"
     },
     "buttons": {
+      "waiting": "Waiting...",
       "skip": "Überspringen",
       "loading": "Lade Nexusmods.com..."
     },
-    "two_factor": {
-      "header": "Zwei-Faktor-Authentifizierung",
-      "description": "Du hast wei-Faktor-Authentifizierung für dein Konto aktiviert. Bitte trage den Code von deinem Handy ein."
-    },
-    "login": {
-      "email": "E-Mail",
-      "password": "Passwort"
-    },
+    "text_0": "To continue, you will need to log in with your NexusMods account in the browser that is about to open.",
     "text_1": "Bitte beachte, dass du dich mit deinem Nexusmods Account anmelden musst, wenn Mods automatisches herunterladen werden sollen.",
-    "text_2": "Die Daten werden lokal verarbeitet und nur an Nexusmods gesendet.\nDu kannst diese Funktion auch später im Einstellungsmenü aktivieren/deaktivieren."
+    "text_2": "Die Daten werden lokal verarbeitet und nur an Nexusmods gesendet.\nDu kannst diese Funktion auch später im Einstellungsmenü aktivieren/deaktivieren.",
+    "waiting_for_login": "Waiting for login..."
   },
   "server_browser": {
     "title": "Server-Browser",
@@ -105,6 +100,7 @@
     "join_dialog": {
       "frosty_profile_disabled": "Frosty Profil ist deaktiviert.",
       "required_mods": {
+        "not_in_database": "Some mods are not in the Moddatabase!",
         "click_on_download": "Klicke unten auf den Download Knopf.",
         "required_mods": "Du hast nicht alle erforderlichen Mods installiert um diesem Server zu joinen.",
         "none": "Keine erforderlichen Mods."
@@ -136,6 +132,7 @@
         "import_mods": "Mod Liste importieren"
       },
       "buttons": {
+        "open_mods": "Open mods in browser",
         "view_mods": "Mods ansehen",
         "downloading": "Lädt runter...",
         "download": "Herunterladen"

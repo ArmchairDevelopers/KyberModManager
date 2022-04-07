@@ -71,19 +71,14 @@
       "login_success": "Вход выполнен успешно!"
     },
     "buttons": {
+      "waiting": "Waiting...",
       "skip": "Пропустить",
       "loading": "Загрузка Nexusmods.com..."
     },
-    "two_factor": {
-      "header": "Двухфакторная аутентификация",
-      "description": "Вы включили двухфакторную аутентификацию. Пожалуйста, введите код с вашего телефона."
-    },
-    "login": {
-      "email": "Электронный адрес",
-      "password": "Пароль"
-    },
+    "text_0": "To continue, you will need to log in with your NexusMods account in the browser that is about to open.",
     "text_1": "Пожалуйста, обратите внимание, что для автоматической загрузки модов вам необходимо войти в свой аккаунт Nexusmods.",
-    "text_2": "Данные обрабатываются локально и будут отправлены только в Nexusmods.\nВы также можете включить/отключить эту функцию позже в меню настроек."
+    "text_2": "Данные обрабатываются локально и будут отправлены только в Nexusmods.\nВы также можете включить/отключить эту функцию позже в меню настроек.",
+    "waiting_for_login": "Waiting for login..."
   },
   "server_browser": {
     "title": "Поиск Сервера",
@@ -105,6 +100,7 @@
     "join_dialog": {
       "frosty_profile_disabled": "Профиль Frosty отключен.",
       "required_mods": {
+        "not_in_database": "Some mods are not in the Moddatabase!",
         "click_on_download": "Нажмите на кнопку загрузки ниже.",
         "required_mods": "Вы не установили необходимые моды для присоединения к этому серверу.",
         "none": "Нет требуемых модов."
@@ -136,6 +132,7 @@
         "import_mods": "Импорт списка модов"
       },
       "buttons": {
+        "open_mods": "Open mods in browser",
         "view_mods": "Показать моды",
         "downloading": "Загрузка...",
         "download": "Скачать"
