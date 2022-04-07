@@ -132,19 +132,26 @@ class _HostingDialogState extends State<HostingDialog> {
       );
     }
 
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(
-          height: 25,
-          width: 25,
-          child: ProgressRing(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 20,
+              width: 20,
+              child: ProgressRing(),
+            ),
+            const SizedBox(width: 15),
+            Text(
+              translate(state == 0 ? 'server_browser.join_dialog.joining_states.battlefront' : '$prefix.wait_for_server'),
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
         ),
-        const SizedBox(width: 16),
-        Text(
-          translate(state == 0 ? 'server_browser.join_dialog.joining_states.battlefront' : '$prefix.wait_for_server'),
-        ),
-        if (state == 0) Text(translate('server_browser.join_dialog.joining_states.battlefront_2'))
+        const SizedBox(height: 10),
+        if (state == 0) Text(translate('server_browser.join_dialog.joining_states.battlefront_2')),
       ],
     );
   }
