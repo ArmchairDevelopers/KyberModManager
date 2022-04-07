@@ -17,7 +17,7 @@ class PuppeteerHelper {
     _browser = await puppeteer.launch(
       executablePath: kDebugMode ? null : './970485/chrome-win/chrome.exe',
       args: [
-        '--window-size=$_width,$_height',
+        '--window-size=${_width ~/ 2},${_height ~/ 2}',
         '--window-position=0,0',
         '--no-sandbox',
         '--disable-infobars',
@@ -25,7 +25,7 @@ class PuppeteerHelper {
         '--ignore-certifcate-errors-spki-list',
         '--lang=en-EN,en',
       ],
-      headless: true,
+      headless: false,
       plugins: [
         StealthPlugin(),
       ],
@@ -43,8 +43,10 @@ class PuppeteerHelper {
 
   static Future<void> initializePage(Page page) async {
     String downloadPath = box.get('frostyPath') + '\\Mods\\starwarsbattlefrontii';
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36');
-    await page.setViewport(const DeviceViewport(width: _width, height: _height, deviceScaleFactor: 2));
+    await page.setExtraHTTPHeaders({'Accept-Language': 'en'});
+
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36');
+    await page.setViewport(const DeviceViewport(width: 1920, height: 1080, deviceScaleFactor: 1, hasTouch: false, isLandscape: false, isMobile: false));
     page.browser.connection.send('Browser.setDownloadBehavior', {
       'behavior': 'allow',
       'downloadPath': downloadPath,

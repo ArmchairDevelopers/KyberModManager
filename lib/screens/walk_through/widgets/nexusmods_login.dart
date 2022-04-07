@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
@@ -26,12 +28,14 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
 
   @override
   void initState() {
-    NexusmodsLoginService.init(() => mounted ? Navigator.of(context).pop() : null, (v) => _browser = v).then(
-      (value) => setState(() {
-        loadedSite = true;
-        _browser = value;
-      }),
-    );
+    Future.delayed(const Duration(seconds: 3), () {
+      NexusmodsLoginService.init(() => mounted ? Navigator.of(context).pop() : null, (v) => _browser = v).then(
+        (value) => setState(() {
+          loadedSite = true;
+          _browser = value;
+        }),
+      );
+    });
     super.initState();
   }
 
@@ -104,13 +108,18 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const Text('Nexusmods Login', style: TextStyle(fontSize: 16)),
-            // const SizedBox(height: 20),
             ...buildContent(),
             const SizedBox(height: 16),
-            Text(translate('$prefix.text_1'), style: TextStyle(fontSize: 16)),
+            Center(
+              child: Text(
+                'PLEASE DO NOT INTERACT IN ANY FORM WITH THE BROWSER',
+                style: TextStyle(fontSize: 14, color: Colors.red, fontWeight: FontWeight.bold),
+              ),
+            ),
             const SizedBox(height: 16),
-            Text(translate('$prefix.text_2')),
+            Text(translate('$prefix.text_1'), style: const TextStyle(fontSize: 14)),
+            const SizedBox(height: 16),
+            Text(translate('$prefix.text_2'), style: const TextStyle(fontSize: 14)),
           ],
         ),
       ),
