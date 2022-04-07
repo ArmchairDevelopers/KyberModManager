@@ -142,8 +142,9 @@ class _HostingDialogState extends State<HostingDialog> {
         ),
         const SizedBox(width: 16),
         Text(
-          translate('$prefix.' + (state == 0 ? 'wait_for_bf2' : 'wait_for_server')),
+          translate(state == 0 ? 'server_browser.join_dialog.joining_states.battlefront' : '$prefix.wait_for_server'),
         ),
+        if (state == 0) Text(translate('server_browser.join_dialog.joining_states.battlefront_2'))
       ],
     );
   }
