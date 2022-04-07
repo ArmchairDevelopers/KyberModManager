@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:http/http.dart';
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
 import 'package:kyber_mod_manager/constants/api_constants.dart';
-import 'package:kyber_mod_manager/main.dart';
 
 class ApiService {
   static Future<bool> isAvailable(String name) async {
@@ -19,6 +17,20 @@ class ApiService {
     }
   }
 
+  static Future<_DownloadLinksResponse> getDownloadLinks(List<String> mods) async {
+    List<String> links = [];
+    List<String> unavailableMods = [];
+    await Future.wait(mods.map((e) async {
+      var info = await getDownloadInfo(e);
+      if (info?.fileUrl == null) {
+        unavailableMods.add(e);
+        return;
+      }
+      links.add(info!.fileUrl + '?tab=files&file_id=' + info.fileId);
+    }));
+    return _DownloadLinksResponse(links, unavailableMods);
+  }
+
   static Future<DownloadInfo?> getDownloadInfo(String modName) async {
     final resp = await get(Uri.parse('$BACKEND_API_BASE_URL/mods/download?query=$modName'));
     if (resp.statusCode == 200) {
@@ -26,4 +38,11 @@ class ApiService {
     }
     return null;
   }
+}
+
+class _DownloadLinksResponse {
+  List<String> links;
+  List<String> unavailable;
+
+  _DownloadLinksResponse(this.links, this.unavailable);
 }

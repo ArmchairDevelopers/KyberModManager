@@ -105,6 +105,7 @@
     "join_dialog": {
       "frosty_profile_disabled": "Frosty Profile is disabled.",
       "required_mods": {
+        "not_in_database": "Some mods are not in the Moddatabase!",
         "click_on_download": "Click on the download button below.",
         "required_mods": "You haven't installed the required mods to join this server.",
         "none": "No required mods."
@@ -136,6 +137,7 @@
         "import_mods": "Import mod list"
       },
       "buttons": {
+        "open_mods": "Open mods in browser",
         "view_mods": "View mods",
         "downloading": "Downloading...",
         "download": "Download"

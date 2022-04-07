@@ -12,8 +12,8 @@ import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/password_in
 import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/required_mods.dart';
 import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/team_selector.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
-import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
+import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
@@ -22,6 +22,7 @@ import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
 class ServerDialog extends StatefulWidget {
@@ -100,7 +101,9 @@ class _ServerDialogState extends State<ServerDialog> {
         Iterable<String> cosmeticsMods = Iterable.castFrom(box.get('cosmetics').map((e) => Mod.fromJson(e).toKyberString()).toList());
         mods.addAll(cosmeticsMods);
       }
-      await ProfileService.searchProfile(mods);
+      await ProfileService.searchProfile(mods).catchError((e) {
+        NotificationService.showNotification(message: e, color: Colors.red);
+      });
       setState(() => startingState = 1);
       dynamic resp = await KyberApiService.joinServer(server.id, faction: int.parse(preferredTeam), password: password);
       if (resp['message'] != "Success, start your game to join this server!") {
@@ -141,10 +144,13 @@ class _ServerDialogState extends State<ServerDialog> {
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
     } else if (!downloading) {
       if (!box.get('nexusmods_login', defaultValue: false)) {
-        var r = await showDialog(context: context, builder: (x) => const NexusmodsLogin());
-        if (r == null) {
-          return;
+        var links = await ApiService.getDownloadLinks(server.mods);
+        if (!links.unavailable.isNotEmpty) {
+          NotificationService.showNotification(message: translate('$prefix.required_mods.not_in_database'), color: Colors.red);
+          await Future.delayed(const Duration(seconds: 1));
         }
+        links.links.toSet().toList().forEach((element) => launch(element));
+        return;
       }
       setState(() {
         state = 0;
@@ -206,7 +212,7 @@ class _ServerDialogState extends State<ServerDialog> {
                       : downloading
                           ? '$prefix.buttons.downloading'
                           : !box.get('nexusmods_login', defaultValue: false)
-                              ? 'login'
+                              ? '$prefix.buttons.open_mods'
                               : '$prefix.buttons.download'
                   : 'continue',
             ),
