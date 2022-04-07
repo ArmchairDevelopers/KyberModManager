@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/nexusmods_login_service.dart';
-import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:puppeteer/puppeteer.dart' as puppeteer;
 
 class NexusmodsLogin extends StatefulWidget {
@@ -22,20 +19,10 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
 
   puppeteer.Browser? _browser;
 
-  bool disabled = false;
-  bool loadedSite = false;
-  bool twoFactor = false;
+  bool browserOpen = false;
 
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 3), () {
-      NexusmodsLoginService.init(() => mounted ? Navigator.of(context).pop() : null, (v) => _browser = v).then(
-        (value) => setState(() {
-          loadedSite = true;
-          _browser = value;
-        }),
-      );
-    });
     super.initState();
   }
 
@@ -51,113 +38,80 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
     if (!box.containsKey('nexusmods_login')) {
       box.put('nexusmods_login', false);
     }
-    _browser?.close();
     super.dispose();
-  }
-
-  void login() async {
-    setState(() => disabled = true);
-    if (!twoFactor) {
-      var s = await NexusmodsLoginService.login(emailController.text, passwordController.text);
-      if (s == LoginType.NOT_LOGGED_IN) {
-        setState(() => disabled = false);
-        NotificationService.showNotification(message: translate('$prefix.notifications.invalid_credentials'), color: Colors.red);
-        return;
-      } else if (s == LoginType.TWO_FACTOR_AUTH) {
-        emailController.text = '';
-        setState(() {
-          disabled = false;
-          twoFactor = true;
-        });
-        return;
-      }
-    } else {
-      var s = await NexusmodsLoginService.validateTwoFactor(emailController.text);
-      if (!s) {
-        setState(() => disabled = false);
-        NotificationService.showNotification(message: translate('$prefix.notifications.invalid_code'), color: Colors.red);
-        return;
-      }
-    }
-    NotificationService.showNotification(message: translate('$prefix.notifications.login_success'));
-    await box.put('nexusmods_login', true);
-    Navigator.of(context).pop(true);
   }
 
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
       backgroundDismiss: false,
-      constraints: const BoxConstraints(maxWidth: 700),
+      constraints: const BoxConstraints(maxWidth: 600, maxHeight: 400),
       title: Text(translate('$prefix.title')),
       actions: [
         Button(
           child: Text(translate('$prefix.buttons.skip')),
           onPressed: () {
             box.put('nexusmods_login', false);
-            Navigator.of(context).pop();
+            if (_browser != null) {
+              _browser!.close();
+            } else {
+              Navigator.of(context).pop();
+            }
           },
         ),
         FilledButton(
-          child: Text(loadedSite ? translate('login') : translate('$prefix.buttons.loading')),
-          onPressed: disabled || !loadedSite ? null : login,
+          child: Text(translate(!browserOpen ? 'continue' : '$prefix.buttons.waiting')),
+          onPressed: browserOpen
+              ? null
+              : () async {
+                  setState(() => browserOpen = true);
+                  NexusmodsLoginService.init(
+                    onClose: () => mounted ? Navigator.of(context).pop() : null,
+                    onCreated: (v) => _browser = v,
+                    onLoginSuccessful: () => _browser?.close(),
+                  ).then(
+                    (value) => setState(() => _browser = value),
+                  );
+                },
         ),
       ],
       content: SizedBox(
-        height: 400,
+        height: 300,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...buildContent(),
-            const SizedBox(height: 16),
-            Center(
-              child: Text(
-                'PLEASE DO NOT INTERACT IN ANY FORM WITH THE BROWSER',
-                style: TextStyle(fontSize: 14, color: Colors.red, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(translate('$prefix.text_1'), style: const TextStyle(fontSize: 14)),
-            const SizedBox(height: 16),
-            Text(translate('$prefix.text_2'), style: const TextStyle(fontSize: 14)),
-          ],
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: browserOpen
+              ? [
+                  Expanded(
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 30,
+                            width: 30,
+                            child: ProgressRing(),
+                          ),
+                          const SizedBox(width: 15),
+                          Text(
+                            translate('$prefix.waiting_for_login'),
+                            style: const TextStyle(fontSize: 17),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]
+              : [
+                  Text(
+                    translate('$prefix.text_0'),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(translate('$prefix.text_2'), style: const TextStyle(fontSize: 14)),
+                ],
         ),
       ),
     );
-  }
-
-  List<Widget> buildContent() {
-    if (twoFactor) {
-      return [
-        TextBox(
-          onSubmitted: (String s) => FocusScope.of(context).requestFocus(passwordFocusNode),
-          controller: emailController,
-          autofocus: true,
-          header: translate('$prefix.two_factor.header'),
-          placeholder: '123 456',
-        ),
-        const SizedBox(height: 16),
-        Text(translate('$prefix.two_factor.description'), style: const TextStyle(fontSize: 16)),
-      ];
-    }
-
-    return [
-      TextBox(
-        onSubmitted: (String s) => FocusScope.of(context).requestFocus(passwordFocusNode),
-        controller: emailController,
-        autofocus: true,
-        header: translate('$prefix.login.email'),
-        placeholder: 'example@gmail.com',
-      ),
-      const SizedBox(height: 16),
-      TextBox(
-        focusNode: passwordFocusNode,
-        controller: passwordController,
-        onSubmitted: (s) => login(),
-        header: translate('$prefix.login.password'),
-        obscureText: true,
-        placeholder: '1234',
-      ),
-    ];
   }
 }

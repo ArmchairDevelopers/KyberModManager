@@ -81,6 +81,10 @@ class _SettingsState extends State<Settings> {
               color: box.get('nexusmods_login', defaultValue: false) ? Colors.red : SystemTheme.accentInstance.accent,
               onPressed: () async {
                 if (box.get('nexusmods_login', defaultValue: false)) {
+                  var s = Directory('$applicationDocumentsDirectory\\puppeteer');
+                  if (s.existsSync()) {
+                    s.deleteSync(recursive: true);
+                  }
                   await box.put('nexusmods_login', false);
                   await box.delete('cookies');
                 } else {
@@ -183,7 +187,7 @@ class _SettingsState extends State<Settings> {
               color: Colors.red,
               onPressed: () => box.deleteFromDisk().then((value) async {
                 await loadHive();
-                var s = Directory('$applicationDocumentsDirectory\\chromium');
+                var s = Directory('$applicationDocumentsDirectory\\puppeteer');
                 if (s.existsSync()) {
                   s.deleteSync(recursive: true);
                 }
