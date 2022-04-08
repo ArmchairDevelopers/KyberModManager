@@ -10,6 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/utils/translation/translate_preferences.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
@@ -60,8 +61,12 @@ Future<void> loadHive() async {
   });
   if (box.isEmpty) {
     box.put('cosmetics', []);
+    box.put('discordRPC', true);
     box.put('saveProfiles', true);
     box.put('enableCosmetics', false);
+  }
+  if (!box.containsKey('discordRPC')) {
+    box.put('discordRPC', true);
   }
 }
 
@@ -79,6 +84,7 @@ class _AppState extends State<App> {
   void initState() {
     ModService.loadMods(context);
     ModService.watchDirectory();
+    RPCService.initialize();
     SystemTheme.darkMode.then((value) {
       setState(() => brightness = value ? Brightness.dark : Brightness.light);
       box.put('brightness', value);

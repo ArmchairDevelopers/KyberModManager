@@ -8,6 +8,7 @@ import 'package:kyber_mod_manager/screens/settings/platform_selector.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
+import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
 import 'package:kyber_mod_manager/widgets/icon_button.dart';
 import 'package:system_theme/system_theme.dart';
@@ -89,6 +90,27 @@ class _SettingsState extends State<Settings> {
                   await box.delete('cookies');
                 } else {
                   await showDialog(context: context, builder: (c) => const NexusmodsLogin());
+                }
+                setState(() => null);
+              },
+            ),
+          ),
+          ListTile(
+            title: Row(
+              children: [
+                Text(translate('$prefix.discord_activity.title')),
+              ],
+            ),
+            subtitle: Text(translate('$prefix.discord_activity.subtitle')),
+            leading: const Icon(FluentIcons.activity_feed),
+            trailing: ToggleSwitch(
+              checked: box.get('discordRPC', defaultValue: true),
+              onChanged: (enabled) async {
+                await box.put('discordRPC', enabled);
+                if (enabled) {
+                  RPCService.start();
+                } else {
+                  RPCService.dispose();
                 }
                 setState(() => null);
               },
