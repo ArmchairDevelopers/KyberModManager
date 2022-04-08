@@ -43,6 +43,7 @@ class _ServerDialogState extends State<ServerDialog> {
   Timer? timer;
   String preferredTeam = '0';
   String password = '';
+  String? content;
   bool profileEnabled = ProfileService.isProfileActive();
   bool downloading = false;
   bool cosmetics = false;
@@ -101,10 +102,15 @@ class _ServerDialogState extends State<ServerDialog> {
         Iterable<String> cosmeticsMods = Iterable.castFrom(box.get('cosmetics').map((e) => Mod.fromJson(e).toKyberString()).toList());
         mods.addAll(cosmeticsMods);
       }
-      await ProfileService.searchProfile(mods).catchError((e) {
+      await ProfileService.searchProfile(mods, (copied, total) {
+        setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
+      }).catchError((e) {
         NotificationService.showNotification(message: e, color: Colors.red);
       });
-      setState(() => startingState = 1);
+      setState(() {
+        startingState = 1;
+        content = null;
+      });
       dynamic resp = await KyberApiService.joinServer(server.id, faction: int.parse(preferredTeam), password: password);
       if (resp['message'] != "Success, start your game to join this server!") {
         WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
@@ -277,7 +283,7 @@ class _ServerDialogState extends State<ServerDialog> {
               ),
               const SizedBox(width: 15),
               Text(
-                translate('$prefix.joining_states.' + startingText()),
+                content != null ? content! : translate('$prefix.joining_states.' + startingText()),
                 style: const TextStyle(fontSize: 16),
               ),
             ],
