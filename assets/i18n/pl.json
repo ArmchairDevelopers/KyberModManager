@@ -16,14 +16,14 @@
   "search": "Szukaj",
   "load": "Załaduj",
   "size": "Rozmiar",
-  "mods": "Mods",
-  "login": "Login",
+  "mods": "Modyfikacje",
+  "login": "Zaloguj się",
   "mods_loaded": "Loaded {count} mods.",
   "navigation_bar": {
-    "battlefront_not_running": "Battlefront II isn't running.",
+    "battlefront_not_running": "Gra Battlefront II nie jest uruchumiona.",
     "kyber": {
-      "running": "Kyber is running",
-      "not_running": "Start Kyber"
+      "running": "Kyber jest uruchomiony",
+      "not_running": "Uruchom Kyber"
     },
     "items": {
       "server_browser": "Server Browser",
