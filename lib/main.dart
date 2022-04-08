@@ -37,7 +37,7 @@ void main() async {
       },
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
-    await SystemTheme.accentInstance.load();
+    await SystemTheme.accentColor.load();
     await loadHive();
     var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'en',
@@ -78,17 +78,11 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  Brightness brightness = box.get('brightness', defaultValue: false) ? Brightness.dark : Brightness.light;
-
   @override
   void initState() {
     ModService.loadMods(context);
     ModService.watchDirectory();
     RPCService.initialize();
-    SystemTheme.darkMode.then((value) {
-      setState(() => brightness = value ? Brightness.dark : Brightness.light);
-      box.put('brightness', value);
-    });
     super.initState();
   }
 
@@ -104,7 +98,7 @@ class _AppState extends State<App> {
     return FluentApp(
       title: 'Kyber Mod Manager',
       theme: ThemeData(
-        accentColor: SystemTheme.accentInstance.accent.toAccentColor(),
+        accentColor: SystemTheme.accentColor.accent.toAccentColor(),
         brightness: Brightness.dark,
       ),
       localizationsDelegates: [

@@ -31,7 +31,7 @@ dependencies:
   fluent_ui: ^3.9.1
   tinycolor2: ^2.0.0
   http: ^0.13.4
-  system_theme: ^1.0.1
+  system_theme: ^2.0.0
   hive: ^2.0.6
   hive_flutter:
   json_annotation:

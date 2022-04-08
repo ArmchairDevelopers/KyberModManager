@@ -11,7 +11,7 @@ class NotificationService {
           margin: const EdgeInsets.all(8).copyWith(top: 20),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-            color: color ?? SystemTheme.accentInstance.accent,
+            color: color ?? SystemTheme.accentColor.accent,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Text(

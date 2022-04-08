@@ -79,7 +79,7 @@ class _SettingsState extends State<Settings> {
                 text: translate(box.get('nexusmods_login', defaultValue: false) ? '$prefix.nexus_mods.logout' : 'Login'),
                 icon: box.get('nexusmods_login', defaultValue: false) ? FluentIcons.user_remove : FluentIcons.user_sync,
               ),
-              color: box.get('nexusmods_login', defaultValue: false) ? Colors.red : SystemTheme.accentInstance.accent,
+              color: box.get('nexusmods_login', defaultValue: false) ? Colors.red : SystemTheme.accentColor.accent,
               onPressed: () async {
                 if (box.get('nexusmods_login', defaultValue: false)) {
                   var s = Directory('$applicationDocumentsDirectory\\puppeteer');
