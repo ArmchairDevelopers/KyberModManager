@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -11,8 +12,10 @@ import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/download_sc
 import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/password_input.dart';
 import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/required_mods.dart';
 import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/team_selector.dart';
+import 'package:kyber_mod_manager/screens/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
+import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
@@ -22,6 +25,7 @@ import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
+import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
@@ -124,11 +128,26 @@ class _ServerDialogState extends State<ServerDialog> {
       setState(() => startingState = 2);
       await FrostyProfileService.createProfile(mods);
       setState(() => startingState = 3);
-      bool success = await FrostyService.startFrosty();
-      if (mounted && !success) {
-        NotificationService.showNotification(message: 'Frosty error!', color: Colors.red);
-        Navigator.pop(context);
-        return;
+      var appliedMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
+      var serverMods = mods.map((e) => ModService.convertToMod(e)).toList();
+      if (!listEquals(appliedMods, serverMods)) {
+        Logger.root.info("Applying Frosty mods...");
+        bool success = await FrostyService.startFrosty().catchError((error) {
+          NotificationService.showNotification(message: error, color: Colors.red);
+          Navigator.of(context).push(FluentPageRoute(builder: (context) => MissingPermissions()));
+        });
+        if (mounted && !success) {
+          NotificationService.showNotification(message: 'Frosty error!', color: Colors.red);
+          Navigator.pop(context);
+          return;
+        }
+      } else {
+        try {
+          Logger.root.info("Mods are already applied.");
+          PlatformHelper.startBattlefront();
+        } catch (e) {
+          NotificationService.showNotification(message: e.toString());
+        }
       }
       setState(() => startingState = 4);
       timer = Timer.periodic(const Duration(seconds: 1), (timer) {

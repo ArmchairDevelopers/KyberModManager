@@ -1,3 +1,4 @@
+import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/system_tasks.dart';
 import 'package:logging/logging.dart';
 import 'package:process_run/process_run.dart';
@@ -21,6 +22,12 @@ class PlatformHelper {
       'exe': 'Launcher\\Portal\\Binaries\\Win32\\EpicGamesLauncher.exe',
     },
   };
+
+  static void startBattlefront() {
+    String battlefrontPath = OriginHelper.getBattlefrontPath();
+    String dataDir = '$battlefrontPath\\ModData\\KyberModData';
+    runExecutableArguments('$battlefrontPath\\starwarsbattlefrontii.exe', ['-datapath "$dataDir"']);
+  }
 
   static Future<void> restartPlatform(String platform, String? profile) async {
     dynamic platformData = _paths[platform]!;
