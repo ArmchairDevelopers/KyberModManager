@@ -45,13 +45,16 @@ class DownloadService {
       _progressController?.close();
       _progressSubscription?.cancel();
     }
-    _browser
-        .close()
-        .then((value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
+    _browser.close().then(
+        (value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
   }
 
   Future<void> startDownload(
-      {required List<String> mods, required Function onWebsiteOpened, required Function onFileInfo, required Function onExtracting, required Function onNextMod}) async {
+      {required List<String> mods,
+      required Function onWebsiteOpened,
+      required Function onFileInfo,
+      required Function onExtracting,
+      required Function onNextMod}) async {
     await Future.forEach(mods, (String element) async {
       if (mods.indexOf(element) != 0) {
         onNextMod(element);
@@ -123,7 +126,7 @@ class DownloadService {
     } else {
       await Future.delayed(const Duration(seconds: 1));
       await UnzipHelper.unrar(File('$_downloadFolder$filename'), Directory(_downloadFolder)).catchError((error) {
-        NotificationService.showNotification(message: error, color: Colors.red);
+        NotificationService.showNotification(message: error.toString(), color: Colors.red);
         Logger.root.severe('Could not unrar $filename. $error');
       });
     }
