@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/constants/maps.dart';
@@ -9,6 +10,7 @@ import 'package:kyber_mod_manager/utils/types/mode.dart';
 
 material.DataRow Server(BuildContext context, KyberServer server) {
   final Mode mode = modes.where((element) => element.mode == server.mode).first;
+  final dynamic map = maps.singleWhere((element) => element['map'] == server.map);
 
   return material.DataRow(
     cells: [
@@ -30,7 +32,7 @@ material.DataRow Server(BuildContext context, KyberServer server) {
                 server.requiresPassword ? const Icon(FluentIcons.lock, size: 14) : Container(),
               ],
             ),
-            Text('${mode.name} - ${maps.singleWhere((element) => element['map'] == server.map)['name']} - ${server.host}'),
+            Text('${mode.name} - ${map['name']} - ${server.host}'),
           ],
         ),
       ),
@@ -44,7 +46,8 @@ material.DataRow Server(BuildContext context, KyberServer server) {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(width: 5),
+            SvgPicture.network(server.proxy.flag, width: 20),
+            const SizedBox(width: 10),
             Text(
               server.proxy.name,
             ),

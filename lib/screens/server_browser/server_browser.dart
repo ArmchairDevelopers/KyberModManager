@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/screens/server_browser/widgets/server.dart';
@@ -59,7 +60,7 @@ class _ServerBrowserState extends State<ServerBrowser> {
             Text(translate('$prefix.current_page', args: {'0': page, '1': response?.pageCount})),
             Button(
               child: Text(translate('$prefix.next_page')),
-              onPressed: page == response?.pageCount ? null : () => loadPage(page + 1),
+              onPressed: page == response?.pageCount || response?.pageCount == 0 ? null : () => loadPage(page + 1),
             ),
           ],
         ),
@@ -85,8 +86,8 @@ class _ServerBrowserState extends State<ServerBrowser> {
         scrollDirection: Axis.vertical,
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: loading ? MediaQuery.of(context).size.height - 70 : null,
-          child: loading ? const Center(child: ProgressRing()) : buildTable(),
+          height: loading ? MediaQuery.of(context).size.height - 130 : null,
+          child: loading ? const Center(child: ProgressRing()) : FadeIn(child: buildTable(), duration: const Duration(milliseconds: 100)),
         ),
       ),
     );

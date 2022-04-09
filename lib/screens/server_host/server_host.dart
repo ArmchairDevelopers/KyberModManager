@@ -240,6 +240,56 @@ class _ServerHostState extends State<ServerHost> {
       header: PageHeader(
         title: Text(translate('$prefix.title')),
       ),
+      bottomBar: Container(
+        alignment: Alignment.centerRight,
+        margin: const EdgeInsets.symmetric(vertical: 10).copyWith(right: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (isHosting)
+              Padding(
+                padding: const EdgeInsets.only(right: 25),
+                child: FilledButton(
+                  style: ButtonStyle(
+                    padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 8)),
+                  ),
+                  child: Text(
+                    translate('$prefix.buttons.server_info'),
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                  onPressed: server == null
+                      ? null
+                      : () => showDialog(
+                            context: context,
+                            builder: (context) => HostingDialog(kyberServer: server, name: formattedServerName),
+                          ),
+                ),
+              ),
+            FilledButton(
+              style: ButtonStyle(
+                padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 8)),
+              ),
+              child: Text(
+                isHosting
+                    ? server != null
+                        ? translate('$prefix.buttons.update_server')
+                        : translate('$prefix.buttons.server_is_starting')
+                    : translate('$prefix.buttons.host'),
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              onPressed: server == null && isHosting
+                  ? null
+                  : !disabled || isHosting && server != null
+                      ? () => host(isHosting)
+                      : null,
+            )
+          ],
+        ),
+      ),
       content: Container(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -375,52 +425,6 @@ class _ServerHostState extends State<ServerHost> {
                     onChanged: (v) => setState(() => maxPlayers = v),
                   ),
                 ),
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      if (isHosting)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 25),
-                          child: FilledButton(
-                            style: ButtonStyle(
-                              padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 8)),
-                            ),
-                            child: Text(
-                              translate('$prefix.buttons.server_info'),
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                            onPressed: server == null
-                                ? null
-                                : () => showDialog(
-                                      context: context,
-                                      builder: (context) => HostingDialog(kyberServer: server, name: formattedServerName),
-                                    ),
-                          ),
-                        ),
-                      FilledButton(
-                        style: ButtonStyle(
-                          padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 8)),
-                        ),
-                        child: Text(
-                          isHosting
-                              ? server != null
-                                  ? translate('$prefix.buttons.update_server')
-                                  : translate('$prefix.buttons.server_is_starting')
-                              : translate('$prefix.buttons.host'),
-                          style: const TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                        onPressed: !disabled || isHosting && server != null ? () => host(isHosting) : null,
-                      )
-                    ],
-                  ),
-                )
               ],
             ),
           ),

@@ -67,7 +67,7 @@ class _EditProfileState extends State<EditProfile> {
       ),
       bottomBar: Container(
         alignment: Alignment.centerRight,
-        margin: const EdgeInsets.only(bottom: 20, right: 20),
+        margin: const EdgeInsets.symmetric(vertical: 10).copyWith(right: 10),
         child: FilledButton(
           style: ButtonStyle(
             padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 60, vertical: 8)),
@@ -85,7 +85,7 @@ class _EditProfileState extends State<EditProfile> {
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height - 157,
+            height: MediaQuery.of(context).size.height - 165,
             child: Form(
               key: _formKey,
               child: Column(
