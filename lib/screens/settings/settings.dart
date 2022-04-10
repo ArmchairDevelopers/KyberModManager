@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -7,6 +8,7 @@ import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/settings/platform_selector.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
+import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
@@ -34,6 +36,29 @@ class _SettingsState extends State<Settings> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('$prefix.title')),
+        commandBar: Row(
+          children: [
+            Button(
+              child: const Text('Export log file'),
+              onPressed: () async {
+                String? path = await FilePicker.platform.saveFile(
+                  type: FileType.custom,
+                  allowedExtensions: ['txt'],
+                  fileName: 'log.txt',
+                  initialDirectory: 'Desktop',
+                  dialogTitle: 'Export log file',
+                  lockParentWindow: true,
+                );
+                if (path == null) {
+                  return;
+                }
+
+                String content = CustomLogger.getLogs();
+                File(path).writeAsStringSync(content);
+              },
+            ),
+          ],
+        ),
       ),
       content: ListView(
         children: [
