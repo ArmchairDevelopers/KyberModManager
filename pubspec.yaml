@@ -45,9 +45,6 @@ dependencies:
     sdk: flutter
   freezed_annotation:
 
-dependency_overrides:
-  package_info_plus: 1.3.0
-
 dev_dependencies:
   hive_generator: ^1.1.2
   build_runner:
