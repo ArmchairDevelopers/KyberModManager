@@ -46,7 +46,7 @@ class _ServerHostState extends State<ServerHost> {
   String mode = modes[0].mode;
   String? formattedServerName;
   String? proxy;
-  double maxPlayers = 40;
+  int maxPlayers = 40;
   bool cosmetics = false;
   bool disabled = false;
   bool isHosting = false;
@@ -112,7 +112,7 @@ class _ServerHostState extends State<ServerHost> {
           _passwordController.text = config['SERVER_OPTIONS']['PASSWORD'];
           _mapController.text = MapHelper.getMapsForMode(mode).where((m) => m.map == server!.map).first.name;
           mode = server!.mode;
-          maxPlayers = server!.maxPlayers + 0.0;
+          maxPlayers = server!.maxPlayers;
           autoBalance = server!.autoBalanceTeams;
         });
       }
@@ -145,9 +145,9 @@ class _ServerHostState extends State<ServerHost> {
 
     setState(() => disabled = true);
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.indeterminate);
-    NotificationService.showNotification(message: translate('$prefix.starting'));
     bool running = await SystemTasks.isKyberRunning();
     if (!update) {
+      NotificationService.showNotification(message: translate('$prefix.starting'));
       KyberServer? server = await KyberApiService.searchServer(_hostController.text);
       if (running && server != null) {
         WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
@@ -175,7 +175,7 @@ class _ServerHostState extends State<ServerHost> {
       password: _passwordController.text,
       mode: mode,
       map: foundMaps.first.map,
-      maxPlayers: maxPlayers.toInt(),
+      maxPlayers: maxPlayers,
       autoBalance: autoBalance,
     );
     if (data['message'] != 'Success, start your game to host this server!') {
@@ -250,9 +250,6 @@ class _ServerHostState extends State<ServerHost> {
               Padding(
                 padding: const EdgeInsets.only(right: 25),
                 child: FilledButton(
-                  style: ButtonStyle(
-                    padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 8)),
-                  ),
                   child: Text(
                     translate('$prefix.buttons.server_info'),
                     style: const TextStyle(
@@ -268,9 +265,6 @@ class _ServerHostState extends State<ServerHost> {
                 ),
               ),
             FilledButton(
-              style: ButtonStyle(
-                padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 8)),
-              ),
               child: Text(
                 isHosting
                     ? server != null
@@ -421,8 +415,8 @@ class _ServerHostState extends State<ServerHost> {
                   child: Slider(
                     max: 64,
                     min: 2,
-                    value: maxPlayers,
-                    onChanged: (v) => setState(() => maxPlayers = v),
+                    value: maxPlayers + 0.0,
+                    onChanged: (v) => setState(() => maxPlayers = int.parse(v.toString().split('.').first)),
                   ),
                 ),
               ],
