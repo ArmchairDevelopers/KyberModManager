@@ -187,7 +187,7 @@
         "header": "Zestawy modyfikacji",
         "placeholder": "Wybierz zestaw...",
         "no_mods_profile": "Brak modyfikacji.",
-        "no_profile_found": "The select mod profile was not found.",
+        "no_profile_found": "Wybrany zestaw modyfikacji nie został odnaleziony.",
         "tooltip": "Wybierz zestaw modyfikacji, który chcesz używać na tym serwerze.\nJeżeli niczego nie wybierzesz, Twój ostatnio użyty zestaw zostanie zastosowany.\nAby hostować serwer Kyber bez żadnych modyfikacji, wybierz Brak modyfikacji."
       },
       "proxy": {
