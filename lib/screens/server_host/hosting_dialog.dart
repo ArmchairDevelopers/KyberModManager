@@ -74,7 +74,6 @@ class _HostingDialogState extends State<HostingDialog> {
   Future<void> createProfile() async {
     List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
     bool cosmetics = box.get('enableCosmetics', defaultValue: false);
-    print(cosmetics);
     String? selectedProfile = widget.selectedProfile;
     if (selectedProfile == null) {
       return;
@@ -91,12 +90,14 @@ class _HostingDialogState extends State<HostingDialog> {
         await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
       }
     } else if (selectedProfile.endsWith('(Mod Profile)')) {
-      ModProfile profile = box.get('profiles').where((p) => p.name == selectedProfile.replaceAll(' (Mod Profile)', '')).first;
+      ModProfile profile = List<ModProfile>.from(box.get('profiles')).where((p) => p.name == selectedProfile.replaceAll(' (Mod Profile)', '')).first;
+      List<Mod> mods = List.from(profile.mods);
       if (cosmetics) {
-        profile = profile.copyWith(mods: profile.mods..addAll(cosmeticMods));
+        mods = [...mods, ...cosmeticMods];
       }
-      await FrostyProfileService.createProfile(profile.mods.map((e) => e.toKyberString()).toList());
-      await ProfileService.searchProfile(profile.mods.map((e) => e.toKyberString()).toList(), onCopied);
+
+      await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+      await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onCopied);
     } else if (selectedProfile == translate('host_server.forms.mod_profile.no_mods_profile')) {
       if (cosmetics) {
         await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
