@@ -40,10 +40,11 @@ class _InstalledModsState extends State<InstalledMods> {
           child: Builder(
             builder: (ctx) {
               List<Widget> children = [];
-              ModService.getModsByCategory(true).forEach((key, value) {
+              ModService.getModsByCategory(false).forEach((key, value) {
                 if (widget.excludedCategories != null && widget.excludedCategories!.contains(key)) return;
                 value.sort((a, b) => a.name.compareTo(b.name));
-                if (value.where((element) => filterMods(element.filename)).isNotEmpty && (search.isEmpty || value.where((element) => element.name.toLowerCase().contains(search.toLowerCase())).isNotEmpty)) {
+                if (value.where((element) => filterMods(element.filename)).isNotEmpty &&
+                    (search.isEmpty || value.where((element) => element.name.toLowerCase().contains(search.toLowerCase())).isNotEmpty)) {
                   children.add(const SizedBox(height: 25));
                   children.add(Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -53,7 +54,9 @@ class _InstalledModsState extends State<InstalledMods> {
                 children.add(ListView(
                   padding: const EdgeInsets.all(0),
                   shrinkWrap: true,
-                  children: value.where((element) => filterMods(element.filename) && (search.isEmpty || element.name.toLowerCase().contains(search.toLowerCase()))).map((Mod mod) {
+                  children: value
+                      .where((element) => filterMods(element.filename) && (search.isEmpty || element.name.toLowerCase().contains(search.toLowerCase())))
+                      .map((Mod mod) {
                     return ListTile(
                       title: Text(
                         mod.name,

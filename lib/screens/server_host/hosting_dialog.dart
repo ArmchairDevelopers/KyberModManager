@@ -72,33 +72,34 @@ class _HostingDialogState extends State<HostingDialog> {
   }
 
   Future<void> createProfile() async {
-    Iterable<Mod> cosmeticsMods = Iterable.castFrom(box.get('cosmetics').map((e) => Mod.fromJson(e)).toList());
+    List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
     bool cosmetics = box.get('enableCosmetics', defaultValue: false);
+    print(cosmetics);
     String? selectedProfile = widget.selectedProfile;
     if (selectedProfile == null) {
       return;
     }
 
-    setState(() => content = translate('$dialog_prefix.joining_states.creating_profile'));
+    setState(() => content = translate('$dialog_prefix.joining_states.creating'));
     if (selectedProfile.endsWith('(Frosty Pack)') && !selectedProfile.contains('KyberModManager')) {
       if (!cosmetics) {
         await FrostyProfileService.loadFrostyPack(selectedProfile.replaceAll(' (Frosty Pack)', ''), onCopied);
       } else {
         List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(selectedProfile.replaceAll(' (Frosty Pack)', ''))
-          ..addAll(cosmeticsMods);
+          ..addAll(cosmeticMods);
         await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onCopied);
         await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
       }
     } else if (selectedProfile.endsWith('(Mod Profile)')) {
       ModProfile profile = box.get('profiles').where((p) => p.name == selectedProfile.replaceAll(' (Mod Profile)', '')).first;
       if (cosmetics) {
-        profile = profile.copyWith(mods: profile.mods..addAll(cosmeticsMods));
+        profile = profile.copyWith(mods: profile.mods..addAll(cosmeticMods));
       }
       await FrostyProfileService.createProfile(profile.mods.map((e) => e.toKyberString()).toList());
       await ProfileService.searchProfile(profile.mods.map((e) => e.toKyberString()).toList(), onCopied);
     } else if (selectedProfile == translate('host_server.forms.mod_profile.no_mods_profile')) {
       if (cosmetics) {
-        await FrostyProfileService.createProfile(cosmeticsMods.map((e) => e.toKyberString()).toList());
+        await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
       } else {
         await FrostyProfileService.createProfile([]);
       }

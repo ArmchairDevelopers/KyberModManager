@@ -380,6 +380,15 @@ class _ServerHostState extends State<ServerHost> {
                     CustomTooltip(message: translate('$prefix.forms.auto_balance.tooltip'))
                   ],
                 ),
+                const SizedBox(height: 16),
+                Checkbox(
+                  checked: cosmetics,
+                  content: Text(translate('$prefix.forms.cosmetic_mods.header')),
+                  onChanged: (value) {
+                    setState(() => cosmetics = value!);
+                    box.put('enableCosmetics', value);
+                  },
+                ),
                 const SizedBox(height: 21),
                 Row(
                   children: [

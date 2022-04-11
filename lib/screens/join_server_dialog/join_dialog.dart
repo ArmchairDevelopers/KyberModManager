@@ -102,9 +102,9 @@ class _ServerDialogState extends State<ServerDialog> {
       });
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.indeterminate);
       List<String> mods = server.mods;
+      List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
       if (cosmetics) {
-        Iterable<String> cosmeticsMods = Iterable.castFrom(box.get('cosmetics').map((e) => Mod.fromJson(e).toKyberString()).toList());
-        mods.addAll(cosmeticsMods);
+        mods.addAll(cosmeticMods.map((e) => e.toKyberString()).toList());
       }
       await ProfileService.searchProfile(mods, (copied, total) {
         setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
@@ -128,9 +128,10 @@ class _ServerDialogState extends State<ServerDialog> {
       setState(() => startingState = 2);
       await FrostyProfileService.createProfile(mods);
       setState(() => startingState = 3);
+
       var appliedMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
       var serverMods = mods.map((e) => ModService.convertToMod(e)).toList();
-      if (!listEquals(appliedMods, serverMods)) {
+      if (!cosmetics ? !listEquals(appliedMods, serverMods) : !listEquals(appliedMods..addAll(cosmeticMods), serverMods)) {
         Logger.root.info("Applying Frosty mods...");
         bool success = await FrostyService.startFrosty().catchError((error) {
           NotificationService.showNotification(message: error, color: Colors.red);
@@ -338,7 +339,7 @@ class _ServerDialogState extends State<ServerDialog> {
           onChange: (team) => setState(() => preferredTeam = team ?? ''),
         ),
         ...requiredMods(),
-        if (modsInstalled && '1' == '2')
+        if (modsInstalled)
           Expanded(
             child: Container(
               alignment: Alignment.bottomCenter,

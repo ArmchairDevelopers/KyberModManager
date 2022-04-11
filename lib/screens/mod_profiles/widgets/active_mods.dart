@@ -31,7 +31,7 @@ class ActiveMods extends StatelessWidget {
                     child: Center(
                       child: Text(
                         translate('edit_mod_profile.forms.mods.no_mods_selected'),
-                        style: textStyle,
+                        style: textStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   )
