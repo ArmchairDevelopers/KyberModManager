@@ -11,12 +11,9 @@ import 'package:kyber_mod_manager/screens/server_host/hosting_dialog.dart';
 import 'package:kyber_mod_manager/utils/helpers/map_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/system_tasks.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
-import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
-import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/utils/types/map.dart';
 import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
@@ -47,8 +44,8 @@ class _ServerHostState extends State<ServerHost> {
   String? formattedServerName;
   String? proxy;
   int maxPlayers = 40;
-  bool cosmetics = false;
   bool disabled = false;
+  bool cosmetics = false;
   bool isHosting = false;
   bool autoBalance = true;
 
@@ -74,17 +71,22 @@ class _ServerHostState extends State<ServerHost> {
     );
     FrostyProfileService.getProfiles().then(
       (value) => setState(() {
+        String noMods = translate('$prefix.forms.mod_profile.no_mods_profile');
         String? lastProfile = box.get('lastProfile');
         frostyProfiles = value;
         if (lastProfile != null) {
           if (lastProfile == 'no_mods') {
-            _profileController.text = translate('$prefix.forms.mod_profile.no_mods_profile');
-          } else {
-            _profileController.text = lastProfile;
+            _profileController.text = noMods;
+            return;
           }
-        } else {
-          _profileController.text = frostyProfiles!.first + ' (Frosty Pack)';
+          _profileController.text = lastProfile;
+          return;
         }
+        if (frostyProfiles == null) {
+          _profileController.text = noMods;
+          return;
+        }
+        _profileController.text = frostyProfiles!.first + ' (Frosty Pack)';
       }),
     );
     super.initState();
@@ -197,36 +199,12 @@ class _ServerHostState extends State<ServerHost> {
       await FrostyProfileService.createProfile([]);
     }
 
-    Iterable<Mod> cosmeticsMods = Iterable.castFrom(box.get('cosmetics').map((e) => Mod.fromJson(e)).toList());
-    if (_profileController.text.endsWith('(Frosty)') && !_profileController.text.contains('KyberModManager')) {
-      if (!cosmetics) {
-        await FrostyProfileService.loadFrostyPack(_profileController.text.replaceAll(' (Frosty)', ''));
-      } else {
-        List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(_profileController.text.replaceAll(' (Frosty)', ''));
-        mods.addAll(cosmeticsMods);
-        await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList());
-        await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-      }
-    } else if (_profileController.text.endsWith('(Mod Profile)')) {
-      ModProfile profile = box.get('profiles').where((p) => p.name == _profileController.text.replaceAll(' (Mod Profile)', '')).first;
-      if (cosmetics) {
-        profile = profile.copyWith(mods: profile.mods..addAll(cosmeticsMods));
-      }
-      await FrostyProfileService.createProfile(profile.mods.map((e) => e.toKyberString()).toList());
-      await ProfileService.searchProfile(profile.mods.map((e) => e.toKyberString()).toList());
-    } else if (!_profileController.text.contains('KyberModManager')) {
-      if (cosmetics) {
-        await FrostyProfileService.createProfile(cosmeticsMods.map((e) => e.toKyberString()).toList());
-      } else {
-        await FrostyProfileService.createProfile([]);
-      }
-    }
-    await FrostyService.startFrosty();
     setState(() => disabled = false);
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
     showDialog(
       context: context,
       builder: (context) => HostingDialog(
+        selectedProfile: _profileController.text,
         name: formattedServerName,
         password: _passwordController.text,
         maxPlayers: maxPlayers.toInt(),
@@ -363,7 +341,7 @@ class _ServerHostState extends State<ServerHost> {
                   placeholder: translate('$prefix.forms.mod_profile.placeholder'),
                   items: [
                     translate('$prefix.forms.mod_profile.no_mods_profile'),
-                    ...frostyProfiles?.map((e) => '$e (Frosty Pack)') ?? [],
+                    ...frostyProfiles?.where((e) => e != 'KyberModManager').map((e) => '$e (Frosty Pack)') ?? [],
                     ..._profiles.map((e) => '${e.name} (Mod Profile)'),
                   ],
                   onSelected: (text) {
