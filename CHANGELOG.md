@@ -8,7 +8,7 @@
 - Added a new button to export the log file.
 - Added a progress bar when a saved profile is being loaded.
 - Added missing translations.
-- Fixed a bug were during the setup the mods could not be loaded.
+- Fixed a bug where during the setup the mods could not be loaded.
 - Minor UI changes.
 - Several minor fixes.
 
