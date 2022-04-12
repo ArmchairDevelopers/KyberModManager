@@ -40,7 +40,7 @@ class DllInjector {
     var latestVersion = await getLatestKyberVersion();
 
     if (latestVersion > currentVersion) {
-      await downloadDll();
+      return downloadDll();
     }
 
     Logger.root.info('Newest Kyber version is already installed.');
