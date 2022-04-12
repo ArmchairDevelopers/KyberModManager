@@ -71,14 +71,14 @@
       "login_success": "Вход выполнен успешно!"
     },
     "buttons": {
-      "waiting": "Waiting...",
+      "waiting": "Ожидание...",
       "skip": "Пропустить",
       "loading": "Загрузка Nexusmods.com..."
     },
-    "text_0": "To continue, you will need to log in with your NexusMods account in the browser that is about to open.",
+    "text_0": "Чтобы продолжить, вам нужно будет войти в свою учетную запись NexusMods в браузере, который скоро откроется.",
     "text_1": "Пожалуйста, обратите внимание, что для автоматической загрузки модов вам необходимо войти в свой аккаунт Nexusmods.",
     "text_2": "Данные обрабатываются локально и будут отправлены только в Nexusmods.\nВы также можете включить/отключить эту функцию позже в меню настроек.",
-    "waiting_for_login": "Waiting for login..."
+    "waiting_for_login": "Ожидание авторизации..."
   },
   "server_browser": {
     "title": "Поиск Сервера",
@@ -100,7 +100,7 @@
     "join_dialog": {
       "frosty_profile_disabled": "Профиль Frosty отключен.",
       "required_mods": {
-        "not_in_database": "Some mods are not in the Moddatabase!",
+        "not_in_database": "Некоторые моды отсутствуют в базе данных!",
         "click_on_download": "Нажмите на кнопку загрузки ниже.",
         "required_mods": "Вы не установили необходимые моды для присоединения к этому серверу.",
         "none": "Нет требуемых модов."
@@ -132,7 +132,7 @@
         "import_mods": "Импорт списка модов"
       },
       "buttons": {
-        "open_mods": "Open mods in browser",
+        "open_mods": "Открыть моды в браузере",
         "view_mods": "Показать моды",
         "downloading": "Загрузка...",
         "download": "Скачать"
@@ -187,7 +187,7 @@
         "header": "Профиль Модов",
         "placeholder": "Выберите профиль мода...",
         "no_mods_profile": "Нет модов",
-        "no_profile_found": "The select mod profile was not found.",
+        "no_profile_found": "Выбранный профиль мода не найден.",
         "tooltip": "Выберите профиль модов, который вы хотите использовать для этого сервера.\nЕсли вы ничего не выбираете, ваш последний использованный профиль будет применен.\nЧтобы разместить Kyber сервер без каких-либо модов, пожалуйста, выберите \"Без модов\"."
       },
       "proxy": {
