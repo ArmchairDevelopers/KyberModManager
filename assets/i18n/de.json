@@ -187,7 +187,7 @@
         "header": "Mod Profil",
         "placeholder": "Wähle ein Mod Profil aus...",
         "no_mods_profile": "Keine Mods",
-        "no_profile_found": "The select mod profile was not found.",
+        "no_profile_found": "Das ausgewählte Mod-Profil wurde nicht gefunden.",
         "tooltip": "Wähle das Mod-Profil, welches du für diesen Server verwenden möchtest.\nWenn du nichts auswählst, wird das zuletzt verwendetes Profil übernommen.\nUm einen Kyber-Server ohne Mods zu hosten, wähle bitte Keine Mods."
       },
       "proxy": {
