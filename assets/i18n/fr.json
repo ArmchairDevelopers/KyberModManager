@@ -261,6 +261,11 @@
   },
   "settings": {
     "title": "Settings",
+    "export_log_file": "Export log file",
+    "check_for_updates": {
+      "title": "Check for updates",
+      "no_updates_available": "No updates available."
+    },
     "language": {
       "title": "Language",
       "subtitle": "Select your language."
