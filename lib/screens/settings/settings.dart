@@ -6,9 +6,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/settings/platform_selector.dart';
+import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
-import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
+import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
+import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
+import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
@@ -56,6 +59,18 @@ class _SettingsState extends State<Settings> {
                 String content = CustomLogger.getLogs();
                 File(path).writeAsStringSync(content);
               },
+            ),
+            const SizedBox(width: 10),
+            Button(
+              onPressed: () async {
+                var version = await AutoUpdater().updateAvailable();
+                if (version == null) {
+                  NotificationService.showNotification(message: 'No update available.');
+                  return;
+                }
+                showDialog(context: context, builder: (c) => UpdateDialog(versionInfo: version));
+              },
+              child: const Text('Check for updates'),
             ),
           ],
         ),
@@ -241,7 +256,16 @@ class _SettingsState extends State<Settings> {
                 Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
               }),
             ),
-          )
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const Center(
+            child: Text(
+              'V1.0.3',
+              style: TextStyle(fontSize: 12),
+            ),
+          ),
         ],
       ),
     );
