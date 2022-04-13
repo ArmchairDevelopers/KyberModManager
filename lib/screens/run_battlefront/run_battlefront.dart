@@ -6,7 +6,7 @@ import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/widgets/unordered_list.dart';
 
 class RunBattlefront extends StatefulWidget {
@@ -23,7 +23,6 @@ class _RunBattlefrontState extends State<RunBattlefront> {
   bool disabled = false;
 
   List<FrostyProfile>? frostyProfiles;
-  List<ModProfile>? modProfiles;
   List<String>? profiles;
 
   @override
@@ -31,12 +30,11 @@ class _RunBattlefrontState extends State<RunBattlefront> {
     FrostyProfileService.getProfilesWithMods().then(
       (value) => setState(() {
         String? lastProfile = box.get('runBf2lastProfile');
-        modProfiles = List<ModProfile>.from(box.get('profiles') ?? []);
         frostyProfiles = value;
         profiles = [
           translate('host_server.forms.mod_profile.no_mods_profile'),
+          translate('host_server.forms.cosmetic_mods.header'),
           ...frostyProfiles?.map((e) => '${e.name} (Frosty Pack)') ?? [],
-          ...modProfiles?.map((e) => '${e.name} (Mod Profile)') ?? [],
         ];
         if (lastProfile != null) {
           if (lastProfile == 'no_mods') {
@@ -55,11 +53,15 @@ class _RunBattlefrontState extends State<RunBattlefront> {
       return [];
     }
 
+    if (_controller.text == translate('host_server.forms.cosmetic_mods.header')) {
+      return List<Mod>.from(box.get('cosmetics')).map((e) => e.name).toList();
+    }
+
     if (_controller.text.endsWith('(Frosty Pack)')) {
       return frostyProfiles?.firstWhere((profile) => profile.name == _controller.text.replaceAll(' (Frosty Pack)', '')).mods.map((e) => e.name).toList() ?? [];
     }
 
-    return modProfiles?.firstWhere((profile) => profile.name == _controller.text.replaceAll(' (Mod Profile)', '')).mods.map((e) => e.name).toList() ?? [];
+    return [];
   }
 
   void launchFrosty() async {
