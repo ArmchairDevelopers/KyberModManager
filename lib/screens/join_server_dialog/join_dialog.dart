@@ -101,7 +101,7 @@ class _ServerDialogState extends State<ServerDialog> {
         loading = true;
       });
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.indeterminate);
-      List<String> mods = server.mods;
+      List<String> mods = List.from(server.mods);
       List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
       if (cosmetics) {
         mods.addAll(cosmeticMods.map((e) => e.toKyberString()).toList());
@@ -131,7 +131,7 @@ class _ServerDialogState extends State<ServerDialog> {
 
       var appliedMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
       var serverMods = mods.map((e) => ModService.convertToMod(e)).toList();
-      if (!cosmetics ? !listEquals(appliedMods, serverMods) : !listEquals(appliedMods..addAll(cosmeticMods), serverMods)) {
+      if (!listEquals(appliedMods, serverMods)) {
         Logger.root.info("Applying Frosty mods...");
         bool success = await FrostyService.startFrosty().catchError((error) {
           NotificationService.showNotification(message: error, color: Colors.red);
