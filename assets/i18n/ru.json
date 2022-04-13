@@ -261,6 +261,11 @@
   },
   "settings": {
     "title": "Настройки",
+    "export_log_file": "Export log file",
+    "check_for_updates": {
+      "title": "Check for updates",
+      "no_updates_available": "No updates available."
+    },
     "language": {
       "title": "Язык",
       "subtitle": "Выберите Ваш Язык."
