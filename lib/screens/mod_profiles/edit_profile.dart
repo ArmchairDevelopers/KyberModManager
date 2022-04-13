@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:kyber_mod_manager/constants/mod_categories.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/frosty_profile.dart';
@@ -58,8 +59,12 @@ class _EditProfileState extends State<EditProfile> {
           children: [
             FilledButton(
               child: Text(translate('$prefix.load_frosty_profile.title')),
-              onPressed: () =>
-                  showDialog(context: context, builder: (c) => FrostyProfileSelector(onSelected: (s) => setState(() => _profile = _profile.copyWith(mods: s)))),
+              onPressed: () => showDialog(
+                context: context,
+                builder: (c) => FrostyProfileSelector(onSelected: (s) {
+                  setState(() => _profile = _profile.copyWith(mods: s.where((element) => kyber_mod_categories.contains(element.category)).toList()));
+                }),
+              ),
             ),
             CustomTooltip(message: translate('$prefix.load_frosty_profile.tooltip'))
           ],

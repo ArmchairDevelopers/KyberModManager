@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:kyber_mod_manager/constants/mod_categories.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/frosty_profile.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/active_mods.dart';
@@ -39,7 +40,12 @@ class _CosmeticModsState extends State<CosmeticMods> {
           children: [
             FilledButton(
               child: Text(translate('edit_mod_profile.load_frosty_profile.title')),
-              onPressed: () => showDialog(context: context, builder: (c) => FrostyProfileSelector(onSelected: (s) => setState(() => activeMods = s))),
+              onPressed: () => showDialog(
+                context: context,
+                builder: (c) => FrostyProfileSelector(onSelected: (s) {
+                  setState(() => activeMods = s.where((element) => !kyber_mod_categories.contains(element.category)).toList());
+                }),
+              ),
             ),
             CustomTooltip(message: translate('edit_mod_profile.load_frosty_profile.tooltip'))
           ],
