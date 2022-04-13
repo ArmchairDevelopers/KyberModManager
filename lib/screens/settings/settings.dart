@@ -42,14 +42,13 @@ class _SettingsState extends State<Settings> {
         commandBar: Row(
           children: [
             Button(
-              child: const Text('Export log file'),
+              child: Text(translate('$prefix.export_log_file')),
               onPressed: () async {
                 String? path = await FilePicker.platform.saveFile(
                   type: FileType.custom,
                   allowedExtensions: ['txt'],
                   fileName: 'log.txt',
-                  initialDirectory: 'Desktop',
-                  dialogTitle: 'Export log file',
+                  dialogTitle: translate('$prefix.export_log_file'),
                   lockParentWindow: true,
                 );
                 if (path == null) {
@@ -65,12 +64,12 @@ class _SettingsState extends State<Settings> {
               onPressed: () async {
                 var version = await AutoUpdater().updateAvailable();
                 if (version == null) {
-                  NotificationService.showNotification(message: 'No update available.');
+                  NotificationService.showNotification(message: translate('$prefix.check_for_update.no_update_available'));
                   return;
                 }
                 showDialog(context: context, builder: (c) => UpdateDialog(versionInfo: version));
               },
-              child: const Text('Check for updates'),
+              child: Text(translate('$prefix.check_for_update.title')),
             ),
           ],
         ),
