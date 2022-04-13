@@ -19,6 +19,7 @@
   "mods": "Modyfikacje",
   "login": "Zaloguj się",
   "mods_loaded": "Ilość załadowanych modyfikacji: {count}",
+  "last_used": "Last Used",
   "navigation_bar": {
     "battlefront_not_running": "Gra Battlefront II nie jest uruchumiona.",
     "kyber": {

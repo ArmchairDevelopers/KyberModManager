@@ -19,6 +19,7 @@
   "mods": "Mods",
   "login": "Login",
   "mods_loaded": "Es wurden {count} Mods geladen.",
+  "last_used": "Zuletzt verwendet",
   "navigation_bar": {
     "battlefront_not_running": "Battlefront II wird nicht ausgeführt.",
     "kyber": {
