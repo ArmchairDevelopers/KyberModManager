@@ -19,6 +19,7 @@
   "mods": "Моды",
   "login": "Войти",
   "mods_loaded": "Загружено {count} модов.",
+  "last_used": "Last Used",
   "navigation_bar": {
     "battlefront_not_running": "Battlefront II не запущен.",
     "kyber": {
@@ -242,6 +243,7 @@
     "title": "Запустить Battlefront II",
     "starting": "Запуск...",
     "copying_profile": "Копирование данных профиля ({copied}/{total} файлов) ...",
+    "cosmetic_mods": "Cosmetic Mods",
     "notifications": {
       "no_profile_selected": "Выберите профиль.",
       "battlefront_already_running": "Battlefront II уже запущен."
