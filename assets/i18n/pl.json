@@ -188,6 +188,7 @@
         "header": "Zestawy modyfikacji",
         "placeholder": "Wybierz zestaw...",
         "no_mods_profile": "Brak modyfikacji.",
+        "no_profile_found": "Wybrany zestaw modyfikacji nie został odnaleziony.",
         "tooltip": "Wybierz zestaw modyfikacji, który chcesz używać na tym serwerze.\nJeżeli niczego nie wybierzesz, Twój ostatnio użyty zestaw zostanie zastosowany.\nAby hostować serwer Kyber bez żadnych modyfikacji, wybierz Brak modyfikacji."
       },
       "proxy": {
@@ -242,6 +243,7 @@
     "title": "Uruchom Battlefront II",
     "starting": "Uruchamianie...",
     "copying_profile": "Kopiowanie danych zestawów ({copied}/{total} plików) ...",
+    "cosmetic_mods": "Cosmetic Mods",
     "notifications": {
       "no_profile_selected": "Wybierz zestaw modyfikacji.",
       "battlefront_already_running": "Gra Battlefront II jest już uruchomiona."
@@ -259,6 +261,11 @@
   },
   "settings": {
     "title": "Ustawienia",
+    "export_log_file": "Export log file",
+    "check_for_updates": {
+      "title": "Check for updates",
+      "no_updates_available": "No updates available."
+    },
     "language": {
       "title": "Język",
       "subtitle": "Wybierz język."
