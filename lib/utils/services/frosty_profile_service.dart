@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
@@ -7,6 +8,7 @@ import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
+import 'package:logging/logging.dart';
 
 class FrostyProfileService {
   static createProfile(List<String> list) async {
@@ -18,16 +20,24 @@ class FrostyProfileService {
     config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
     config.globalOptions.useDefaultProfile = true;
     config.games['starwarsbattlefrontii']?.options.selectedPack = 'KyberModManager';
-    config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] = mods.where((element) => element.filename.isNotEmpty).map((e) => '${e.filename.substring(e.filename.lastIndexOf('\\') + 1)}:True').join('|');
+    config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
+        mods.where((element) => element.filename.isNotEmpty).map((e) => '${e.filename.substring(e.filename.lastIndexOf('\\') + 1)}:True').join('|');
     await FrostyService.saveFrostyConfig(config);
   }
 
   static loadFrostyPack(String name, [Function? onProgress]) async {
+    Logger.root.info('Loading Frosty pack: $name');
     String bf2path = OriginHelper.getBattlefrontPath();
     List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(name);
     await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
     Directory d = Directory('$bf2path\\ModData\\' + name);
     if (d.existsSync()) {
+      var appliedMods = await getModsFromProfile('KyberModManager');
+      if (listEquals(mods, appliedMods)) {
+        Logger.root.info('Profile $name already loaded');
+        return;
+      }
+
       await ProfileService.copyProfileData(d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress);
     }
   }

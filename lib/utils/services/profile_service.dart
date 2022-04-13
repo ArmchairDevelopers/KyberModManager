@@ -16,6 +16,8 @@ import 'package:uuid/uuid.dart';
 import 'package:win32_registry/win32_registry.dart';
 
 class ProfileService {
+  static final File _profileFile = File('${OriginHelper.getBattlefrontPath()}\\ModData\\SavedProfiles\\profiles.json');
+
   static Future<void> searchProfile(List<String> mods, [Function? onProgress]) async {
     if (!box.get('saveProfiles', defaultValue: true)) {
       return;
@@ -45,6 +47,8 @@ class ProfileService {
     }
 
     SavedProfile profile = profiles.firstWhere((element) => listEquals(element.mods, convertedMods));
+    profile.lastUsed = DateTime.now();
+    _editProfile(profile);
     await copyProfileData(Directory(profile.path), dir, onProgress);
     config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
         profile.mods.where((element) => element.filename.isNotEmpty).map((element) => '${element.filename}:True').join('|');
@@ -82,10 +86,9 @@ class ProfileService {
       return;
     }
 
-    File file = File('$path\\ModData\\SavedProfiles\\profiles.json');
-    if (!file.existsSync()) {
-      file.createSync(recursive: true);
-      file.writeAsStringSync('[]');
+    if (!_profileFile.existsSync()) {
+      _profileFile.createSync(recursive: true);
+      _profileFile.writeAsStringSync('[]');
     }
   }
 
@@ -133,35 +136,40 @@ class ProfileService {
   }
 
   static void _saveProfiles(List<SavedProfile> profiles) {
-    File file = File('${OriginHelper.getBattlefrontPath()}\\ModData\\SavedProfiles\\profiles.json');
-    if (!file.existsSync()) {
-      file.createSync();
-      file.writeAsStringSync('[]');
+    if (!_profileFile.existsSync()) {
+      _profileFile.createSync();
+      _profileFile.writeAsStringSync('[]');
     }
     const encoder = JsonEncoder.withIndent('  ');
-    file.writeAsStringSync(encoder.convert(profiles.map((e) => e.toJson()).toList()));
+    _profileFile.writeAsStringSync(encoder.convert(profiles.map((e) => e.toJson()).toList()));
+  }
+
+  static void _editProfile(SavedProfile profile) {
+    const encoder = JsonEncoder.withIndent('  ');
+    List<dynamic> profiles = jsonDecode(_profileFile.readAsStringSync());
+    profiles.removeWhere((element) => element['id'] == profile.id);
+    profiles.add(profile.toJson());
+    _profileFile.writeAsStringSync(encoder.convert(profiles));
   }
 
   static void saveProfile(SavedProfile profile) {
-    File file = File('${OriginHelper.getBattlefrontPath()}\\ModData\\SavedProfiles\\profiles.json');
-    if (!file.existsSync()) {
-      file.createSync();
-      file.writeAsStringSync('[]');
+    if (!_profileFile.existsSync()) {
+      _profileFile.createSync();
+      _profileFile.writeAsStringSync('[]');
     }
     const encoder = JsonEncoder.withIndent('  ');
     List<SavedProfile> profiles = getSavedProfiles()..add(profile);
-    file.writeAsStringSync(encoder.convert(profiles.map((e) => e.toJson()).toList()));
+    _profileFile.writeAsStringSync(encoder.convert(profiles.map((e) => e.toJson()).toList()));
   }
 
   static Future<List<SavedProfile>> getSavedProfilesAsync() async {
-    File file = File('${OriginHelper.getBattlefrontPath()}\\ModData\\SavedProfiles\\profiles.json');
-    if (!await file.exists()) {
-      await file.create();
-      file.writeAsStringSync('[]');
+    if (!await _profileFile.exists()) {
+      await _profileFile.create();
+      _profileFile.writeAsStringSync('[]');
       return [];
     }
     List<SavedProfile> profiles =
-        await file.readAsString().then((value) => List<SavedProfile>.from(jsonDecode(value).map((element) => SavedProfile.fromJson(element)).toList()));
+        await _profileFile.readAsString().then((value) => List<SavedProfile>.from(jsonDecode(value).map((element) => SavedProfile.fromJson(element)).toList()));
     List<SavedProfile> profilesToRemove = profiles.where((element) => !Directory(element.path).existsSync()).toList();
     profiles.removeWhere((element) => !Directory(element.path).existsSync());
     for (SavedProfile profile in profilesToRemove) {
@@ -171,13 +179,12 @@ class ProfileService {
   }
 
   static List<SavedProfile> getSavedProfiles() {
-    File file = File('${OriginHelper.getBattlefrontPath()}\\ModData\\SavedProfiles\\profiles.json');
-    if (!file.existsSync()) {
-      file.createSync(recursive: true);
-      file.writeAsStringSync('[]');
+    if (!_profileFile.existsSync()) {
+      _profileFile.createSync(recursive: true);
+      _profileFile.writeAsStringSync('[]');
       return [];
     }
-    return List<SavedProfile>.from(jsonDecode(file.readAsStringSync()).map((element) => SavedProfile.fromJson(element)).toList());
+    return List<SavedProfile>.from(jsonDecode(_profileFile.readAsStringSync()).map((element) => SavedProfile.fromJson(element)).toList());
   }
 
   static bool isProfileActive() {

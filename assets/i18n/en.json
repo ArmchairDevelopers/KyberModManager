@@ -19,6 +19,7 @@
   "mods": "Mods",
   "login": "Login",
   "mods_loaded": "Loaded {count} mods.",
+  "last_used": "Last Used",
   "navigation_bar": {
     "battlefront_not_running": "Battlefront II isn't running.",
     "kyber": {
@@ -187,6 +188,7 @@
         "header": "Mod Profile",
         "placeholder": "Select a mod profile...",
         "no_mods_profile": "No mods",
+        "no_profile_found": "The select mod profile was not found.",
         "tooltip": "Choose the mod profile you want to use for this server.\nIf you do not choose anything, your last used profile will be applied.\nTo host Kyber server without any mods, please select No Mods."
       },
       "proxy": {
@@ -241,6 +243,7 @@
     "title": "Run Battlefront II",
     "starting": "Starting...",
     "copying_profile": "Copying profile data ({copied}/{total} Files) ...",
+    "cosmetic_mods": "Cosmetic Mods",
     "notifications": {
       "no_profile_selected": "Please select a profile.",
       "battlefront_already_running": "Battlefront II is already running."
@@ -258,6 +261,11 @@
   },
   "settings": {
     "title": "Settings",
+    "export_log_file": "Export log file",
+    "check_for_updates": {
+      "title": "Check for updates",
+      "no_updates_available": "No updates available."
+    },
     "language": {
       "title": "Language",
       "subtitle": "Select your language."

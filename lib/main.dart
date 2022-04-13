@@ -7,11 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
+import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/utils/translation/translate_preferences.dart';
+import 'package:kyber_mod_manager/utils/translation/translation_delegate.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/widgets/navigation_bar.dart';
@@ -25,18 +26,17 @@ String applicationDocumentsDirectory = '';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Logger.root.level = Level.INFO;
-  Logger.root.onRecord.listen(
-    (record) => print('${DateFormat('HH:mm:ss').format(DateTime.now())} ${record.level.name}: ${record.message}'),
-  );
   runZonedGuarded(() async {
     await SentryFlutter.init(
       (options) {
+        options.autoSessionTrackingInterval = const Duration(minutes: 1);
         options.dsn = 'https://1d0ce9262dcb416e8404c51e396297e4@o1117951.ingest.sentry.io/6233409';
         options.tracesSampleRate = 1.0;
+        options.release = "kyber-mod-manager@1.0.3";
       },
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
+    CustomLogger.initialise();
     await SystemTheme.accentColor.load();
     await loadHive();
     var delegate = await LocalizationDelegate.create(
@@ -83,6 +83,10 @@ class _AppState extends State<App> {
     ModService.loadMods(context);
     ModService.watchDirectory();
     RPCService.initialize();
+    FlutterError.onError = (details) {
+      Logger.root.severe('Uncaught exception: ${details.exception}\n${details.stack}');
+      Sentry.captureException(details.exception, stackTrace: details.stack);
+    };
     super.initState();
   }
 
@@ -102,7 +106,7 @@ class _AppState extends State<App> {
         brightness: Brightness.dark,
       ),
       localizationsDelegates: [
-        DefaultFluentLocalizations.delegate,
+        TranslationDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         localizationDelegate,

@@ -87,15 +87,19 @@ class _DownloadScreenState extends State<DownloadScreen> {
       currentMod = mods.first;
       loadingState = 1;
     });
-    downloadService.onReceiveProgress().listen((event) => setState(() {
-          received = int.parse(event.received);
-          total = int.parse(event.total);
-          progress = received / total * 100;
-        }));
+    downloadService.onReceiveProgress().listen((event) {
+      setState(() {
+        received = int.parse(event.received);
+        total = int.parse(event.total);
+        progress = received / total * 100;
+      });
+    });
     await downloadService.startDownload(
       onWebsiteOpened: () {
         setState(() => loadingState = 2);
       },
+      context: context,
+      onClose: () => Navigator.of(context).pop(),
       onFileInfo: (i) => setState(() => downloadInfo = i),
       onExtracting: () => setState(() => loadingState = 3),
       mods: mods.map((e) => e.toString()).toList(),

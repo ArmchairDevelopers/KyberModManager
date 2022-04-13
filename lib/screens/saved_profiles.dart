@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:intl/intl.dart';
+import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/saved_profile.dart';
 import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
@@ -41,7 +44,19 @@ class _SavedProfilesState extends State<SavedProfiles> {
   }
 
   void loadProfiles() {
-    ProfileService.getSavedProfilesAsync().then((value) => setState(() => _savedProfiles = value));
+    ProfileService.getSavedProfilesAsync().then((value) {
+      value.sort((a, b) {
+        if (a.lastUsed == null) {
+          return 1;
+        }
+        if (b.lastUsed == null) {
+          return -1;
+        }
+
+        return b.lastUsed!.compareTo(a.lastUsed!);
+      });
+      setState(() => _savedProfiles = value);
+    });
   }
 
   @override
@@ -91,6 +106,16 @@ class _SavedProfilesState extends State<SavedProfiles> {
             material.DataColumn(
               label: SizedBox(
                 child: Text(
+                  translate('last_used'),
+                  style: TextStyle(
+                    color: color.withOpacity(.5),
+                  ),
+                ),
+              ),
+            ),
+            material.DataColumn(
+              label: SizedBox(
+                child: Text(
                   translate('size'),
                   style: TextStyle(
                     color: color.withOpacity(.5),
@@ -111,6 +136,16 @@ class _SavedProfilesState extends State<SavedProfiles> {
                   material.DataCell(
                     Text(
                       e.mods.length.toString(),
+                    ),
+                  ),
+                  material.DataCell(
+                    Text(
+                      e.lastUsed != null
+                          ? DateFormat.yMMMMEEEEd(
+                                  Locale.fromSubtags(languageCode: box.get('locale', defaultValue: Platform.localeName.split('_').first)).languageCode)
+                              .format(e.lastUsed!)
+                          : '-',
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   material.DataCell(

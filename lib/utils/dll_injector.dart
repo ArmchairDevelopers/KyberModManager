@@ -22,7 +22,9 @@ class DllInjector {
     var version = await getLatestKyberVersion();
     Logger.root.info('Downloading Kyber V$version');
     box.put('kyberVersion', version.toString());
-    await Dio().download(KYBER_DLL_LINK, _file.path);
+    await Dio().download(KYBER_DLL_LINK, _file.path).catchError((e) {
+      Logger.root.severe('Error while downloading Kyber.dll: $e');
+    });
   }
 
   static Future checkForUpdates() async {
@@ -38,7 +40,7 @@ class DllInjector {
     var latestVersion = await getLatestKyberVersion();
 
     if (latestVersion > currentVersion) {
-      await downloadDll();
+      return downloadDll();
     }
 
     Logger.root.info('Newest Kyber version is already installed.');

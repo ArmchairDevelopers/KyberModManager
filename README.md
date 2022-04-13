@@ -20,13 +20,13 @@
       src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7"
     />
   </a>
-  <a title="Crowdin" target="_blank" href="https://crowdin.com"><img src="https://badges.crowdin.net/kyber-mod-manager/localized.svg"></a>
+  <a title="Crowdin" target="_blank" href="https://crowdin.com/project/kyber-mod-manager"><img src="https://badges.crowdin.net/kyber-mod-manager/localized.svg"></a>
 </p>
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
   <a href="#download">Download</a> •
+  <a href="#screenshots">Screenshots</a> •
   <a href="#credits">Credits</a> •
   <a href="#license">License</a>
 </p>

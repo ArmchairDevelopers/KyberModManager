@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
-import 'package:fluent_ui/fluent_ui.dart' show Colors;
+import 'package:fluent_ui/fluent_ui.dart' show Colors, BuildContext;
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/helpers/puppeteer_helper.dart';
@@ -12,10 +12,12 @@ import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:logging/logging.dart';
 import 'package:puppeteer/puppeteer.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class DownloadService {
   late Browser _browser;
   late Page _page;
+  late BuildContext context;
   late String _downloadFolder;
   bool _done = false;
   bool _initializedPage = false;
@@ -45,13 +47,20 @@ class DownloadService {
       _progressController?.close();
       _progressSubscription?.cancel();
     }
-    _browser
-        .close()
-        .then((value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
+    _browser.close().then(
+        (value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
   }
 
-  Future<void> startDownload(
-      {required List<String> mods, required Function onWebsiteOpened, required Function onFileInfo, required Function onExtracting, required Function onNextMod}) async {
+  Future<void> startDownload({
+    required List<String> mods,
+    required Function onWebsiteOpened,
+    required Function onFileInfo,
+    required Function onExtracting,
+    required Function onNextMod,
+    required Function onClose,
+    required BuildContext context,
+  }) async {
+    this.context = context;
     await Future.forEach(mods, (String element) async {
       if (mods.indexOf(element) != 0) {
         onNextMod(element);
@@ -66,7 +75,7 @@ class DownloadService {
         return;
       }
       onFileInfo(info);
-      String filename = await _download(info.fileUrl + '?tab=files&file_id=' + info.fileId, info, onWebsiteOpened);
+      String filename = await _download(info.fileUrl + '?tab=files&file_id=' + info.fileId, info, onClose, onWebsiteOpened);
       onExtracting();
       await _unpackFile(filename);
     });
@@ -74,13 +83,21 @@ class DownloadService {
     await _browser.close();
   }
 
-  Future<String> _download(String url, DownloadInfo info, Function? onDone) async {
+  Future<String> _download(String url, DownloadInfo info, Function onClose, Function? onDone) async {
     await _page.goto(url, wait: Until.networkAlmostIdle);
     if (!_initializedPage) {
       await PuppeteerHelper.initializePage(_page);
       _initializedPage = true;
     }
-    await _page.click('button[id\$="slowDownloadButton"]');
+    await _page.click('button[id\$="slowDownloadButton"]').onError((error, stackTrace) {
+      NotificationService.showNotification(message: 'Download button not found! Please try again!', color: Colors.red);
+      close();
+      onClose();
+      Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
+    });
     String filename = await _page.evaluate(r'''document.querySelectorAll('.page-layout .header')[0].innerHTML.split('<')[0]''');
     String name = filename.substring(0, filename.lastIndexOf('.'));
     String extension = filename.split('.').last;
@@ -123,7 +140,7 @@ class DownloadService {
     } else {
       await Future.delayed(const Duration(seconds: 1));
       await UnzipHelper.unrar(File('$_downloadFolder$filename'), Directory(_downloadFolder)).catchError((error) {
-        NotificationService.showNotification(message: error, color: Colors.red);
+        NotificationService.showNotification(message: error.toString(), color: Colors.red);
         Logger.root.severe('Could not unrar $filename. $error');
       });
     }

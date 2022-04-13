@@ -4,9 +4,9 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
+import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 
 class RunDialog extends StatefulWidget {
   RunDialog({Key? key, required this.profile}) : super(key: key);
@@ -49,12 +49,13 @@ class _RunDialogState extends State<RunDialog> {
         onProgress(0, 0);
         await FrostyProfileService.loadFrostyPack(profile.replaceAll(' (Frosty Pack)', ''), onProgress);
       }
-    } else {
-      ModProfile profile = box.get('profiles').where((p) => selectedProfile.replaceAll(' (Mod Profile)', '') == p.name).first;
-      setState(() => content = translate('$prefix.searching'));
-      await ProfileService.searchProfile(profile.mods.map((e) => e.toKyberString()).toList(), onProgress);
+    } else if (selectedProfile == translate('host_server.forms.cosmetic_mods.header')) {
+      List<Mod> mods = List<Mod>.from(box.get('cosmetics'));
+      await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
       setState(() => content = translate('$prefix.creating'));
-      await FrostyProfileService.createProfile(profile.mods.map((e) => e.toKyberString()).toList());
+      await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+    } else {
+      return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'));
     }
 
     setState(() => content = translate('$prefix.frosty'));

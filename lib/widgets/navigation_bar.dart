@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
 import 'package:kyber_mod_manager/screens/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
@@ -91,7 +92,7 @@ class _NavigationBarState extends State<NavigationBar> {
     return BlocConsumer<WidgetCubit, dynamic>(listener: (context, state) {
       bool isFake = state.runtimeType != int && state.containsKey(state.keys.first);
       setState(() {
-        index = !isFake ? state : 7;
+        index = !isFake ? state : 8;
         fakeIndex = !isFake ? state : state.keys.toList().first;
       });
     }, builder: (context, widget) {
@@ -133,6 +134,10 @@ class _NavigationBarState extends State<NavigationBar> {
             PaneItem(
               icon: const Icon(FluentIcons.list),
               title: Text(translate('$prefix.items.mod_profiles')),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.custom_list),
+              title: Text(translate('$prefix.items.cosmetic_mods')),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.save_all),
@@ -188,6 +193,7 @@ class _NavigationBarState extends State<NavigationBar> {
             const ServerBrowser(),
             const ServerHost(),
             const ModProfiles(),
+            const CosmeticMods(),
             const SavedProfiles(),
             const RunBattlefront(),
             const feedback.Feedback(),
