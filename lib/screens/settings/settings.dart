@@ -64,12 +64,12 @@ class _SettingsState extends State<Settings> {
               onPressed: () async {
                 var version = await AutoUpdater().updateAvailable();
                 if (version == null) {
-                  NotificationService.showNotification(message: translate('$prefix.check_for_update.no_update_available'));
+                  NotificationService.showNotification(message: translate('$prefix.check_for_updates.no_updates_available'));
                   return;
                 }
                 showDialog(context: context, builder: (c) => UpdateDialog(versionInfo: version));
               },
-              child: Text(translate('$prefix.check_for_update.title')),
+              child: Text(translate('$prefix.check_for_updates.title')),
             ),
           ],
         ),
