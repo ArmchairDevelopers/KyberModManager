@@ -19,6 +19,7 @@
   "mods": "Mods",
   "login": "Login",
   "mods_loaded": "Loaded {count} mods.",
+  "last_used": "Last Used",
   "navigation_bar": {
     "battlefront_not_running": "Battlefront II isn't running.",
     "kyber": {
@@ -242,6 +243,7 @@
     "title": "Run Battlefront II",
     "starting": "Starting...",
     "copying_profile": "Copying profile data ({copied}/{total} Files) ...",
+    "cosmetic_mods": "Cosmetic Mods",
     "notifications": {
       "no_profile_selected": "Please select a profile.",
       "battlefront_already_running": "Battlefront II is already running."
