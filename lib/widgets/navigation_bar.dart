@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
@@ -17,6 +18,7 @@ import 'package:kyber_mod_manager/screens/settings/settings.dart';
 import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/walk_through/walk_through.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
+import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
@@ -49,6 +51,7 @@ class _NavigationBarState extends State<NavigationBar> {
 
   @override
   void initState() {
+    Jiffy.locale(AppLocale().getLocale().languageCode);
     Timer.run(() {
       try {
         ProfileService.generateFiles();

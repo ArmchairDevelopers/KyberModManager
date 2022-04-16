@@ -39,6 +39,7 @@ dependencies:
   json_annotation:
   flutter_acrylic: ^1.0.0+2
   puppeteer: ^2.7.0
+  jiffy: ^5.0.0
   win32: ^2.4.1
   ffi: ^1.1.2
   flutter:

@@ -121,6 +121,16 @@ class _ServerBrowserState extends State<ServerBrowser> {
         material.DataColumn(
           label: SizedBox(
             child: Text(
+              'Started at',
+              style: TextStyle(
+                color: color.withOpacity(.5),
+              ),
+            ),
+          ),
+        ),
+        material.DataColumn(
+          label: SizedBox(
+            child: Text(
               translate('$prefix.table.location'),
               style: TextStyle(
                 color: color.withOpacity(.5),

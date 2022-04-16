@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/constants/maps.dart';
 import 'package:kyber_mod_manager/constants/modes.dart';
@@ -39,6 +40,12 @@ material.DataRow Server(BuildContext context, KyberServer server) {
       material.DataCell(
         Text(
           '${server.users}/${server.maxPlayers}',
+          textAlign: TextAlign.center,
+        ),
+      ),
+      material.DataCell(
+        Text(
+          Jiffy.unixFromMillisecondsSinceEpoch(server.startedAt).fromNow(),
           textAlign: TextAlign.center,
         ),
       ),
