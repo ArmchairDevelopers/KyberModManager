@@ -12,13 +12,11 @@ class PuppeteerHelper {
   static Future<Browser> startBrowser({Function? onClose, Function? onBrowserCreated, bool headless = true}) async {
     if (_browser != null) {
       await _browser?.close().catchError((e) => null);
-      Sentry.captureException(FlutterError('Browser already started.'));
       _browser = null;
     }
 
     _browser = await puppeteer.launch(
       executablePath: kDebugMode ? null : './970485/chrome-win/chrome.exe',
-      // userDataDir: '$applicationDocumentsDirectory/puppeteer',
       defaultViewport: null,
       args: [
         '--no-sandbox',
