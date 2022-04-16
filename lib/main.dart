@@ -20,19 +20,23 @@ import 'package:kyber_mod_manager/widgets/navigation_bar.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:system_info2/system_info2.dart';
 import 'package:system_theme/system_theme.dart';
 
+final bool _isNewWindows = SysInfo.operatingSystemName.contains('Windows 11');
 Box box = Hive.box('data');
 String applicationDocumentsDirectory = '';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runZonedGuarded(() async {
-    await Window.initialize();
-    await Window.setEffect(
-      effect: WindowEffect.mica,
-      dark: true,
-    );
+    if (_isNewWindows) {
+      await Window.initialize();
+      await Window.setEffect(
+        effect: WindowEffect.mica,
+        dark: true,
+      );
+    }
     await SentryFlutter.init(
       (options) {
         options.autoSessionTrackingInterval = const Duration(minutes: 1);
@@ -122,6 +126,10 @@ class _AppState extends State<App> {
       locale: localizationDelegate.currentLocale,
       builder: (context, child) {
         child = BlocProvider(create: (_) => WidgetCubit(), child: child);
+        if (!_isNewWindows) {
+          return botToastBuilder(context, child);
+        }
+
         return Directionality(
           textDirection: TextDirection.ltr,
           child: NavigationPaneTheme(
