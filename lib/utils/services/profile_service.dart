@@ -13,7 +13,6 @@ import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:kyber_mod_manager/utils/types/saved_profile.dart';
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
-import 'package:win32_registry/win32_registry.dart';
 
 class ProfileService {
   static final File _profileFile = File('${OriginHelper.getBattlefrontPath()}\\ModData\\SavedProfiles\\profiles.json');
@@ -185,33 +184,5 @@ class ProfileService {
       return [];
     }
     return List<SavedProfile>.from(jsonDecode(_profileFile.readAsStringSync()).map((element) => SavedProfile.fromJson(element)).toList());
-  }
-
-  static bool isProfileActive() {
-    final key = Registry.openPath(RegistryHive.currentUser, path: 'Environment');
-    String? value = key.getValueAsString('GAME_DATA_DIR');
-    return value != null && value.endsWith('KyberModManager');
-  }
-
-  static Future<String> activateProfile(String profile, {bool previous = false}) async {
-    final key = Registry.openPath(RegistryHive.currentUser, path: 'Environment', desiredAccessRights: AccessRights.allAccess);
-    String battlefrontPath = OriginHelper.getBattlefrontPath();
-    String profilePath = '$battlefrontPath\\ModData\\$profile';
-    RegistryValue path = RegistryValue(
-      'GAME_DATA_DIR',
-      RegistryValueType.string,
-      previous ? profile : '$battlefrontPath\\ModData\\$profile',
-    );
-    Logger.root.info('Activating profile $profile');
-    if (key.getValue('GAME_DATA_DIR') != null && !previous) {
-      await box.put('previousProfile', key.getValueAsString('GAME_DATA_DIR'));
-      Logger.root.info('Saved previous profile (${key.getValueAsString('GAME_DATA_DIR')})');
-    }
-    if (profile.isNotEmpty) {
-      key.createValue(path);
-    } else {
-      key.deleteValue('GAME_DATA_DIR');
-    }
-    return previous ? profile : profilePath;
   }
 }

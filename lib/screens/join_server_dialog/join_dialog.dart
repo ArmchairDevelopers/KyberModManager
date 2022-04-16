@@ -48,7 +48,7 @@ class _ServerDialogState extends State<ServerDialog> {
   String preferredTeam = '0';
   String password = '';
   String? content;
-  bool profileEnabled = ProfileService.isProfileActive();
+  bool profileEnabled = PlatformHelper.isProfileActive();
   bool downloading = false;
   bool cosmetics = false;
   bool disabled = false;

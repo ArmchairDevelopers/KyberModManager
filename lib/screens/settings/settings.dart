@@ -12,7 +12,6 @@ import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
-import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
 import 'package:kyber_mod_manager/widgets/icon_button.dart';
@@ -200,7 +199,7 @@ class _SettingsState extends State<Settings> {
             subtitle: Text(translate('$prefix.frosty_profile.subtitle')),
             leading: const Icon(FluentIcons.game),
             trailing: ToggleSwitch(
-              checked: ProfileService.isProfileActive(),
+              checked: PlatformHelper.isProfileActive(),
               onChanged: !disabled
                   ? (value) async {
                       String path;
@@ -215,7 +214,7 @@ class _SettingsState extends State<Settings> {
                             disabled = false;
                           });
                         }
-                        path = await ProfileService.activateProfile('KyberModManager');
+                        path = await PlatformHelper.activateProfile('KyberModManager');
                         await box.put('platform', result);
                         if (result.contains('epic')) {
                           await Future.wait([
@@ -226,7 +225,7 @@ class _SettingsState extends State<Settings> {
                           await PlatformHelper.restartPlatform(result, path);
                         }
                       } else {
-                        path = await ProfileService.activateProfile(box.get('previousProfile') ?? '', previous: true);
+                        path = await PlatformHelper.activateProfile(box.get('previousProfile') ?? '', previous: true);
                         await PlatformHelper.restartPlatform(box.get('platform', defaultValue: 'origin'), path);
                         await box.put('previousProfile', null);
                       }
