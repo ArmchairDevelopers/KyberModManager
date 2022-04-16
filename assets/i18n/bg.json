@@ -112,6 +112,7 @@
         "unsupported_mods_3": "Currently only a selected list of mods can be downloaded automatically.",
         "downloading": "Downloading {0}... {1}%",
         "loading_states": {
+          "checking_mods": "Checking mods availability...",
           "0": "Starting browser...",
           "1": "Starting download...",
           "3": "Extracting..."
