@@ -77,15 +77,22 @@ class _DownloadScreenState extends State<DownloadScreen> {
     }));
 
     if (mods.isEmpty) {
+      setState(() {
+        done = true;
+        unsupportedMods = true;
+      });
       onDownloadsFinished();
-      setState(() => loadingState = 2);
       return;
     }
 
-    await downloadService.init();
     setState(() {
       currentMod = mods.first;
       loadingState = 1;
+    });
+    await downloadService.init();
+    setState(() {
+      currentMod = mods.first;
+      loadingState = 2;
     });
     downloadService.onReceiveProgress().listen((event) {
       setState(() {
@@ -96,12 +103,12 @@ class _DownloadScreenState extends State<DownloadScreen> {
     });
     await downloadService.startDownload(
       onWebsiteOpened: () {
-        setState(() => loadingState = 2);
+        setState(() => loadingState = 3);
       },
       context: context,
       onClose: () => Navigator.of(context).pop(),
       onFileInfo: (i) => setState(() => downloadInfo = i),
-      onExtracting: () => setState(() => loadingState = 3),
+      onExtracting: () => setState(() => loadingState = 4),
       mods: mods.map((e) => e.toString()).toList(),
       onNextMod: (String s) {
         setState(() {
@@ -109,7 +116,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
           progress = 0;
           received = 0;
           currentMod = mods.firstWhere((element) => s == element.toString());
-          loadingState = 1;
+          loadingState = 2;
         });
       },
     );
@@ -118,7 +125,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (loadingState == 0) {
+    if (loadingState < 2) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -129,12 +136,13 @@ class _DownloadScreenState extends State<DownloadScreen> {
           ),
           const SizedBox(width: 15),
           Text(
-            translate('$prefix.loading_states.0'),
+            translate(loadingState == 1 ? '$prefix.loading_states.0' : '$prefix.loading_states.checking_mods'),
             style: const TextStyle(fontSize: 15),
           ),
         ],
       );
     }
+
     if (unsupportedMods && done || mods.isEmpty) {
       return Container(
         alignment: Alignment.topCenter,
@@ -192,7 +200,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
         Text(formatBytes(received, 1) + ' / ' + formatBytes(total, 1), style: const TextStyle(fontSize: 14)),
         const SizedBox(height: 10),
         Text(translate('$prefix.file', args: {'0': downloadInfo?.fileName ?? '-'})),
-        if (loadingState == 1 || loadingState == 3)
+        if (loadingState == 2 || loadingState == 4)
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -204,7 +212,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 ),
                 const SizedBox(width: 15),
                 Text(
-                  translate('$prefix.loading_states.${loadingState.toString()}'),
+                  translate('$prefix.loading_states.${(loadingState - 1).toString()}'),
                   style: const TextStyle(fontSize: 15),
                 ),
               ],
