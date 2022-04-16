@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   auto_update
   dart_discord_rpc
+  flutter_acrylic
   sentry_flutter
   system_theme
   url_launcher_windows

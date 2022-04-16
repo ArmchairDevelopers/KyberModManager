@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -27,6 +28,11 @@ String applicationDocumentsDirectory = '';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runZonedGuarded(() async {
+    await Window.initialize();
+    await Window.setEffect(
+      effect: WindowEffect.mica,
+      dark: true,
+    );
     await SentryFlutter.init(
       (options) {
         options.autoSessionTrackingInterval = const Duration(minutes: 1);
@@ -101,6 +107,7 @@ class _AppState extends State<App> {
     var localizationDelegate = LocalizedApp.of(context).delegate;
     return FluentApp(
       title: 'Kyber Mod Manager',
+      color: SystemTheme.accentColor.accent.toAccentColor(),
       theme: ThemeData(
         accentColor: SystemTheme.accentColor.accent.toAccentColor(),
         brightness: Brightness.dark,
@@ -115,7 +122,15 @@ class _AppState extends State<App> {
       locale: localizationDelegate.currentLocale,
       builder: (context, child) {
         child = BlocProvider(create: (_) => WidgetCubit(), child: child);
-        return botToastBuilder(context, child);
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: NavigationPaneTheme(
+            data: const NavigationPaneThemeData(
+              backgroundColor: Colors.transparent,
+            ),
+            child: botToastBuilder(context, child),
+          ),
+        );
       },
       navigatorObservers: [
         BotToastNavigatorObserver(),
