@@ -22,6 +22,7 @@ import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
+import 'package:window_manager/window_manager.dart';
 
 class NavigationBar extends StatefulWidget {
   const NavigationBar({Key? key, this.widget, this.index}) : super(key: key);
@@ -100,6 +101,23 @@ class _NavigationBarState extends State<NavigationBar> {
       });
     }, builder: (context, widget) {
       return NavigationView(
+        appBar: NavigationAppBar(
+          title: () {
+            return DragToMoveArea(
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: Text('Kyber Mod Manager'),
+              ),
+            );
+          }(),
+          actions: SizedBox(
+            height: 40,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [Spacer(), WindowButtons()],
+            ),
+          ),
+        ),
         pane: NavigationPane(
           selected: fakeIndex,
           items: [
@@ -137,6 +155,10 @@ class _NavigationBarState extends State<NavigationBar> {
             PaneItem(
               icon: const Icon(FluentIcons.list),
               title: Text(translate('$prefix.items.mod_profiles')),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.installation),
+              title: const Text('Installed mods'),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.custom_list),
@@ -206,5 +228,23 @@ class _NavigationBarState extends State<NavigationBar> {
         ),
       );
     });
+  }
+}
+
+class WindowButtons extends StatelessWidget {
+  const WindowButtons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = FluentTheme.of(context);
+
+    return SizedBox(
+      width: 138,
+      height: 50,
+      child: WindowCaption(
+        brightness: theme.brightness,
+        backgroundColor: Colors.transparent,
+      ),
+    );
   }
 }

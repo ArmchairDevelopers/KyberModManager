@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,17 +12,17 @@ import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/utils/translation/translate_preferences.dart';
 import 'package:kyber_mod_manager/utils/translation/translation_delegate.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/widgets/navigation_bar.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:system_theme/system_theme.dart';
+import 'package:window_manager/window_manager.dart';
 
 final bool _micaSupported = SysInfo.operatingSystemName.contains('Windows 10');
 Box box = Hive.box('data');
@@ -30,6 +30,7 @@ String applicationDocumentsDirectory = '';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
   runZonedGuarded(() async {
     if (_micaSupported) {
       await Window.initialize();

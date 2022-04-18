@@ -9,6 +9,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   sentry_flutter
   system_theme
   url_launcher_windows
+  window_manager
   windows_taskbar
 )
 
