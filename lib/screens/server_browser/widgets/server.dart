@@ -22,11 +22,17 @@ material.DataRow Server(BuildContext context, KyberServer server) {
           children: [
             Row(
               children: [
-                Text(
-                  server.name.trimRight(),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                Container(
+                  child: Text(
+                    server.name.trimRight(),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.35,
                   ),
                 ),
                 const SizedBox(width: 4),

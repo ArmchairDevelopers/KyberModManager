@@ -125,7 +125,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (loadingState < 2) {
+    if (loadingState < 2 && !done) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

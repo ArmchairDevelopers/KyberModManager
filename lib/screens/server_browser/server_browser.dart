@@ -121,7 +121,7 @@ class _ServerBrowserState extends State<ServerBrowser> {
         material.DataColumn(
           label: SizedBox(
             child: Text(
-              'Started at',
+              'Started',
               style: TextStyle(
                 color: color.withOpacity(.5),
               ),

@@ -82,7 +82,7 @@ class _ServerHostState extends State<ServerHost> {
           _profileController.text = lastProfile;
           return;
         }
-        if (frostyProfiles == null) {
+        if (frostyProfiles == null || frostyProfiles!.isEmpty) {
           _profileController.text = noMods;
           return;
         }
