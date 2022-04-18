@@ -24,14 +24,14 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:system_theme/system_theme.dart';
 
-final bool _isNewWindows = SysInfo.operatingSystemName.contains('Windows 11');
+final bool _micaSupported = SysInfo.operatingSystemName.contains('Windows 10');
 Box box = Hive.box('data');
 String applicationDocumentsDirectory = '';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runZonedGuarded(() async {
-    if (_isNewWindows) {
+    if (_micaSupported) {
       await Window.initialize();
       await Window.setEffect(
         effect: WindowEffect.mica,
@@ -117,7 +117,7 @@ class _AppState extends State<App> {
       locale: localizationDelegate.currentLocale,
       builder: (context, child) {
         child = BlocProvider(create: (_) => WidgetCubit(), child: child);
-        if (!_isNewWindows) {
+        if (!_micaSupported) {
           return botToastBuilder(context, child);
         }
 
