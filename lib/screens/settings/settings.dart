@@ -11,6 +11,7 @@ import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.d
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
+import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
@@ -246,7 +247,7 @@ class _SettingsState extends State<Settings> {
               ),
               color: Colors.red,
               onPressed: () => box.deleteFromDisk().then((value) async {
-                await loadHive();
+                await StorageHelper.initialiseHive();
                 var s = Directory('$applicationDocumentsDirectory\\puppeteer');
                 if (s.existsSync()) {
                   s.deleteSync(recursive: true);

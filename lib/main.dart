@@ -10,6 +10,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
+import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/utils/translation/translate_preferences.dart';
@@ -48,36 +49,24 @@ void main() async {
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
     CustomLogger.initialise();
     await SystemTheme.accentColor.load();
-    await loadHive();
+    await StorageHelper.initialiseHive();
     var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'en',
       supportedLocales: ['en', 'de', 'pl', 'ru'],
       preferences: TranslatePreferences(),
     );
+    windowManager.waitUntilReadyToShow().then((_) async {
+      await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
+      await windowManager.setSize(const Size(1400, 700));
+      await windowManager.center();
+      await windowManager.show();
+      await windowManager.setSkipTaskbar(false);
+    });
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {
     Logger.root.severe('Uncaught exception: $exception\n$stackTrace');
     await Sentry.captureException(exception, stackTrace: stackTrace);
   });
-}
-
-Future<void> loadHive() async {
-  await Hive.initFlutter(applicationDocumentsDirectory);
-  Hive.registerAdapter(ModProfileAdapter(), override: true);
-  Hive.registerAdapter(ModAdapter(), override: true);
-  box = await Hive.openBox('data').catchError((e) {
-    Logger.root.severe('Error while opening box: $e');
-    exit(1);
-  });
-  if (box.isEmpty) {
-    box.put('cosmetics', []);
-    box.put('discordRPC', true);
-    box.put('saveProfiles', true);
-    box.put('enableCosmetics', false);
-  }
-  if (!box.containsKey('discordRPC')) {
-    box.put('discordRPC', true);
-  }
 }
 
 class App extends StatefulWidget {
@@ -90,7 +79,9 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   void initState() {
-    ModService.loadMods(context);
+    ModService.loadMods(context).then((value) {
+      ProfileService.migrateSavedProfiles();
+    });
     ModService.watchDirectory();
     RPCService.initialize();
     FlutterError.onError = (details) {
