@@ -6,13 +6,11 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
-import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
-import 'package:kyber_mod_manager/utils/services/notification_service.dart';
-import 'package:kyber_mod_manager/utils/services/profile_service.dart';
+import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
+import 'package:kyber_mod_manager/utils/types/pack_type.dart';
 
 class HostingDialog extends StatefulWidget {
   const HostingDialog({Key? key, this.name, this.password, this.maxPlayers, this.kyberServer, this.selectedProfile}) : super(key: key);
@@ -80,33 +78,40 @@ class _HostingDialogState extends State<HostingDialog> {
     }
 
     setState(() => content = translate('$dialog_prefix.joining_states.creating'));
-    if (selectedProfile.endsWith('(Frosty Pack)') && !selectedProfile.contains('KyberModManager')) {
-      if (!cosmetics) {
-        await FrostyProfileService.loadFrostyPack(selectedProfile.replaceAll(' (Frosty Pack)', ''), onCopied);
-      } else {
-        List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(selectedProfile.replaceAll(' (Frosty Pack)', ''))
-          ..addAll(cosmeticMods);
-        await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onCopied);
-        await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-      }
-    } else if (selectedProfile.endsWith('(Mod Profile)')) {
-      ModProfile profile = List<ModProfile>.from(box.get('profiles')).where((p) => p.name == selectedProfile.replaceAll(' (Mod Profile)', '')).first;
-      List<Mod> mods = List.from(profile.mods);
-      if (cosmetics) {
-        mods = [...mods, ...cosmeticMods];
-      }
-
-      await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-      await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onCopied);
-    } else if (selectedProfile == translate('host_server.forms.mod_profile.no_mods_profile')) {
-      if (cosmetics) {
-        await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
-      } else {
-        await FrostyProfileService.createProfile([]);
-      }
-    } else {
-      return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'), color: Colors.red);
-    }
+    await ModService.createModPack(
+      packType: getPackType(widget.selectedProfile!),
+      profileName: selectedProfile.split(' (').first,
+      cosmetics: true,
+      onProgress: onCopied,
+      setContent: (content) => setState(() => this.content = content),
+    );
+    // if (selectedProfile.endsWith('(Frosty Pack)') && !selectedProfile.contains('KyberModManager')) {
+    //   if (!cosmetics) {
+    //     await FrostyProfileService.loadFrostyPack(selectedProfile.replaceAll(' (Frosty Pack)', ''), onCopied);
+    //   } else {
+    //     List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(selectedProfile.replaceAll(' (Frosty Pack)', ''))
+    //       ..addAll(cosmeticMods);
+    //     await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onCopied);
+    //     await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+    //   }
+    // } else if (selectedProfile.endsWith('(Mod Profile)')) {
+    //   ModProfile profile = List<ModProfile>.from(box.get('profiles')).where((p) => p.name == selectedProfile.replaceAll(' (Mod Profile)', '')).first;
+    //   List<Mod> mods = List.from(profile.mods);
+    //   if (cosmetics) {
+    //     mods = [...mods, ...cosmeticMods];
+    //   }
+//
+    //   await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+    //   await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onCopied);
+    // } else if (selectedProfile == translate('host_server.forms.mod_profile.no_mods_profile')) {
+    //   if (cosmetics) {
+    //     await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
+    //   } else {
+    //     await FrostyProfileService.createProfile([]);
+    //   }
+    // } else {
+    //   return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'), color: Colors.red);
+    // }
     setState(() => content = translate('$dialog_prefix.joining_states.frosty'));
     await FrostyService.startFrosty();
     setState(() => state = 1);

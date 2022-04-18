@@ -37,12 +37,12 @@ class ProfileService {
       if (current.isEmpty || profiles.where((element) => listEquals(element.mods, current)).isNotEmpty) {
         return;
       }
-      await _saveProfile(dir, current);
+      await _saveProfile(dir, current, onProgress);
       return;
     }
 
     if (current.isNotEmpty && profiles.where((element) => listEquals(current, element.mods)).isEmpty) {
-      await _saveProfile(dir, current);
+      await _saveProfile(dir, current, onProgress);
     }
 
     SavedProfile profile = profiles.firstWhere((element) => listEquals(element.mods, convertedMods));
@@ -57,11 +57,11 @@ class ProfileService {
 
   static containsMod(List<Mod> mods, Mod mod) => mods.where((element) => element.filename == mod.filename).isNotEmpty;
 
-  static Future<void> _saveProfile(Directory dir, List<Mod> mods) async {
+  static Future<void> _saveProfile(Directory dir, List<Mod> mods, [Function? onProgress]) async {
     String id = const Uuid().v4();
     String battlefrontPath = OriginHelper.getBattlefrontPath();
     String profilePath = '$battlefrontPath\\ModData\\SavedProfiles\\$id';
-    await copyProfileData(dir, Directory(profilePath));
+    await copyProfileData(dir, Directory(profilePath), onProgress);
     int size = await getProfileSize(id);
     SavedProfile savedProfile = SavedProfile(id: id, path: profilePath, mods: mods, size: size);
     saveProfile(savedProfile);
@@ -184,5 +184,19 @@ class ProfileService {
       return [];
     }
     return List<SavedProfile>.from(jsonDecode(_profileFile.readAsStringSync()).map((element) => SavedProfile.fromJson(element)).toList());
+  }
+
+  static void migrateSavedProfiles() {
+    if (box.containsKey('profilesMigrated')) {
+      return;
+    }
+
+    var profiles = getSavedProfiles();
+    profiles = profiles.map((e) {
+      e.mods = e.mods.map((e) => ModService.fromFilename(e.filename)).toList();
+      return e;
+    }).toList();
+    box.put('profilesMigrated', true);
+    _saveProfiles(profiles);
   }
 }

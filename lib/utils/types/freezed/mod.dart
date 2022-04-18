@@ -19,6 +19,7 @@ class Mod with _$Mod {
     @HiveField(1) required String filename,
     @HiveField(2) required String category,
     @HiveField(3) required String version,
+    @HiveField(4) String? author,
   }) = _Mod;
 
   factory Mod.fromJson(Map<String, dynamic> json) => _$ModFromJson(json);
@@ -27,6 +28,7 @@ class Mod with _$Mod {
     List<String> formatted = data != null ? Uri.encodeComponent(data).split('%00') : ['', '', '', ''];
     return Mod(
       name: Uri.decodeComponent(formatted[0]),
+      author: Uri.decodeComponent(formatted[1]),
       filename: filename.split('\\').last,
       category: Uri.decodeComponent(formatted[2]),
       version: Uri.decodeComponent(formatted[3]),

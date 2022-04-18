@@ -4,12 +4,17 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
+import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/utils/types/mod_info.dart';
+import 'package:kyber_mod_manager/utils/types/pack_type.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -18,6 +23,54 @@ class ModService {
   static final List<String> _kyberCategories = ['gameplay', 'server host'];
   static List<Mod> mods = [];
   static StreamSubscription? _subscription;
+
+  static Future<void> createModPack({
+    required PackType packType,
+    required String profileName,
+    bool cosmetics = false,
+    required Function(int copied, int total) onProgress,
+    required Function(String content) setContent,
+  }) async {
+    const String prefix = 'server_browser.join_dialog.joining_states';
+    List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
+
+    if (packType == PackType.NO_MODS) {
+      if (cosmetics && box.get('enableCosmetics')) {
+        await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
+      } else {
+        await FrostyProfileService.createProfile([]);
+      }
+    } else if (packType == PackType.MOD_PROFILE) {
+      ModProfile profile = List<ModProfile>.from(box.get('profiles')).where((p) => p.name == profileName).first;
+      List<Mod> mods = List.from(profile.mods);
+      if (cosmetics && box.get('enableCosmetics') && mods.length < 20) {
+        mods = [...mods, ...cosmeticMods];
+      }
+
+      await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+      await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
+    } else if (packType == PackType.FROSTY_PACK) {
+      var currentMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
+      List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(profileName);
+      if (cosmetics && box.get('enableCosmetics') && mods.length < 20) {
+        mods = [...mods, ...cosmeticMods];
+      }
+
+      if (!listEquals(currentMods, mods)) {
+        setContent(translate('$prefix.creating'));
+        await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+        onProgress(0, 0);
+        await FrostyProfileService.loadFrostyPack(profileName.replaceAll(' (Frosty Pack)', ''), onProgress);
+      }
+    } else if (packType == PackType.COSMETICS) {
+      List<Mod> mods = List<Mod>.from(box.get('cosmetics'));
+      await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
+      setContent(translate('$prefix.creating'));
+      await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+    } else {
+      return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'));
+    }
+  }
 
   static Mod fromFilename(String filename) {
     for (Mod mod in mods) {
