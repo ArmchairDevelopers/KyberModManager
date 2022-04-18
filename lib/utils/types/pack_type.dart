@@ -14,7 +14,9 @@ PackType getPackType(String packType) {
     return PackType.MOD_PROFILE;
   } else if (packType.endsWith('Cosmetics')) {
     return PackType.COSMETICS;
-  } else if (packType.endsWith(translate('host_server.forms.mod_profile.no_mods_profile'))) {}
+  } else if (packType.endsWith(translate('host_server.forms.mod_profile.no_mods_profile'))) {
+    return PackType.NO_MODS;
+  }
   throw Exception('Invalid pack type: $packType');
 }
 
