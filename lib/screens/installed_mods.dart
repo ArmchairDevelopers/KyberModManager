@@ -53,6 +53,7 @@ class _InstalledModsState extends State<InstalledMods> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: TextBox(
+                  autofocus: true,
                   onChanged: (String? value) {
                     setState(() => search = value ?? '');
                     loadMods();
