@@ -16,7 +16,7 @@ class InstalledMods extends StatefulWidget {
 }
 
 class _InstalledModsState extends State<InstalledMods> {
-  late List<Mod> _installedMods;
+  List<Mod> _installedMods = [];
   String search = '';
 
   @override
@@ -46,90 +46,94 @@ class _InstalledModsState extends State<InstalledMods> {
           ],
         ),
       ),
-      content: Column(
+      content: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: TextBox(
-              onChanged: (String? value) {
-                setState(() => search = value ?? '');
-                loadMods();
-              },
-              placeholder: translate('search'),
-            ),
-          ),
-          Expanded(
-            child: ConstrainedBox(
-              constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width),
-              child: SingleChildScrollView(
-                child: material.DataTable(
-                  dataRowHeight: 40,
-                  columns: [
-                    material.DataColumn(
-                      label: SizedBox(
-                        child: Text(
-                          'Name',
-                          style: TextStyle(
-                            color: color.withOpacity(.5),
-                          ),
-                        ),
-                      ),
-                    ),
-                    material.DataColumn(
-                      label: SizedBox(
-                        child: Text(
-                          'Author',
-                          style: TextStyle(
-                            color: color.withOpacity(.5),
-                          ),
-                        ),
-                      ),
-                    ),
-                    material.DataColumn(
-                      label: SizedBox(
-                        child: Text(
-                          'Version',
-                          style: TextStyle(
-                            color: color.withOpacity(.5),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    const material.DataColumn(
-                      label: Text(''),
-                    ),
-                  ],
-                  rows: _installedMods.map((e) {
-                    return material.DataRow(
-                      cells: [
-                        material.DataCell(
-                          Text(e.name),
-                        ),
-                        material.DataCell(
-                          Text(e.author ?? 'Unknown'),
-                        ),
-                        material.DataCell(
-                          Text(e.version, textAlign: TextAlign.center),
-                        ),
-                        material.DataCell(Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            FilledButton(
-                              child: const Text('Uninstall'),
-                              onPressed: () {
-                                ModService.deleteMod(e);
-                                loadMods();
-                              },
-                            ),
-                          ],
-                        )),
-                      ],
-                    );
-                  }).toList(),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: TextBox(
+                  onChanged: (String? value) {
+                    setState(() => search = value ?? '');
+                    loadMods();
+                  },
+                  placeholder: translate('search'),
                 ),
               ),
-            ),
+              Expanded(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width),
+                  child: SingleChildScrollView(
+                    child: material.DataTable(
+                      dataRowHeight: 40,
+                      columns: [
+                        material.DataColumn(
+                          label: SizedBox(
+                            child: Text(
+                              'Name',
+                              style: TextStyle(
+                                color: color.withOpacity(.5),
+                              ),
+                            ),
+                          ),
+                        ),
+                        material.DataColumn(
+                          label: SizedBox(
+                            child: Text(
+                              'Author',
+                              style: TextStyle(
+                                color: color.withOpacity(.5),
+                              ),
+                            ),
+                          ),
+                        ),
+                        material.DataColumn(
+                          label: SizedBox(
+                            child: Text(
+                              'Version',
+                              style: TextStyle(
+                                color: color.withOpacity(.5),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        const material.DataColumn(
+                          label: Text(''),
+                        ),
+                      ],
+                      rows: _installedMods.map((e) {
+                        return material.DataRow(
+                          cells: [
+                            material.DataCell(
+                              Text(e.name),
+                            ),
+                            material.DataCell(
+                              Text(e.author ?? 'Unknown'),
+                            ),
+                            material.DataCell(
+                              Text(e.version, textAlign: TextAlign.center),
+                            ),
+                            material.DataCell(Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                FilledButton(
+                                  child: const Text('Uninstall'),
+                                  onPressed: () {
+                                    ModService.deleteMod(e);
+                                    loadMods();
+                                  },
+                                ),
+                              ],
+                            )),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

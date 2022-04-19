@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   auto_update
   dart_discord_rpc
+  drag_and_drop_windows
   flutter_acrylic
   sentry_flutter
   system_theme

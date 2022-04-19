@@ -197,6 +197,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.6"
+  drag_and_drop_windows:
+    dependency: "direct main"
+    description:
+      name: drag_and_drop_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   ffi:
     dependency: "direct main"
     description:

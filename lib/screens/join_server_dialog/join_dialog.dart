@@ -65,7 +65,7 @@ class _ServerDialogState extends State<ServerDialog> {
     server = widget.server;
     modsInstalled = server.mods.every((element) => ModService.isInstalled(element));
     correctPassword = !(server.requiresPassword);
-    cosmetics = box.get('enableCosmetics', defaultValue: false);
+    cosmetics = server.mods.length < 10 ? box.get('enableCosmetics', defaultValue: false) : false;
     super.initState();
   }
 
