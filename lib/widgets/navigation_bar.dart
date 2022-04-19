@@ -8,6 +8,7 @@ import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
+import 'package:kyber_mod_manager/screens/installed_mods.dart';
 import 'package:kyber_mod_manager/screens/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
@@ -102,6 +103,7 @@ class _NavigationBarState extends State<NavigationBar> {
     }, builder: (context, widget) {
       return NavigationView(
         appBar: NavigationAppBar(
+          height: 30,
           title: () {
             return DragToMoveArea(
               child: Container(
@@ -111,7 +113,6 @@ class _NavigationBarState extends State<NavigationBar> {
             );
           }(),
           actions: SizedBox(
-            height: 40,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [Spacer(), WindowButtons()],
@@ -218,6 +219,7 @@ class _NavigationBarState extends State<NavigationBar> {
             const ServerBrowser(),
             const ServerHost(),
             const ModProfiles(),
+            const InstalledMods(),
             const CosmeticMods(),
             const SavedProfiles(),
             const RunBattlefront(),

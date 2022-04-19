@@ -81,6 +81,15 @@ class ModService {
     return Mod.fromString('');
   }
 
+  static void deleteMod(Mod mod) {
+    Directory dir = Directory(p.join(box.get('frostyPath'), 'Mods', 'starwarsbattlefrontii'));
+    File file = File(p.join(dir.path, mod.filename));
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+    mods.remove(mod);
+  }
+
   static Mod convertToMod(String mod) {
     ModInfo info = convertToModInfo(mod);
     return mods.firstWhere((element) => element.name == info.name && element.version == info.version, orElse: () => Mod.fromString(mod));
