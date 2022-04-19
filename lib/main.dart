@@ -49,12 +49,10 @@ void main() async {
       supportedLocales: ['en', 'de', 'pl', 'ru'],
       preferences: TranslatePreferences(),
     );
-    await Window.initialize();
-    await Window.setEffect(
-      effect: _micaSupported ? WindowEffect.mica : WindowEffect.acrylic,
-      dark: true,
-      color: _micaSupported ? Colors.transparent : const Color(0xFF202020).withOpacity(0.05),
-    );
+    if (_micaSupported) {
+      await Window.initialize();
+      await Window.setEffect(effect: WindowEffect.mica, dark: true);
+    }
 
     windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.setTitleBarStyle(TitleBarStyle.hidden, windowButtonVisibility: false);
@@ -62,9 +60,7 @@ void main() async {
       await windowManager.center();
       await windowManager.show();
       await windowManager.setSkipTaskbar(false);
-      if (_micaSupported) {
-        await windowManager.setBackgroundColor(Colors.transparent);
-      }
+      await windowManager.setBackgroundColor(Colors.transparent);
     });
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {
@@ -121,6 +117,10 @@ class _AppState extends State<App> {
       locale: localizationDelegate.currentLocale,
       builder: (context, child) {
         child = BlocProvider(create: (_) => WidgetCubit(), child: child);
+
+        if (!_micaSupported) {
+          return botToastBuilder(context, child);
+        }
 
         return Directionality(
           textDirection: TextDirection.ltr,
