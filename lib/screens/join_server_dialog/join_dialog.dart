@@ -106,6 +106,7 @@ class _ServerDialogState extends State<ServerDialog> {
       if (cosmetics) {
         mods.addAll(cosmeticMods.map((e) => e.toKyberString()).toList());
       }
+
       await ProfileService.searchProfile(mods, (copied, total) {
         setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
       }).catchError((e) {
