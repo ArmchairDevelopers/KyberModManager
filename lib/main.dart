@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -49,20 +50,20 @@ void main() async {
       preferences: TranslatePreferences(),
     );
     if (_micaSupported) {
-      // await Window.initialize();
-      // await Window.setEffect(
-      //   effect: WindowEffect.mica,
-      //   dark: true,
-      // );
+      await Window.initialize();
+      await Window.setEffect(
+        effect: WindowEffect.mica,
+        dark: true,
+      );
     }
 
     windowManager.waitUntilReadyToShow().then((_) async {
-      await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
+      await windowManager.setTitleBarStyle(TitleBarStyle.hidden, windowButtonVisibility: false);
       await windowManager.setSize(const Size(1400, 700));
       await windowManager.center();
       await windowManager.show();
       await windowManager.setSkipTaskbar(false);
-      // await windowManager.setBackgroundColor(Colors.transparent);
+      await windowManager.setBackgroundColor(Colors.transparent);
     });
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {
@@ -127,8 +128,8 @@ class _AppState extends State<App> {
           textDirection: TextDirection.ltr,
           child: NavigationPaneTheme(
             data: const NavigationPaneThemeData(
-                // backgroundColor: Colors.transparent,
-                ),
+              backgroundColor: Colors.transparent,
+            ),
             child: botToastBuilder(context, child),
           ),
         );
