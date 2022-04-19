@@ -8,6 +8,7 @@ import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/helpers/unzip_helper.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:logging/logging.dart';
+import 'package:windows_taskbar/windows_taskbar.dart';
 
 class ModInstallerService {
   static final _allowedExtensions = ['zip', 'rar', '7z', 'fbmod'];
@@ -28,14 +29,10 @@ class ModInstallerService {
   }
 
   static void _handleDrop(List<String> paths) async {
-    for (var value in paths) {
-      String extension = value.split('.').last;
-      if (!_allowedExtensions.contains(extension)) {
-        Logger.root.info('Invalid file extension: $extension');
-        continue;
-      }
+    await Future.forEach(paths.where((path) => _allowedExtensions.contains(path.split('.').last)), (String path) async {
+      String extension = path.split('.').last;
+      File file = File(path);
 
-      File file = File(value);
       if (extension == 'fbmod') {
         String basename = file.path.split('\\').last;
         await File(_installDir.path + '\\' + basename).writeAsBytes(file.readAsBytesSync());
@@ -44,12 +41,15 @@ class ModInstallerService {
       } else if (extension == 'zip') {
         final inputStream = InputFileStream(file.path);
         final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
+
+        WindowsTaskbar.setProgressMode(TaskbarProgressMode.normal);
         for (var file in archive.files) {
+          WindowsTaskbar.setProgress(archive.files.indexOf(file), archive.files.length - 1);
           final outputStream = OutputFileStream(_installDir.path + file.name);
           file.writeContent(outputStream);
           outputStream.close();
         }
-        archive.clear();
+        await archive.clear();
         Logger.root.info('Installed mod: ${file.path.split('\\').last}');
         NotificationService.showNotification(message: 'Installed mod: ${file.path.split('\\').last}');
       } else {
@@ -60,6 +60,7 @@ class ModInstallerService {
         Logger.root.info('Installed mod: ${file.path.split('\\').last}');
         NotificationService.showNotification(message: 'Installed mod: ${file.path.split('\\').last}');
       }
-    }
+      WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
+    });
   }
 }
