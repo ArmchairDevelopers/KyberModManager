@@ -263,7 +263,7 @@ class _ServerHostState extends State<ServerHost> {
         ),
       ),
       content: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
