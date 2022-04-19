@@ -99,7 +99,7 @@ class _NavigationBarState extends State<NavigationBar> {
     return BlocConsumer<WidgetCubit, dynamic>(listener: (context, state) {
       bool isFake = state.runtimeType != int && state.containsKey(state.keys.first);
       setState(() {
-        index = !isFake ? state : 8;
+        index = !isFake ? state : 9;
         fakeIndex = !isFake ? state : state.keys.toList().first;
       });
     }, builder: (context, widget) {
