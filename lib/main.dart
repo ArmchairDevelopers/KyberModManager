@@ -24,7 +24,7 @@ import 'package:system_info2/system_info2.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:window_manager/window_manager.dart';
 
-final bool _micaSupported = SysInfo.operatingSystemName.contains('Windows 10');
+final bool _micaSupported = SysInfo.operatingSystemName.contains('Windows 11');
 Box box = Hive.box('data');
 String applicationDocumentsDirectory = '';
 
@@ -32,13 +32,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   runZonedGuarded(() async {
-    if (_micaSupported) {
-      await Window.initialize();
-      await Window.setEffect(
-        effect: WindowEffect.mica,
-        dark: true,
-      );
-    }
     await SentryFlutter.init(
       (options) {
         options.autoSessionTrackingInterval = const Duration(minutes: 1);
@@ -56,12 +49,21 @@ void main() async {
       supportedLocales: ['en', 'de', 'pl', 'ru'],
       preferences: TranslatePreferences(),
     );
+    if (_micaSupported) {
+      await Window.initialize();
+      await Window.setEffect(
+        effect: WindowEffect.mica,
+        dark: true,
+      );
+    }
+
     windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
       await windowManager.setSize(const Size(1400, 700));
       await windowManager.center();
       await windowManager.show();
       await windowManager.setSkipTaskbar(false);
+      await windowManager.setBackgroundColor(Colors.transparent);
     });
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {
