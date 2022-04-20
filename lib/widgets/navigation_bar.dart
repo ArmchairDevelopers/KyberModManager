@@ -110,7 +110,7 @@ class _NavigationBarState extends State<NavigationBar> {
             return DragToMoveArea(
               child: Container(
                 alignment: Alignment.centerLeft,
-                child: Text('Kyber Mod Manager'),
+                child: const Text('Kyber Mod Manager'),
               ),
             );
           }(),

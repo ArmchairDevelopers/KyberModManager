@@ -54,7 +54,7 @@ class _CosmeticModsState extends State<CosmeticMods> {
       content: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          height: MediaQuery.of(context).size.height - 79,
+          height: MediaQuery.of(context).size.height - 110,
           child: Row(
             children: [
               Flexible(

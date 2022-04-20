@@ -55,9 +55,16 @@ class _EditProfileState extends State<EditProfile> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('$prefix.title')),
+        leading: Padding(
+          padding: const EdgeInsets.only(right: 15, left: 15),
+          child: IconButton(
+            icon: const Icon(FluentIcons.back),
+            onPressed: () => BlocProvider.of<WidgetCubit>(context).toIndex(2),
+          ),
+        ),
         commandBar: Row(
           children: [
-            FilledButton(
+            Button(
               child: Text(translate('$prefix.load_frosty_profile.title')),
               onPressed: () => showDialog(
                 context: context,
@@ -66,31 +73,40 @@ class _EditProfileState extends State<EditProfile> {
                 }),
               ),
             ),
-            CustomTooltip(message: translate('$prefix.load_frosty_profile.tooltip'))
+            CustomTooltip(message: translate('$prefix.load_frosty_profile.tooltip')),
+            const SizedBox(
+              width: 15,
+            ),
+            FilledButton(
+              child: Text(
+                translate('save'),
+                style: const TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+              onPressed: () => save(),
+            ),
           ],
         ),
       ),
-      bottomBar: Container(
-        alignment: Alignment.centerRight,
-        margin: const EdgeInsets.symmetric(vertical: 10).copyWith(right: 10),
-        child: FilledButton(
-          style: ButtonStyle(
-            padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 60, vertical: 8)),
-          ),
-          child: Text(
-            translate('save'),
-            style: const TextStyle(
-              fontSize: 15,
-            ),
-          ),
-          onPressed: () => save(),
-        ),
-      ),
+      // bottomBar: Container(
+      //   alignment: Alignment.centerRight,
+      //   margin: const EdgeInsets.symmetric(vertical: 10).copyWith(right: 10),
+      //   child: FilledButton(
+      //     child: Text(
+      //       translate('save'),
+      //       style: const TextStyle(
+      //         fontSize: 15,
+      //       ),
+      //     ),
+      //     onPressed: () => save(),
+      //   ),
+      // ),
       content: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height - 165,
+            height: MediaQuery.of(context).size.height - 110,
             child: Form(
               key: _formKey,
               child: Column(
