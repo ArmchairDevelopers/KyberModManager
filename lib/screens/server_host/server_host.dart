@@ -217,49 +217,49 @@ class _ServerHostState extends State<ServerHost> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('$prefix.title')),
-      ),
-      bottomBar: Container(
-        alignment: Alignment.centerRight,
-        margin: const EdgeInsets.symmetric(vertical: 10).copyWith(right: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            if (isHosting)
-              Padding(
-                padding: const EdgeInsets.only(right: 25),
-                child: FilledButton(
-                  child: Text(
-                    translate('$prefix.buttons.server_info'),
-                    style: const TextStyle(
-                      fontSize: 14,
+        commandBar: Container(
+          alignment: Alignment.centerRight,
+          margin: const EdgeInsets.symmetric(vertical: 10).copyWith(right: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (isHosting)
+                Padding(
+                  padding: const EdgeInsets.only(right: 25),
+                  child: FilledButton(
+                    child: Text(
+                      translate('$prefix.buttons.server_info'),
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
                     ),
+                    onPressed: server == null
+                        ? null
+                        : () => showDialog(
+                              context: context,
+                              builder: (context) => HostingDialog(kyberServer: server, name: formattedServerName),
+                            ),
                   ),
-                  onPressed: server == null
-                      ? null
-                      : () => showDialog(
-                            context: context,
-                            builder: (context) => HostingDialog(kyberServer: server, name: formattedServerName),
-                          ),
                 ),
-              ),
-            FilledButton(
-              child: Text(
-                isHosting
-                    ? server != null
-                        ? translate('$prefix.buttons.update_server')
-                        : translate('$prefix.buttons.server_is_starting')
-                    : translate('$prefix.buttons.host'),
-                style: const TextStyle(
-                  fontSize: 14,
+              FilledButton(
+                child: Text(
+                  isHosting
+                      ? server != null
+                          ? translate('$prefix.buttons.update_server')
+                          : translate('$prefix.buttons.server_is_starting')
+                      : translate('$prefix.buttons.host'),
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              onPressed: server == null && isHosting
-                  ? null
-                  : !disabled || isHosting && server != null
-                      ? () => host(isHosting)
-                      : null,
-            )
-          ],
+                onPressed: server == null && isHosting
+                    ? null
+                    : !disabled || isHosting && server != null
+                        ? () => host(isHosting)
+                        : null,
+              )
+            ],
+          ),
         ),
       ),
       content: Container(
@@ -406,6 +406,7 @@ class _ServerHostState extends State<ServerHost> {
                     onChanged: (v) => setState(() => maxPlayers = int.parse(v.toString().split('.').first)),
                   ),
                 ),
+                const SizedBox(height: 21),
               ],
             ),
           ),

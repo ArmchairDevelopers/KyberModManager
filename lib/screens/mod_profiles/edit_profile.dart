@@ -89,19 +89,6 @@ class _EditProfileState extends State<EditProfile> {
           ],
         ),
       ),
-      // bottomBar: Container(
-      //   alignment: Alignment.centerRight,
-      //   margin: const EdgeInsets.symmetric(vertical: 10).copyWith(right: 10),
-      //   child: FilledButton(
-      //     child: Text(
-      //       translate('save'),
-      //       style: const TextStyle(
-      //         fontSize: 15,
-      //       ),
-      //     ),
-      //     onPressed: () => save(),
-      //   ),
-      // ),
       content: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
