@@ -9,7 +9,7 @@ import 'package:logging/logging.dart';
 class StorageHelper {
   static final Map<String, dynamic> _defaultValues = {
     'cosmetics': [],
-    'discordRPC': [],
+    'discordRPC': true,
     'saveProfiles': true,
     'enableCosmetics': false,
   };

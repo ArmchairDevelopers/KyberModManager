@@ -110,7 +110,7 @@ class _ServerDialogState extends State<ServerDialog> {
       await ProfileService.searchProfile(mods, (copied, total) {
         setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
       }).catchError((e) {
-        NotificationService.showNotification(message: e, color: Colors.red);
+        NotificationService.showNotification(message: e.toString(), color: Colors.red);
       });
       setState(() {
         startingState = 1;

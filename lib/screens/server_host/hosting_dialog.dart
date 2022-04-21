@@ -9,6 +9,7 @@ import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/pack_type.dart';
 
@@ -84,7 +85,9 @@ class _HostingDialogState extends State<HostingDialog> {
       cosmetics: true,
       onProgress: onCopied,
       setContent: (content) => setState(() => this.content = content),
-    );
+    ).catchError((error) {
+      NotificationService.showNotification(message: error.toString(), color: Colors.red);
+    });
     // if (selectedProfile.endsWith('(Frosty Pack)') && !selectedProfile.contains('KyberModManager')) {
     //   if (!cosmetics) {
     //     await FrostyProfileService.loadFrostyPack(selectedProfile.replaceAll(' (Frosty Pack)', ''), onCopied);

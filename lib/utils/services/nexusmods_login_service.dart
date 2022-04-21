@@ -29,9 +29,3 @@ class NexusmodsLoginService {
     return browser;
   }
 }
-
-enum LoginType {
-  NOT_LOGGED_IN,
-  LOGGED_IN,
-  TWO_FACTOR_AUTH,
-}

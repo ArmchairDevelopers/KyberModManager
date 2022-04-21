@@ -79,15 +79,17 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   void initState() {
-    ModService.loadMods(context).then((value) {
-      ProfileService.migrateSavedProfiles();
+    Timer.run(() {
+      ModService.loadMods(context).then((value) {
+        ProfileService.migrateSavedProfiles();
+      });
+      ModService.watchDirectory();
+      RPCService.initialize();
+      FlutterError.onError = (details) {
+        Logger.root.severe('Uncaught exception: ${details.exception}\n${details.stack}');
+        Sentry.captureException(details.exception, stackTrace: details.stack);
+      };
     });
-    ModService.watchDirectory();
-    RPCService.initialize();
-    FlutterError.onError = (details) {
-      Logger.root.severe('Uncaught exception: ${details.exception}\n${details.stack}');
-      Sentry.captureException(details.exception, stackTrace: details.stack);
-    };
     super.initState();
   }
 

@@ -58,7 +58,7 @@ class _WalkThroughState extends State<WalkThrough> {
                 ? [
                     Text(
                       translate('$prefix.dependencies.downloading'),
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                     const SizedBox(height: 10),
                     const ProgressBar(),

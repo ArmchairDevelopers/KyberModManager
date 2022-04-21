@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
@@ -12,17 +14,21 @@ import 'package:logging/logging.dart';
 
 class FrostyProfileService {
   static createProfile(List<String> list) async {
-    List<Mod> mods = list.map((e) => ModService.convertToMod(e)).toList();
-    FrostyConfig config = await FrostyService.getFrostyConfig();
-    if (config.games['starwarsbattlefrontii'] == null) {
-      return;
+    try {
+      List<Mod> mods = list.map((e) => ModService.convertToMod(e)).toList();
+      FrostyConfig config = await FrostyService.getFrostyConfig();
+      if (config.games['starwarsbattlefrontii'] == null) {
+        return;
+      }
+      config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
+      config.globalOptions.useDefaultProfile = true;
+      config.games['starwarsbattlefrontii']?.options.selectedPack = 'KyberModManager';
+      config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
+          mods.where((element) => element.filename.isNotEmpty).map((e) => '${e.filename.substring(e.filename.lastIndexOf('\\') + 1)}:True').join('|');
+      await FrostyService.saveFrostyConfig(config);
+    } catch (e) {
+      NotificationService.showNotification(message: e.toString(), color: Colors.red);
     }
-    config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
-    config.globalOptions.useDefaultProfile = true;
-    config.games['starwarsbattlefrontii']?.options.selectedPack = 'KyberModManager';
-    config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
-        mods.where((element) => element.filename.isNotEmpty).map((e) => '${e.filename.substring(e.filename.lastIndexOf('\\') + 1)}:True').join('|');
-    await FrostyService.saveFrostyConfig(config);
   }
 
   static loadFrostyPack(String name, [Function? onProgress]) async {
@@ -66,7 +72,7 @@ class FrostyProfileService {
     String content = await file.readAsString();
     return content.split('\n').where((element) => element.contains(':') && element.contains("' '")).map((element) {
       String filename = element.split(':')[0];
-      return ModService.mods.firstWhere((element) => element.filename == filename);
+      return ModService.mods.firstWhere((element) => element.filename == filename, orElse: () => Mod.fromString(filename));
     }).toList();
   }
 
