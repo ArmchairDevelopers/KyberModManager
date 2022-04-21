@@ -7,6 +7,7 @@ import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.d
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/path_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
+import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 
@@ -116,6 +117,7 @@ class _WalkThroughState extends State<WalkThrough> {
       } else {
         await box.put('setup', true);
         await ModService.loadMods(context);
+        ModInstallerService.initialise();
         ModService.watchDirectory();
         Navigator.of(context).pop();
         showDialog(context: context, builder: (context) => const NexusmodsLogin());
