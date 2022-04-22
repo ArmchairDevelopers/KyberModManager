@@ -99,21 +99,25 @@ class _NavigationBarState extends State<NavigationBar> {
     }, builder: (context, widget) {
       return NavigationView(
         appBar: NavigationAppBar(
-          height: 30,
-          title: () {
-            return DragToMoveArea(
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text('Kyber Mod Manager'),
-              ),
-            );
-          }(),
-          actions: SizedBox(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [Spacer(), WindowButtons()],
-            ),
-          ),
+          height: micaSupported ? 0 : 30,
+          title: !micaSupported
+              ? () {
+                  return DragToMoveArea(
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Kyber Mod Manager'),
+                    ),
+                  );
+                }()
+              : null,
+          actions: !micaSupported
+              ? SizedBox(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [Spacer(), WindowButtons()],
+                  ),
+                )
+              : null,
         ),
         pane: NavigationPane(
           selected: fakeIndex,

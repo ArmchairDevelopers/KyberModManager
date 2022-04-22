@@ -24,7 +24,7 @@ import 'package:system_info2/system_info2.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:window_manager/window_manager.dart';
 
-final bool _micaSupported = SysInfo.operatingSystemName.contains('Windows 11');
+final bool micaSupported = SysInfo.operatingSystemName.contains('Windows 11');
 Box box = Hive.box('data');
 String applicationDocumentsDirectory = '';
 
@@ -49,19 +49,24 @@ void main() async {
       supportedLocales: ['en', 'de', 'pl', 'ru'],
       preferences: TranslatePreferences(),
     );
-    if (_micaSupported) {
+    if (micaSupported) {
       await Window.initialize();
       await Window.setEffect(effect: WindowEffect.mica, dark: true);
     }
 
-    windowManager.waitUntilReadyToShow().then((_) async {
-      await windowManager.setTitleBarStyle(TitleBarStyle.hidden, windowButtonVisibility: false);
-      await windowManager.setSize(const Size(1400, 700));
-      await windowManager.center();
-      await windowManager.show();
-      await windowManager.setSkipTaskbar(false);
+    if (!micaSupported) {
+      windowManager.waitUntilReadyToShow().then((_) async {
+        await windowManager.setTitleBarStyle(TitleBarStyle.hidden, windowButtonVisibility: false);
+        await windowManager.setSize(const Size(1400, 700));
+        await windowManager.center();
+        await windowManager.show();
+        await windowManager.setSkipTaskbar(false);
+        await windowManager.setBackgroundColor(Colors.transparent);
+      });
+    } else {
+      await windowManager.setTitleBarStyle(TitleBarStyle.normal, windowButtonVisibility: false);
       await windowManager.setBackgroundColor(Colors.transparent);
-    });
+    }
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {
     Logger.root.severe('Uncaught exception: $exception\n$stackTrace');
@@ -129,7 +134,7 @@ class _AppState extends State<App> {
           child: child ?? const SizedBox(height: 0),
         );
 
-        if (!_micaSupported) {
+        if (!micaSupported) {
           return botToastBuilder(context, child);
         }
 
