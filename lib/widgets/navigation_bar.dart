@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
@@ -24,6 +25,7 @@ import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
+import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:window_manager/window_manager.dart';
 
 class NavigationBar extends StatefulWidget {
@@ -41,16 +43,6 @@ class _NavigationBarState extends State<NavigationBar> {
   bool injectedDll = false;
   int index = 0;
   int fakeIndex = 0;
-
-  Future<void> openDialog() async {
-    await showDialog(
-      context: context,
-      builder: (context) => const WalkThrough(),
-    );
-    if (!box.containsKey('setup')) {
-      openDialog();
-    }
-  }
 
   @override
   void initState() {
@@ -77,22 +69,24 @@ class _NavigationBarState extends State<NavigationBar> {
         showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
       });
     }
-    checkKyberStatus(null);
-    Timer.periodic(const Duration(seconds: 3), checkKyberStatus);
+
+    RPCService.initialize(context);
+    Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
+
     super.initState();
   }
 
-  void checkKyberStatus(Timer? timer) {
-    if (!mounted) {
-      timer?.cancel();
-      return;
+  Future<void> openDialog() async {
+    await showDialog(
+      context: context,
+      builder: (context) => const WalkThrough(),
+    );
+    if (!box.containsKey('setup')) {
+      openDialog();
     }
-    bool injected = DllInjector.isInjected();
-    if (injected == injectedDll) {
-      return;
-    }
-    setState(() => injectedDll = injected);
   }
+
+  void checkKyberStatus(Timer? timer) => BlocProvider.of<GameStatusCubic>(context).check();
 
   @override
   Widget build(BuildContext context) {

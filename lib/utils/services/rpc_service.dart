@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/constants/maps.dart';
 import 'package:kyber_mod_manager/constants/modes.dart';
+import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
@@ -20,9 +23,13 @@ class RPCService {
   static Timer? _timer;
   static Timer? _applicationTimer;
 
-  static void initialize() {
+  static void initialize(BuildContext context) {
     DiscordRPC.initialize();
     RPCService.start();
+    BlocProvider.of<GameStatusCubic>(context).stream.forEach((element) {
+      RPCService._started = element.started;
+      checkStatus();
+    });
   }
 
   static void dispose() {
@@ -49,26 +56,27 @@ class RPCService {
     }
     rpc.start(autoRegister: true);
     _running = true;
-    _applicationTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      bool isRunning = DllInjector.isInjected();
-      if (isRunning && _started == null) {
-        _checkStatus();
-      } else if (!isRunning && _started != null) {
-        _started = null;
-        _serverId = null;
-        rpc.clearPresence();
-      }
-    });
-    _timer = Timer.periodic(const Duration(seconds: 5), (x) => _checkStatus());
+    // _applicationTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    //   bool isRunning = DllInjector.isInjected();
+    //   if (isRunning && _started == null) {
+    //     checkStatus();
+    //   } else if (!isRunning && _started != null) {
+    //     _started = null;
+    //     _serverId = null;
+    //     rpc.clearPresence();
+    //   }
+    // });
+    _timer = Timer.periodic(const Duration(seconds: 5), (x) => checkStatus());
     Logger.root.info('Started rpc-service');
   }
 
-  static void _checkStatus() async {
+  static void checkStatus() async {
     bool isRunning = DllInjector.isInjected();
     if (!box.get('discordRPC')) {
       return dispose();
     }
-    if (isRunning) {
+
+    if (isRunning && _started != null) {
       dynamic config = await KyberApiService.getCurrentConfig();
       try {
         KyberServer? server;
@@ -96,7 +104,6 @@ class RPCService {
 
         dynamic map = maps.where((element) => element['map'] == server?.map).first;
         Mode mode = modes.where((element) => element.mode == server?.mode).first;
-        _started ??= DateTime.now();
 
         if (!_running) {
           return;
@@ -115,7 +122,6 @@ class RPCService {
         return;
       }
     } else {
-      _started = null;
       _serverId = null;
       rpc.clearPresence();
     }

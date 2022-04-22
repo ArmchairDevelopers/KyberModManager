@@ -8,12 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
-import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/utils/translation/translate_preferences.dart';
 import 'package:kyber_mod_manager/utils/translation/translation_delegate.dart';
 import 'package:kyber_mod_manager/widgets/navigation_bar.dart';
@@ -84,7 +84,6 @@ class _AppState extends State<App> {
         ProfileService.migrateSavedProfiles();
       });
       ModService.watchDirectory();
-      RPCService.initialize();
       FlutterError.onError = (details) {
         Logger.root.severe('Uncaught exception: ${details.exception}\n${details.stack}');
         Sentry.captureException(details.exception, stackTrace: details.stack);
@@ -118,7 +117,17 @@ class _AppState extends State<App> {
       supportedLocales: localizationDelegate.supportedLocales,
       locale: localizationDelegate.currentLocale,
       builder: (context, child) {
-        child = BlocProvider(create: (_) => WidgetCubit(), child: child);
+        child = MultiBlocProvider(
+          providers: [
+            BlocProvider<WidgetCubit>(
+              create: (BuildContext context) => WidgetCubit(),
+            ),
+            BlocProvider<GameStatusCubic>(
+              create: (BuildContext context) => GameStatusCubic(),
+            ),
+          ],
+          child: child ?? const SizedBox(height: 0),
+        );
 
         if (!_micaSupported) {
           return botToastBuilder(context, child);
