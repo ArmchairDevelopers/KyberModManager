@@ -6,6 +6,7 @@ import 'package:kyber_mod_manager/screens/mod_profiles/frosty_profile.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/active_mods.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/installed_mods.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
+import 'package:kyber_mod_manager/widgets/button_text.dart';
 import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
 
 class CosmeticMods extends StatefulWidget {
@@ -39,7 +40,10 @@ class _CosmeticModsState extends State<CosmeticMods> {
         commandBar: Row(
           children: [
             FilledButton(
-              child: Text(translate('edit_mod_profile.load_frosty_profile.title')),
+              child: ButtonText(
+                icon: const Icon(FluentIcons.download),
+                text: Text(translate('edit_mod_profile.load_frosty_profile.title')),
+              ),
               onPressed: () => showDialog(
                 context: context,
                 builder: (c) => FrostyProfileSelector(onSelected: (s) {
