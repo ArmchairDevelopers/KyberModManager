@@ -9,6 +9,7 @@ import 'package:kyber_mod_manager/screens/mod_profiles/widgets/active_mods.dart'
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/installed_mods.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
+import 'package:kyber_mod_manager/widgets/button_text.dart';
 import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
 
 class EditProfile extends StatefulWidget {
@@ -65,7 +66,10 @@ class _EditProfileState extends State<EditProfile> {
         commandBar: Row(
           children: [
             Button(
-              child: Text(translate('$prefix.load_frosty_profile.title')),
+              child: ButtonText(
+                icon: const Icon(FluentIcons.download),
+                text: Text(translate('$prefix.load_frosty_profile.title')),
+              ),
               onPressed: () => showDialog(
                 context: context,
                 builder: (c) => FrostyProfileSelector(onSelected: (s) {
@@ -78,10 +82,13 @@ class _EditProfileState extends State<EditProfile> {
               width: 15,
             ),
             FilledButton(
-              child: Text(
-                translate('save'),
-                style: const TextStyle(
-                  fontSize: 15,
+              child: ButtonText(
+                icon: const Icon(FluentIcons.save),
+                text: Text(
+                  translate('save'),
+                  style: const TextStyle(
+                    fontSize: 15,
+                  ),
                 ),
               ),
               onPressed: () => save(),

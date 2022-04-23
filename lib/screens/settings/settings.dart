@@ -15,8 +15,8 @@ import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
+import 'package:kyber_mod_manager/widgets/button_text.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
-import 'package:kyber_mod_manager/widgets/icon_button.dart';
 import 'package:system_theme/system_theme.dart';
 
 class Settings extends StatefulWidget {
@@ -43,7 +43,10 @@ class _SettingsState extends State<Settings> {
         commandBar: Row(
           children: [
             Button(
-              child: Text(translate('$prefix.export_log_file')),
+              child: ButtonText(
+                icon: const Icon(FluentIcons.export),
+                text: Text(translate('$prefix.export_log_file')),
+              ),
               onPressed: () async {
                 String? path = await FilePicker.platform.saveFile(
                   type: FileType.custom,
@@ -70,7 +73,10 @@ class _SettingsState extends State<Settings> {
                 }
                 showDialog(context: context, builder: (c) => UpdateDialog(versionInfo: version));
               },
-              child: Text(translate('$prefix.check_for_updates.title')),
+              child: ButtonText(
+                icon: const Icon(FluentIcons.refresh),
+                text: Text(translate('$prefix.check_for_updates.title')),
+              ),
             ),
           ],
         ),
@@ -115,9 +121,9 @@ class _SettingsState extends State<Settings> {
             subtitle: Text(translate('$prefix.nexus_mods.subtitle')),
             leading: const Icon(FluentIcons.download),
             trailing: CustomFilledButton(
-              child: CustomIconButton(
-                text: translate(box.get('nexusmods_login', defaultValue: false) ? '$prefix.nexus_mods.logout' : 'Login'),
-                icon: box.get('nexusmods_login', defaultValue: false) ? FluentIcons.user_remove : FluentIcons.user_sync,
+              child: ButtonText(
+                text: Text(translate(box.get('nexusmods_login', defaultValue: false) ? '$prefix.nexus_mods.logout' : 'Login')),
+                icon: Icon(box.get('nexusmods_login', defaultValue: false) ? FluentIcons.user_remove : FluentIcons.user_sync),
               ),
               color: box.get('nexusmods_login', defaultValue: false) ? Colors.red : SystemTheme.accentColor.accent,
               onPressed: () async {
@@ -242,9 +248,9 @@ class _SettingsState extends State<Settings> {
             subtitle: Text(translate('$prefix.reset.subtitle')),
             leading: const Icon(FluentIcons.reset),
             trailing: CustomFilledButton(
-              child: CustomIconButton(
-                text: translate('$prefix.reset.title'),
-                icon: FluentIcons.reset,
+              child: ButtonText(
+                text: Text(translate('$prefix.reset.title')),
+                icon: const Icon(FluentIcons.reset),
               ),
               color: Colors.red,
               onPressed: () => box.deleteFromDisk().then((value) async {

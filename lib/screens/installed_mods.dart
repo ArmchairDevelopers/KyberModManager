@@ -6,6 +6,8 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
+import 'package:kyber_mod_manager/widgets/button_text.dart';
+import 'package:kyber_mod_manager/widgets/custom_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InstalledMods extends StatefulWidget {
@@ -40,7 +42,10 @@ class _InstalledModsState extends State<InstalledMods> {
         commandBar: Row(
           children: [
             FilledButton(
-              child: const Text('Open folder'),
+              child: const ButtonText(
+                icon: Icon(FluentIcons.folder_search),
+                text: Text('Open Directory'),
+              ),
               onPressed: () => launch('file://${box.get('frostyPath')}\\Mods\\starwarsbattlefrontii'),
             ),
           ],
@@ -118,8 +123,12 @@ class _InstalledModsState extends State<InstalledMods> {
                             material.DataCell(Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                FilledButton(
-                                  child: const Text('Uninstall'),
+                                CustomFilledButton(
+                                  color: Colors.red,
+                                  child: const ButtonText(
+                                    text: Text('Delete'),
+                                    icon: Icon(FluentIcons.delete),
+                                  ),
                                   onPressed: () {
                                     ModService.deleteMod(e);
                                     loadMods();
