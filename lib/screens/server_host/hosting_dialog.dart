@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
-import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
-import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/game_status.dart';
 import 'package:kyber_mod_manager/utils/types/pack_type.dart';
 
 class HostingDialog extends StatefulWidget {
@@ -31,6 +31,7 @@ class _HostingDialogState extends State<HostingDialog> {
   final String dialog_prefix = 'server_browser.join_dialog';
 
   int state = 0;
+  late StreamSubscription _streamSubscription;
   KyberServer? _server;
   Timer? _timer;
   String? content;
@@ -39,40 +40,53 @@ class _HostingDialogState extends State<HostingDialog> {
   @override
   void initState() {
     Timer.run(() async {
-      if (widget.kyberServer != null) {
-        setState(() {
-          state = 3;
-          _server = widget.kyberServer;
-          link = 'https://kyber.gg/servers/#id=' + _server!.id.toString();
-        });
-        return;
-      }
-
-      bool isRunning = DllInjector.getBattlefrontPID() != -1;
-      if (isRunning) {
-        setState(() => state = 1);
-        bool s = await checkServer();
-        if (!s) {
-          _timer = Timer.periodic(const Duration(seconds: 5), (Timer t) => checkServer());
+      _streamSubscription = BlocProvider.of<GameStatusCubic>(context).stream.listen((GameStatus element) {
+        if (element.running && !element.injected) {
+          DllInjector.inject();
         }
+
+        if (element.injected && state < 2) {
+          if (element.server != null) {
+            setServer(element.server!);
+          } else {
+            setState(() => state = 2);
+          }
+          return;
+        } else if (!element.running && state > 1) {
+          _timer?.cancel();
+          setState(() => state = 1);
+          return;
+        }
+
+        if (element.server != null) {
+          setServer(element.server!);
+        }
+      });
+
+      if (widget.kyberServer != null) {
+        setServer(widget.kyberServer!);
         return;
       }
 
       await createProfile();
-      _timer = Timer.periodic(const Duration(milliseconds: 500), (Timer t) => checkRunning());
     });
     super.initState();
   }
 
   @override
   void dispose() {
+    _streamSubscription.cancel();
     _timer?.cancel();
     super.dispose();
   }
 
+  void setServer(KyberServer server) => setState(() {
+        state = 3;
+        _server = server;
+        link = 'https://kyber.gg/servers/#id=' + server.id.toString();
+      });
+
   Future<void> createProfile() async {
-    List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
-    bool cosmetics = box.get('enableCosmetics', defaultValue: false);
     String? selectedProfile = widget.selectedProfile;
     if (selectedProfile == null) {
       return;
@@ -88,74 +102,12 @@ class _HostingDialogState extends State<HostingDialog> {
     ).catchError((error) {
       NotificationService.showNotification(message: error.toString(), color: Colors.red);
     });
-    // if (selectedProfile.endsWith('(Frosty Pack)') && !selectedProfile.contains('KyberModManager')) {
-    //   if (!cosmetics) {
-    //     await FrostyProfileService.loadFrostyPack(selectedProfile.replaceAll(' (Frosty Pack)', ''), onCopied);
-    //   } else {
-    //     List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(selectedProfile.replaceAll(' (Frosty Pack)', ''))
-    //       ..addAll(cosmeticMods);
-    //     await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onCopied);
-    //     await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-    //   }
-    // } else if (selectedProfile.endsWith('(Mod Profile)')) {
-    //   ModProfile profile = List<ModProfile>.from(box.get('profiles')).where((p) => p.name == selectedProfile.replaceAll(' (Mod Profile)', '')).first;
-    //   List<Mod> mods = List.from(profile.mods);
-    //   if (cosmetics) {
-    //     mods = [...mods, ...cosmeticMods];
-    //   }
-//
-    //   await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-    //   await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onCopied);
-    // } else if (selectedProfile == translate('host_server.forms.mod_profile.no_mods_profile')) {
-    //   if (cosmetics) {
-    //     await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
-    //   } else {
-    //     await FrostyProfileService.createProfile([]);
-    //   }
-    // } else {
-    //   return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'), color: Colors.red);
-    // }
     setState(() => content = translate('$dialog_prefix.joining_states.frosty'));
     await FrostyService.startFrosty();
     setState(() => state = 1);
   }
 
   void onCopied(copied, total) => setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
-
-  Future<bool> checkServer() async {
-    bool running = DllInjector.isInjected();
-    if (!running) {
-      setState(() => state = 1);
-      _timer?.cancel();
-      _timer = Timer(const Duration(seconds: 5), checkRunning);
-      return false;
-    }
-
-    KyberServer? server = await KyberApiService.searchServer(widget.name ?? '');
-    if (server == null) {
-      return false;
-    }
-
-    setState(() {
-      _server = server;
-      link = 'https://kyber.gg/servers#id=' + _server!.id;
-      state = 3;
-    });
-    _timer?.cancel();
-    return true;
-  }
-
-  Future<bool> checkRunning() async {
-    bool running = DllInjector.getBattlefrontPID() != -1;
-    if (running) {
-      DllInjector.inject();
-      setState(() => state = 2);
-      _timer?.cancel();
-      _timer = Timer.periodic(const Duration(seconds: 5), (Timer t) => checkServer());
-      return false;
-    }
-    return true;
-  }
 
   @override
   Widget build(BuildContext context) {

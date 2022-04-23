@@ -8,6 +8,7 @@ class GameStatusCubic extends Cubit<GameStatus> {
   GameStatusCubic() : super(GameStatus(injected: false, running: false));
 
   String? _serverId;
+  int interval = 0;
 
   void emitServerId(String? serverId) {
     _serverId = serverId;
@@ -19,6 +20,10 @@ class GameStatusCubic extends Cubit<GameStatus> {
     bool injected = DllInjector.isInjected();
     DateTime? started = state.started;
     KyberServer? server = state.server;
+    interval++;
+    if (interval == 20) {
+      server = await _getServer();
+    }
     if (!state.running && running) {
       started = DateTime.now();
       if (state.server == null) {
@@ -27,6 +32,10 @@ class GameStatusCubic extends Cubit<GameStatus> {
     } else if (state.running && !running) {
       started = null;
       server = null;
+    }
+
+    if (injected && server == null) {
+      server = await _getServer();
     }
 
     emit(GameStatus(injected: injected, running: running, started: started, server: server));

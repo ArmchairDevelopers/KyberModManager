@@ -15,6 +15,7 @@ import 'package:kyber_mod_manager/utils/helpers/system_tasks.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/game_status.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/utils/types/map.dart';
 import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
@@ -35,9 +36,9 @@ class _ServerHostState extends State<ServerHost> {
   final TextEditingController _mapController = TextEditingController();
   final TextEditingController _profileController = TextEditingController();
 
-  late Timer _timer;
   late List<ModProfile> _profiles;
 
+  late StreamSubscription _subscription;
   KyberServer? server;
   List<KyberProxy>? proxies;
   List<String>? frostyProfiles;
@@ -61,9 +62,12 @@ class _ServerHostState extends State<ServerHost> {
   void initState() {
     _mapController.text = '';
     _profiles = List<ModProfile>.from(box.get('profiles') ?? []);
-    _timer = Timer.periodic(const Duration(seconds: 5), checkServerStatus);
     cosmetics = box.get('enableCosmetics', defaultValue: false);
-    checkServerStatus(null);
+    Timer.run(() async {
+      GameStatus status = BlocProvider.of<GameStatusCubic>(context).state;
+      checkServerStatus(status);
+      _subscription = BlocProvider.of<GameStatusCubic>(context).stream.listen((status) => checkServerStatus(status));
+    });
     KyberApiService.getProxies().then(
       (proxies) => setState(() {
         this.proxies = proxies;
@@ -96,35 +100,30 @@ class _ServerHostState extends State<ServerHost> {
   @override
   void dispose() {
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
-    _timer.cancel();
+    _subscription.cancel();
     super.dispose();
   }
 
-  void checkServerStatus(Timer? _timer) async {
-    bool running = await SystemTasks.isKyberRunning();
-    if (!running && !isHosting) {
-      return;
-    }
-    dynamic config = await KyberApiService.getCurrentConfig();
-
-    if (config['KYBER_MODE'] == 'SERVER' && running && server == null) {
-      server = await KyberApiService.searchServer(config['SERVER_OPTIONS']['NAME']);
-      if (_hostController.text.isEmpty && server != null) {
+  void checkServerStatus(GameStatus status) async {
+    var config = await KyberApiService.getCurrentConfig();
+    if (status.injected && config['KYBER_MODE'] == 'SERVER') {
+      if (status.server != null) {
         setState(() {
-          _hostController.text = server!.name;
+          _hostController.text = status.server!.name;
           _passwordController.text = config['SERVER_OPTIONS']['PASSWORD'];
-          _mapController.text = MapHelper.getMapsForMode(mode).where((m) => m.map == server!.map).first.name;
-          mode = server!.mode;
-          maxPlayers = server!.maxPlayers;
-          autoBalance = server!.autoBalanceTeams;
+          _mapController.text = MapHelper.getMapsForMode(mode).where((m) => m.map == status.server!.map).first.name;
+          server = status.server;
+          mode = status.server!.mode;
+          maxPlayers = status.server!.maxPlayers;
+          autoBalance = status.server!.autoBalanceTeams;
         });
       }
-      BlocProvider.of<GameStatusCubic>(context).emitServerId(server?.id);
       setState(() => isHosting = true);
-    } else if (isHosting && (!running || config['KYBER_MODE'] != 'SERVER')) {
-      server = null;
-      BlocProvider.of<GameStatusCubic>(context).emitServerId(server?.id);
-      setState(() => isHosting = false);
+    } else if (isHosting && (!status.injected || config['KYBER_MODE'] != 'SERVER')) {
+      setState(() {
+        isHosting = false;
+        server = null;
+      });
     }
   }
 

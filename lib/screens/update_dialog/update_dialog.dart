@@ -3,9 +3,9 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 
 class UpdateDialog extends StatefulWidget {
-  UpdateDialog({Key? key, required this.versionInfo}) : super(key: key);
+  const UpdateDialog({Key? key, required this.versionInfo}) : super(key: key);
 
-  VersionInfo versionInfo;
+  final VersionInfo versionInfo;
 
   @override
   State<UpdateDialog> createState() => _UpdateDialogState();
