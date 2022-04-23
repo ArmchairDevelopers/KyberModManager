@@ -49,7 +49,6 @@ class DllInjector {
   static bool inject() {
     int pid = getBattlefrontPID();
     if (pid == -1) {
-      Logger.root.info('Battlefront process not found.');
       return false;
     }
 

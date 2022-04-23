@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:puppeteer/plugins/stealth.dart';
 import 'package:puppeteer/puppeteer.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 class PuppeteerHelper {
   static Browser? _browser;
