@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/api/kyber/proxy.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/constants/modes.dart';
+import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/server_host/hosting_dialog.dart';
 import 'package:kyber_mod_manager/utils/helpers/map_helper.dart';
@@ -13,7 +15,6 @@ import 'package:kyber_mod_manager/utils/helpers/system_tasks.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
-import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/utils/types/map.dart';
 import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
@@ -118,11 +119,11 @@ class _ServerHostState extends State<ServerHost> {
           autoBalance = server!.autoBalanceTeams;
         });
       }
-      RPCService.setServerId(server?.id);
+      BlocProvider.of<GameStatusCubic>(context).emitServerId(server?.id);
       setState(() => isHosting = true);
     } else if (isHosting && (!running || config['KYBER_MODE'] != 'SERVER')) {
       server = null;
-      RPCService.setServerId(null);
+      BlocProvider.of<GameStatusCubic>(context).emitServerId(server?.id);
       setState(() => isHosting = false);
     }
   }
