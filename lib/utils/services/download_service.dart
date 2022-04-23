@@ -47,8 +47,9 @@ class DownloadService {
       _progressController?.close();
       _progressSubscription?.cancel();
     }
-    _browser.close().then(
-        (value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
+    _browser
+        .close()
+        .then((value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
   }
 
   Future<void> startDownload({
@@ -89,7 +90,9 @@ class DownloadService {
       await PuppeteerHelper.initializePage(_page);
       _initializedPage = true;
     }
-    await _page.click('button[id\$="slowDownloadButton"]').onError((error, stackTrace) {
+    bool isPremium = await _page.evaluate(r'''document.querySelectorAll('#startDownloadButton').length > 0''');
+    await _page.click(isPremium ? 'button[id\$="startDownloadButton"]' : 'button[id\$="slowDownloadButton"]').onError((error, stackTrace) async {
+      await _page.screenshot().then((value) => File('$applicationDocumentsDirectory\\${DateTime.now().toString().replaceAll(':', '-')}.png').writeAsBytesSync(value));
       NotificationService.showNotification(message: 'Download button not found! Please try again!', color: Colors.red);
       close();
       onClose();
