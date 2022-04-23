@@ -71,12 +71,8 @@ class _InstalledModsState extends State<InstalledMods> {
                   }).toList(),
                 ));
               });
-              return SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: children,
-                ),
+              return ListView(
+                children: children,
               );
             },
           ),
