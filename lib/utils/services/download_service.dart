@@ -92,7 +92,9 @@ class DownloadService {
     }
     bool isPremium = await _page.evaluate(r'''document.querySelectorAll('#startDownloadButton').length > 0''');
     await _page.click(isPremium ? 'button[id\$="startDownloadButton"]' : 'button[id\$="slowDownloadButton"]').onError((error, stackTrace) async {
-      await _page.screenshot().then((value) => File('$applicationDocumentsDirectory\\${DateTime.now().toString().replaceAll(':', '-')}.png').writeAsBytesSync(value));
+      await _page
+          .screenshot(fullPage: true)
+          .then((value) => File('$applicationDocumentsDirectory\\${DateTime.now().toString().replaceAll(':', '-')}.png').writeAsBytesSync(value));
       NotificationService.showNotification(message: 'Download button not found! Please try again!', color: Colors.red);
       close();
       onClose();
