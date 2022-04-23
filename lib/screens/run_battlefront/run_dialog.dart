@@ -6,7 +6,7 @@ import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/types/pack_type.dart';
 
 class RunDialog extends StatefulWidget {
-  RunDialog({Key? key, required this.profile}) : super(key: key);
+  const RunDialog({Key? key, required this.profile}) : super(key: key);
 
   final String profile;
 
@@ -41,26 +41,6 @@ class _RunDialogState extends State<RunDialog> {
       onProgress: onProgress,
       setContent: (content) => setState(() => this.content = content),
     );
-    // if (selectedProfile == translate('host_server.forms.mod_profile.no_mods_profile')) {
-    //   await FrostyProfileService.createProfile([]);
-    // } else if (selectedProfile.endsWith('(Frosty Pack)')) {
-    //   var currentMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
-    //   String profile = selectedProfile.replaceAll(' (Frosty Pack)', '');
-    //   List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(profile);
-    //   if (!listEquals(currentMods, mods)) {
-    //     setState(() => content = translate('$prefix.creating'));
-    //     await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-    //     onProgress(0, 0);
-    //     await FrostyProfileService.loadFrostyPack(profile.replaceAll(' (Frosty Pack)', ''), onProgress);
-    //   }
-    // } else if (selectedProfile == translate('host_server.forms.cosmetic_mods.header')) {
-    //   List<Mod> mods = List<Mod>.from(box.get('cosmetics'));
-    //   await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
-    //   setState(() => content = translate('$prefix.creating'));
-    //   await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-    // } else {
-    //   return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'));
-    // }
 
     setState(() => content = translate('$prefix.frosty'));
     await FrostyService.startFrosty();
