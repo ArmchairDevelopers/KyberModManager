@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,14 +33,18 @@ material.DataRow Server(BuildContext context, KyberServer server) {
                     ),
                   ),
                   constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.35,
+                    maxWidth: MediaQuery.of(context).size.width * 0.25,
                   ),
                 ),
                 const SizedBox(width: 4),
                 server.requiresPassword ? const Icon(FluentIcons.lock, size: 14) : Container(),
               ],
             ),
-            Text('${mode.name} - ${map['name']} - ${server.host}'),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.25,
+              height: 20,
+              child: AutoSizeText('${mode.name} - ${map['name']} - ${server.host}'),
+            )
           ],
         ),
       ),
@@ -49,21 +54,27 @@ material.DataRow Server(BuildContext context, KyberServer server) {
           textAlign: TextAlign.center,
         ),
       ),
-      material.DataCell(
-        Text(
+      material.DataCell(SizedBox(
+        width: MediaQuery.of(context).size.width * .08,
+        child: AutoSizeText(
           Jiffy.unixFromMillisecondsSinceEpoch(server.startedAt).fromNow(),
-          textAlign: TextAlign.center,
+          maxLines: 1,
         ),
-      ),
+      )),
       material.DataCell(
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SvgPicture.network(server.proxy.flag, width: 20),
             const SizedBox(width: 10),
-            Text(
-              server.proxy.name,
-            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .065,
+              height: 20,
+              child: AutoSizeText(
+                server.proxy.name,
+                maxLines: 1,
+              ),
+            )
           ],
         ),
       ),

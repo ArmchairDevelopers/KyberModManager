@@ -33,6 +33,7 @@ dependencies:
   path_provider: ^2.0.9
   flutter_translate: ^3.0.1
   archive: ^3.2.1
+  auto_size_text: ^3.0.0
   fluent_ui: ^3.9.1
   tinycolor2: ^2.0.0
   http: ^0.13.4
