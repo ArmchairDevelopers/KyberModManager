@@ -42,12 +42,6 @@ class _FeedbackState extends State<Feedback> {
                   onPressed: () => launch('https://github.com/7reax/kyber-mod-manager'),
                   color: Colors.grey,
                 ),
-                const SizedBox(width: 16),
-                CustomFilledButton(
-                  child: const Text('Trello board'),
-                  onPressed: () => launch('https://trello.com/b/LcwfrRfC/kyber-mod-manager'),
-                  color: Colors.orange,
-                ),
               ],
             ),
           ],

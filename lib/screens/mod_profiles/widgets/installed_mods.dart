@@ -39,40 +39,56 @@ class _InstalledModsState extends State<InstalledMods> {
         Expanded(
           child: Builder(
             builder: (ctx) {
-              List<Widget> children = [];
-              ModService.getModsByCategory(false).forEach((key, value) {
-                if (widget.excludedCategories != null && widget.excludedCategories!.contains(key)) return;
-                value.sort((a, b) => a.name.compareTo(b.name));
-                if (value.where((element) => filterMods(element.filename)).isNotEmpty &&
-                    (search.isEmpty || value.where((element) => element.name.toLowerCase().contains(search.toLowerCase())).isNotEmpty)) {
-                  children.add(const SizedBox(height: 25));
-                  children.add(Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Text(key, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  ));
-                }
-                children.add(ListView(
-                  padding: const EdgeInsets.all(0),
-                  shrinkWrap: true,
-                  children: value
-                      .where((element) => filterMods(element.filename) && (search.isEmpty || element.name.toLowerCase().contains(search.toLowerCase())))
-                      .map((Mod mod) {
-                    return ListTile(
-                      title: Text(
-                        mod.name,
-                        style: textStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      leading: IconButton(
-                        icon: const Icon(FluentIcons.add),
-                        onPressed: () => setState(() => widget.onAdd(mod)),
-                      ),
+              return ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  List<Widget> children = [];
+                  final mods = ModService.getModsByCategory(false);
+                  var value = mods.values.toList()[index];
+                  var key = mods.keys.toList()[index];
+
+                  if (widget.excludedCategories != null && widget.excludedCategories!.contains(key)) {
+                    return const SizedBox(
+                      height: 0,
                     );
-                  }).toList(),
-                ));
-              });
-              return ListView(
-                children: children,
+                  }
+
+                  value.sort((a, b) => a.name.compareTo(b.name));
+                  if (value.where((element) => filterMods(element.filename)).isNotEmpty &&
+                      (search.isEmpty || value.where((element) => element.name.toLowerCase().contains(search.toLowerCase())).isNotEmpty)) {
+                    children.add(const SizedBox(height: 25));
+                    children.add(Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Text(key, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    ));
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...children,
+                      ListView(
+                        padding: const EdgeInsets.all(0),
+                        shrinkWrap: true,
+                        children: value
+                            .where((element) => filterMods(element.filename) && (search.isEmpty || element.name.toLowerCase().contains(search.toLowerCase())))
+                            .map((Mod mod) {
+                          return ListTile(
+                            title: Text(
+                              mod.name,
+                              style: textStyle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            leading: IconButton(
+                              icon: const Icon(FluentIcons.add),
+                              onPressed: () => setState(() => widget.onAdd(mod)),
+                            ),
+                          );
+                        }).toList(),
+                      )
+                    ],
+                  );
+                },
+                itemCount: ModService.getModsByCategory(false).length,
               );
             },
           ),
