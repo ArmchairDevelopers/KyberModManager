@@ -13,6 +13,7 @@ import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:kyber_mod_manager/utils/types/saved_profile.dart';
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
+import 'package:windows_taskbar/windows_taskbar.dart';
 
 class ProfileService {
   static final File _profileFile = File('${OriginHelper.getBattlefrontPath()}\\ModData\\SavedProfiles\\profiles.json');
@@ -112,10 +113,12 @@ class ProfileService {
 
   static Future<void> copyProfileData(Directory from, Directory to, [Function? onProgress]) async {
     List<File> files = await _getAllFiles(from);
+    WindowsTaskbar.setProgressMode(TaskbarProgressMode.normal);
     for (File file in files) {
       if (onProgress != null) {
         onProgress(files.indexOf(file), files.length - 1);
       }
+      WindowsTaskbar.setProgress(files.indexOf(file), files.length - 1);
       String dirPath = to.path + '/' + file.parent.path.substring(from.path.length);
       Directory dir = Directory(dirPath);
       if (!dir.existsSync()) {
@@ -123,6 +126,7 @@ class ProfileService {
       }
       await file.copy(to.path + '/' + file.path.substring(from.path.length));
     }
+    WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
   }
 
   static bool _isSymlink(String path) {
