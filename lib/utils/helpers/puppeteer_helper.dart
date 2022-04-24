@@ -5,8 +5,6 @@ import 'package:puppeteer/puppeteer.dart';
 
 class PuppeteerHelper {
   static Browser? _browser;
-  static const int _height = 1080;
-  static const int _width = 1920;
 
   static Future<Browser> startBrowser({Function? onClose, Function? onBrowserCreated, bool headless = true}) async {
     if (_browser != null) {

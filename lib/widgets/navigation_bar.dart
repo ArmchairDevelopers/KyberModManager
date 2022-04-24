@@ -62,13 +62,14 @@ class _NavigationBarState extends State<NavigationBar> {
     } else {
       ModInstallerService.initialise();
       DllInjector.checkForUpdates();
-      AutoUpdater().updateAvailable().then((value) {
-        if (value == null) {
-          return;
-        }
-        showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
-      });
     }
+
+    AutoUpdater().updateAvailable().then((value) {
+      if (value == null) {
+        return;
+      }
+      showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
+    });
 
     RPCService.initialize(context);
     Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
