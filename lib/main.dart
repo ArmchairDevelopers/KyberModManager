@@ -86,7 +86,9 @@ class _AppState extends State<App> {
   void initState() {
     Timer.run(() {
       ModService.loadMods(context).then((value) {
-        ProfileService.migrateSavedProfiles();
+        if (box.containsKey('setup')) {
+          ProfileService.migrateSavedProfiles();
+        }
       });
       ModService.watchDirectory();
       FlutterError.onError = (details) {
