@@ -19,9 +19,9 @@
   "mods": "Mods",
   "login": "Login",
   "name": "Name",
-  "description": "Description",
+  "description": "Beschreibung",
   "version": "Version",
-  "author": "Author",
+  "author": "Autor",
   "mods_loaded": "Es wurden {count} Mods geladen.",
   "last_used": "Zuletzt Verwendet",
   "navigation_bar": {
@@ -116,7 +116,7 @@
         "unsupported_mods_3": "Derzeit kann nur eine ausgewählte liste von Mods automatisch installiert werden.",
         "downloading": "Lädt {0} runter... {1}%",
         "loading_states": {
-          "checking_mods": "Checking mods availability...",
+          "checking_mods": "Überprüfe die Verfügbarkeit von Mods...",
           "0": "Browser wird gestartet...",
           "1": "Starte Download...",
           "3": "Extrahiere..."
@@ -221,8 +221,8 @@
     "label": "Wähle ein Profil aus, welches du importieren möchtest:"
   },
   "installed_mods": {
-    "title": "Installed Mods",
-    "open_directory": "Open directory"
+    "title": "Installierte Mods",
+    "open_directory": "Verzeichnis öffnen"
   },
   "edit_mod_profile": {
     "title": "Mod Profil",
