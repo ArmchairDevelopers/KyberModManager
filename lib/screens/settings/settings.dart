@@ -82,186 +82,210 @@ class _SettingsState extends State<Settings> {
         ),
       ),
       content: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
-          ListTile(
-            title: Text(translate('$prefix.language.title')),
-            subtitle: Text(translate('$prefix.language.subtitle')),
-            leading: const Icon(FluentIcons.locale_language),
-            trailing: SizedBox(
-              width: 250,
-              child: Combobox<dynamic>(
-                onChanged: (dynamic value) {
-                  changeLocale(context, value);
-                  box.put('locale', value);
-                },
-                isExpanded: true,
-                value: LocalizedApp.of(context).delegate.currentLocale.languageCode,
-                items: LocalizedApp.of(context).delegate.supportedLocales.map((e) {
-                  return ComboboxItem<dynamic>(
-                    value: e.languageCode,
-                    child: SizedBox(
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/flags/${e.languageCode}.svg',
-                            height: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(translate('languages.' + e.languageCode)),
-                        ],
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: Text(translate('$prefix.language.title')),
+              subtitle: Text(translate('$prefix.language.subtitle')),
+              leading: const Icon(FluentIcons.locale_language),
+              trailing: SizedBox(
+                width: 250,
+                child: Combobox<dynamic>(
+                  onChanged: (dynamic value) {
+                    changeLocale(context, value);
+                    box.put('locale', value);
+                  },
+                  isExpanded: true,
+                  value: LocalizedApp.of(context).delegate.currentLocale.languageCode,
+                  items: LocalizedApp.of(context).delegate.supportedLocales.map((e) {
+                    return ComboboxItem<dynamic>(
+                      value: e.languageCode,
+                      child: SizedBox(
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/flags/${e.languageCode}.svg',
+                              height: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(translate('languages.' + e.languageCode)),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ),
-          ListTile(
-            title: Text(translate('$prefix.nexus_mods.title')),
-            subtitle: Text(translate('$prefix.nexus_mods.subtitle')),
-            leading: const Icon(FluentIcons.download),
-            trailing: CustomFilledButton(
-              child: ButtonText(
-                text: Text(translate(box.get('nexusmods_login', defaultValue: false) ? '$prefix.nexus_mods.logout' : 'Login')),
-                icon: Icon(box.get('nexusmods_login', defaultValue: false) ? FluentIcons.user_remove : FluentIcons.user_sync),
+          SizedBox(height: 16),
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: Text(translate('$prefix.nexus_mods.title')),
+              subtitle: Text(translate('$prefix.nexus_mods.subtitle')),
+              leading: const Icon(FluentIcons.download),
+              trailing: CustomFilledButton(
+                child: ButtonText(
+                  text: Text(translate(box.get('nexusmods_login', defaultValue: false) ? '$prefix.nexus_mods.logout' : 'Login')),
+                  icon: Icon(box.get('nexusmods_login', defaultValue: false) ? FluentIcons.user_remove : FluentIcons.user_sync),
+                ),
+                color: box.get('nexusmods_login', defaultValue: false) ? Colors.red : SystemTheme.accentColor.accent,
+                onPressed: () async {
+                  if (box.get('nexusmods_login', defaultValue: false)) {
+                    var s = Directory('$applicationDocumentsDirectory\\puppeteer');
+                    if (s.existsSync()) {
+                      s.deleteSync(recursive: true);
+                    }
+                    await box.put('nexusmods_login', false);
+                    await box.delete('cookies');
+                  } else {
+                    await showDialog(context: context, builder: (c) => const NexusmodsLogin());
+                  }
+                  setState(() => null);
+                },
               ),
-              color: box.get('nexusmods_login', defaultValue: false) ? Colors.red : SystemTheme.accentColor.accent,
-              onPressed: () async {
-                if (box.get('nexusmods_login', defaultValue: false)) {
+            ),
+          ),
+          SizedBox(height: 16),
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: Row(
+                children: [
+                  Text(translate('$prefix.discord_activity.title')),
+                ],
+              ),
+              subtitle: Text(translate('$prefix.discord_activity.subtitle')),
+              leading: const Icon(FluentIcons.activity_feed),
+              trailing: ToggleSwitch(
+                checked: box.get('discordRPC', defaultValue: true),
+                onChanged: (enabled) async {
+                  await box.put('discordRPC', enabled);
+                  if (enabled) {
+                    RPCService.start();
+                  } else {
+                    RPCService.dispose();
+                  }
+                  setState(() => null);
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: Row(
+                children: [
+                  Text(translate('$prefix.saved_profiles.title')),
+                  Tooltip(
+                    child: const Icon(
+                      FluentIcons.status_circle_question_mark,
+                      size: 22,
+                    ),
+                    style: const TooltipThemeData(
+                      padding: EdgeInsets.all(8),
+                    ),
+                    message: translate('saved_profiles.tooltip'),
+                  )
+                ],
+              ),
+              subtitle: Text(translate('$prefix.saved_profiles.subtitle')),
+              leading: const Icon(FluentIcons.save),
+              trailing: ToggleSwitch(
+                checked: box.get('saveProfiles', defaultValue: true),
+                onChanged: (enabled) async {
+                  await box.put('saveProfiles', enabled);
+                  setState(() => null);
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: Row(
+                children: [
+                  Text(translate('$prefix.frosty_profile.title')),
+                  Tooltip(
+                    child: const Icon(
+                      FluentIcons.status_circle_question_mark,
+                      size: 22,
+                    ),
+                    style: const TooltipThemeData(
+                      padding: EdgeInsets.all(8),
+                    ),
+                    message: translate('$prefix.frosty_profile.tooltip'),
+                  )
+                ],
+              ),
+              subtitle: Text(translate('$prefix.frosty_profile.subtitle')),
+              leading: const Icon(FluentIcons.game),
+              trailing: ToggleSwitch(
+                checked: PlatformHelper.isProfileActive(),
+                onChanged: !disabled
+                    ? (value) async {
+                        String path;
+                        setState(() => disabled = true);
+                        if (value) {
+                          String? result = await showDialog(
+                            context: context,
+                            builder: (b) => const PlatformSelector(),
+                          );
+                          if (result == null) {
+                            return setState(() {
+                              disabled = false;
+                            });
+                          }
+                          path = await PlatformHelper.activateProfile('KyberModManager');
+                          await box.put('platform', result);
+                          if (result.contains('epic')) {
+                            await Future.wait([
+                              PlatformHelper.restartPlatform(result, path),
+                              PlatformHelper.restartPlatform('origin', path),
+                            ]);
+                          } else {
+                            await PlatformHelper.restartPlatform(result, path);
+                          }
+                        } else {
+                          path = await PlatformHelper.activateProfile(box.get('previousProfile') ?? '', previous: true);
+                          await PlatformHelper.restartPlatform(box.get('platform', defaultValue: 'origin'), path);
+                          await box.put('previousProfile', null);
+                        }
+                        await box.put('frostyProfile', value);
+                        setState(() => disabled = false);
+                      }
+                    : null,
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: Text(translate('$prefix.reset.title')),
+              subtitle: Text(translate('$prefix.reset.subtitle')),
+              leading: const Icon(FluentIcons.reset),
+              trailing: CustomFilledButton(
+                child: ButtonText(
+                  text: Text(translate('$prefix.reset.title')),
+                  icon: const Icon(FluentIcons.reset),
+                ),
+                color: Colors.red,
+                onPressed: () => box.deleteFromDisk().then((value) async {
+                  ModInstallerService.dispose();
+                  await StorageHelper.initialiseHive();
                   var s = Directory('$applicationDocumentsDirectory\\puppeteer');
                   if (s.existsSync()) {
                     s.deleteSync(recursive: true);
                   }
-                  await box.put('nexusmods_login', false);
-                  await box.delete('cookies');
-                } else {
-                  await showDialog(context: context, builder: (c) => const NexusmodsLogin());
-                }
-                setState(() => null);
-              },
-            ),
-          ),
-          ListTile(
-            title: Row(
-              children: [
-                Text(translate('$prefix.discord_activity.title')),
-              ],
-            ),
-            subtitle: Text(translate('$prefix.discord_activity.subtitle')),
-            leading: const Icon(FluentIcons.activity_feed),
-            trailing: ToggleSwitch(
-              checked: box.get('discordRPC', defaultValue: true),
-              onChanged: (enabled) async {
-                await box.put('discordRPC', enabled);
-                if (enabled) {
-                  RPCService.start();
-                } else {
-                  RPCService.dispose();
-                }
-                setState(() => null);
-              },
-            ),
-          ),
-          ListTile(
-            title: Row(
-              children: [
-                Text(translate('$prefix.saved_profiles.title')),
-                Tooltip(
-                  child: const Icon(
-                    FluentIcons.status_circle_question_mark,
-                    size: 22,
-                  ),
-                  style: const TooltipThemeData(
-                    padding: EdgeInsets.all(8),
-                  ),
-                  message: translate('saved_profiles.tooltip'),
-                )
-              ],
-            ),
-            subtitle: Text(translate('$prefix.saved_profiles.subtitle')),
-            leading: const Icon(FluentIcons.save),
-            trailing: ToggleSwitch(
-              checked: box.get('saveProfiles', defaultValue: true),
-              onChanged: (enabled) async {
-                await box.put('saveProfiles', enabled);
-                setState(() => null);
-              },
-            ),
-          ),
-          ListTile(
-            title: Row(
-              children: [
-                Text(translate('$prefix.frosty_profile.title')),
-                Tooltip(
-                  child: const Icon(
-                    FluentIcons.status_circle_question_mark,
-                    size: 22,
-                  ),
-                  style: const TooltipThemeData(
-                    padding: EdgeInsets.all(8),
-                  ),
-                  message: translate('$prefix.frosty_profile.tooltip'),
-                )
-              ],
-            ),
-            subtitle: Text(translate('$prefix.frosty_profile.subtitle')),
-            leading: const Icon(FluentIcons.game),
-            trailing: ToggleSwitch(
-              checked: PlatformHelper.isProfileActive(),
-              onChanged: !disabled
-                  ? (value) async {
-                      String path;
-                      setState(() => disabled = true);
-                      if (value) {
-                        String? result = await showDialog(
-                          context: context,
-                          builder: (b) => const PlatformSelector(),
-                        );
-                        if (result == null) {
-                          return setState(() {
-                            disabled = false;
-                          });
-                        }
-                        path = await PlatformHelper.activateProfile('KyberModManager');
-                        await box.put('platform', result);
-                        if (result.contains('epic')) {
-                          await Future.wait([
-                            PlatformHelper.restartPlatform(result, path),
-                            PlatformHelper.restartPlatform('origin', path),
-                          ]);
-                        } else {
-                          await PlatformHelper.restartPlatform(result, path);
-                        }
-                      } else {
-                        path = await PlatformHelper.activateProfile(box.get('previousProfile') ?? '', previous: true);
-                        await PlatformHelper.restartPlatform(box.get('platform', defaultValue: 'origin'), path);
-                        await box.put('previousProfile', null);
-                      }
-                      await box.put('frostyProfile', value);
-                      setState(() => disabled = false);
-                    }
-                  : null,
-            ),
-          ),
-          ListTile(
-            title: Text(translate('$prefix.reset.title')),
-            subtitle: Text(translate('$prefix.reset.subtitle')),
-            leading: const Icon(FluentIcons.reset),
-            trailing: CustomFilledButton(
-              child: ButtonText(
-                text: Text(translate('$prefix.reset.title')),
-                icon: const Icon(FluentIcons.reset),
+                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                }),
               ),
-              color: Colors.red,
-              onPressed: () => box.deleteFromDisk().then((value) async {
-                ModInstallerService.dispose();
-                await StorageHelper.initialiseHive();
-                var s = Directory('$applicationDocumentsDirectory\\puppeteer');
-                if (s.existsSync()) {
-                  s.deleteSync(recursive: true);
-                }
-                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-              }),
             ),
           ),
           const SizedBox(
