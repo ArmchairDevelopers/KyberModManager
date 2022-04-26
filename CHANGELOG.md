@@ -1,3 +1,14 @@
+## [1.0.4] - [27/04/2022]
+
+- Added support for NexusMods premium.
+- Added an installed mods page.
+- Mods can now be dragged and dropped into the mod manager. It will then install them.
+- Added Started At field in the server browser.
+- Added a custom window title bar.
+- Added mica background effect for Windows 11.
+- Saved profiles progress is now being shown in the Windows taskbar.
+- Several UI changes.
+
 ## [1.0.3] - [14/04/2022]
 
 - **Added Discord activity feature**.
