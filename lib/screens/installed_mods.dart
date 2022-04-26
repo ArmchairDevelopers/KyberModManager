@@ -8,7 +8,7 @@ import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class InstalledMods extends StatefulWidget {
   const InstalledMods({Key? key}) : super(key: key);
@@ -18,6 +18,7 @@ class InstalledMods extends StatefulWidget {
 }
 
 class _InstalledModsState extends State<InstalledMods> {
+  final String prefix = 'installed_mods';
   List<Mod> _installedMods = [];
   String search = '';
 
@@ -38,15 +39,15 @@ class _InstalledModsState extends State<InstalledMods> {
 
     return ScaffoldPage(
       header: PageHeader(
-        title: const Text('Installed mods'),
+        title: Text(translate('$prefix.title')),
         commandBar: Row(
           children: [
             FilledButton(
-              child: const ButtonText(
-                icon: Icon(FluentIcons.folder_search),
-                text: Text('Open Directory'),
+              child: ButtonText(
+                icon: const Icon(FluentIcons.folder_search),
+                text: Text(translate('$prefix.open_directory')),
               ),
-              onPressed: () => launch('file://${box.get('frostyPath')}\\Mods\\starwarsbattlefrontii'),
+              onPressed: () => launchUrlString('file://${box.get('frostyPath')}\\Mods\\starwarsbattlefrontii'),
             ),
           ],
         ),
@@ -76,7 +77,7 @@ class _InstalledModsState extends State<InstalledMods> {
                         material.DataColumn(
                           label: SizedBox(
                             child: Text(
-                              'Name',
+                              translate('name'),
                               style: TextStyle(
                                 color: color.withOpacity(.5),
                               ),
@@ -86,7 +87,7 @@ class _InstalledModsState extends State<InstalledMods> {
                         material.DataColumn(
                           label: SizedBox(
                             child: Text(
-                              'Author',
+                              translate('author'),
                               style: TextStyle(
                                 color: color.withOpacity(.5),
                               ),
@@ -96,7 +97,7 @@ class _InstalledModsState extends State<InstalledMods> {
                         material.DataColumn(
                           label: SizedBox(
                             child: Text(
-                              'Version',
+                              translate('version'),
                               style: TextStyle(
                                 color: color.withOpacity(.5),
                               ),
@@ -125,9 +126,9 @@ class _InstalledModsState extends State<InstalledMods> {
                               children: [
                                 CustomFilledButton(
                                   color: Colors.red,
-                                  child: const ButtonText(
-                                    text: Text('Delete'),
-                                    icon: Icon(FluentIcons.delete),
+                                  child: ButtonText(
+                                    text: Text(translate('delete')),
+                                    icon: const Icon(FluentIcons.delete),
                                   ),
                                   onPressed: () {
                                     ModService.deleteMod(e);

@@ -18,6 +18,10 @@
   "size": "Size",
   "mods": "Mods",
   "login": "Login",
+  "name": "Name",
+  "description": "Description",
+  "version": "Version",
+  "author": "Author",
   "mods_loaded": "Loaded {count} mods.",
   "last_used": "Last Used",
   "navigation_bar": {
@@ -215,6 +219,10 @@
   "select_frosty_profile": {
     "title": "Load Frosty profile",
     "label": "Select a Frosty profile to import:"
+  },
+  "installed_mods": {
+    "title": "Installed Mods",
+    "open_directory": "Open directory"
   },
   "edit_mod_profile": {
     "title": "Mod Profile",
