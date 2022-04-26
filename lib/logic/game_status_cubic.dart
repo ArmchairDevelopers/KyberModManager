@@ -21,7 +21,8 @@ class GameStatusCubic extends Cubit<GameStatus> {
     DateTime? started = state.started;
     KyberServer? server = state.server;
     interval++;
-    if (interval == 20) {
+    if (interval == 20 && injected) {
+      interval = 0;
       server = await _getServer();
     }
     if (!state.running && running) {
