@@ -191,7 +191,7 @@ class ProfileService {
   }
 
   static void migrateSavedProfiles() {
-    if (box.containsKey('profilesMigrated')) {
+    if (box.containsKey('savedProfilesMigrated')) {
       return;
     }
 
@@ -200,7 +200,7 @@ class ProfileService {
       e.mods = e.mods.map((e) => ModService.fromFilename(e.filename)).toList();
       return e;
     }).toList();
-    box.put('profilesMigrated', true);
+    box.put('savedProfilesMigrated', true);
     _saveProfiles(profiles);
   }
 }
