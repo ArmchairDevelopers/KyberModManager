@@ -53,16 +53,6 @@ class RPCService {
     }
     rpc.start(autoRegister: true);
     _running = true;
-    // _applicationTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-    //   bool isRunning = DllInjector.isInjected();
-    //   if (isRunning && _started == null) {
-    //     checkStatus();
-    //   } else if (!isRunning && _started != null) {
-    //     _started = null;
-    //     _serverId = null;
-    //     rpc.clearPresence();
-    //   }
-    // });
     _timer = Timer.periodic(const Duration(seconds: 5), (x) => checkStatus());
     Logger.root.info('Started rpc-service');
   }
@@ -76,26 +66,7 @@ class RPCService {
     if (isRunning && _gameStatus.started != null) {
       dynamic config = await KyberApiService.getCurrentConfig();
       try {
-        // KyberServer? server;
-        // if (config['KYBER_MODE'] != 'CLIENT') {
-        //   if (_serverId == null) {
-        //     server = await KyberApiService.searchServer(config['SERVER_OPTIONS']['NAME']);
-        //     _serverId = server?.id;
-        //   } else {
-        //     server = await KyberApiService.getServer(_serverId ?? '');
-        //   }
-        // } else {
-        //   if (config['CLIENT_OPTIONS']['SERVER_ID'] == null) {
-        //     _serverId = null;
-        //     return;
-        //   }
-        //   server = await KyberApiService.getServer(
-        //     config['CLIENT_OPTIONS']['SERVER_ID'],
-        //   );
-        // }
-
         if (_gameStatus.server == null) {
-          print('Server is null');
           return;
         }
 
