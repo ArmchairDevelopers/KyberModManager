@@ -134,8 +134,9 @@ class _EditProfileState extends State<EditProfile> {
                       children: [
                         Expanded(
                           child: InstalledMods(
+                            kyber: true,
                             activeMods: _profile.mods,
-                            onAdd: (mod) => setState(() => _profile.mods.add(mod)),
+                            onAdd: (mod) => setState(() => _profile = _profile.copyWith(mods: _profile.mods + [mod])),
                           ),
                           flex: 6,
                         ),
@@ -143,7 +144,7 @@ class _EditProfileState extends State<EditProfile> {
                           flex: 6,
                           child: ActiveMods(
                             mods: _profile.mods,
-                            onRemove: (mod) => setState(() => _profile.mods.remove(mod)),
+                            onRemove: (mod) => setState(() => _profile = _profile.copyWith(mods: [..._profile.mods]..remove(mod))),
                             onReorder: (int oldIndex, int newIndex) {
                               setState(() {
                                 if (newIndex > oldIndex) {
