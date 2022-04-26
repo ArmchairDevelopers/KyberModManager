@@ -113,7 +113,7 @@ class _AppState extends State<App> {
       color: SystemTheme.accentColor.accent.toAccentColor(),
       theme: ThemeData(
         accentColor: SystemTheme.accentColor.accent.toAccentColor(),
-        cardColor: Colors.white.withOpacity(.025),
+        cardColor: micaSupported ? Colors.white.withOpacity(.025) : null,
         brightness: Brightness.dark,
       ),
       localizationsDelegates: [
