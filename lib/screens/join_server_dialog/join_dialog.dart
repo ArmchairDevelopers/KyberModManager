@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -194,7 +195,10 @@ class _ServerDialogState extends State<ServerDialog> {
       constraints: const BoxConstraints(maxWidth: 600, minHeight: 400, maxHeight: 400),
       title: Row(children: [
         Expanded(
-          child: Text(server.name, overflow: TextOverflow.ellipsis),
+          child: AutoSizeText(
+            server.name,
+            maxLines: 1,
+          ),
         ),
         DropDownButton(
           leading: Text(translate('$prefix.options.title')),
