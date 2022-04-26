@@ -105,7 +105,7 @@ class _ServerDialogState extends State<ServerDialog> {
       List<String> mods = List.from(server.mods);
       List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
       if (cosmetics) {
-        mods = [...cosmeticMods.map((e) => e.toKyberString()).toList(), ...mods];
+        mods.addAll(cosmeticMods.map((e) => e.toKyberString()).toList());
       }
 
       await ProfileService.searchProfile(mods, (copied, total) {

@@ -44,7 +44,7 @@ class ModService {
       ModProfile profile = List<ModProfile>.from(box.get('profiles')).where((p) => p.name == profileName).first;
       List<Mod> mods = List.from(profile.mods);
       if (cosmetics && box.get('enableCosmetics') && mods.length < 20) {
-        mods = [...cosmeticMods, ...mods];
+        mods = [...mods, ...cosmeticMods];
       }
 
       await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
@@ -53,7 +53,7 @@ class ModService {
       var currentMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
       List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(profileName);
       if (cosmetics && box.get('enableCosmetics') && mods.length < 20) {
-        mods = [...cosmeticMods, ...mods];
+        mods = [...mods, ...cosmeticMods];
       }
 
       if (!listEquals(currentMods, mods)) {
