@@ -160,7 +160,7 @@ class _NavigationBarState extends State<NavigationBar> {
             ),
             PaneItem(
               icon: const Icon(FluentIcons.installation),
-              title: const Text('Installed mods'),
+              title: Text(translate('$prefix.items.installed_mods')),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.custom_list),
