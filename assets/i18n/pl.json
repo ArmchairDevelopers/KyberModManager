@@ -18,6 +18,10 @@
   "size": "Rozmiar",
   "mods": "Modyfikacje",
   "login": "Zaloguj się",
+  "name": "Name",
+  "description": "Description",
+  "version": "Version",
+  "author": "Author",
   "mods_loaded": "Ilość załadowanych modyfikacji: {count}",
   "last_used": "Last Used",
   "navigation_bar": {
@@ -215,6 +219,10 @@
   "select_frosty_profile": {
     "title": "Wybierz profil Frosty",
     "label": "Wybierz profil Frosty, aby zaimportować:"
+  },
+  "installed_mods": {
+    "title": "Installed Mods",
+    "open_directory": "Open directory"
   },
   "edit_mod_profile": {
     "title": "Zestaw modyfikacji",
