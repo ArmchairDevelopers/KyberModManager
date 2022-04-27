@@ -12,7 +12,7 @@ PackType getPackType(String packType) {
     return PackType.FROSTY_PACK;
   } else if (packType.contains('Mod Profile')) {
     return PackType.MOD_PROFILE;
-  } else if (packType.endsWith('Cosmetics')) {
+  } else if (packType.endsWith('Cosmetics') || packType.endsWith(translate('host_server.forms.cosmetic_mods.header'))) {
     return PackType.COSMETICS;
   } else if (packType.endsWith(translate('host_server.forms.mod_profile.no_mods_profile'))) {
     return PackType.NO_MODS;
