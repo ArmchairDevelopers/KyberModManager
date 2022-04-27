@@ -159,12 +159,12 @@ class _NavigationBarState extends State<NavigationBar> {
               title: Text(translate('$prefix.items.mod_profiles')),
             ),
             PaneItem(
-              icon: const Icon(FluentIcons.installation),
-              title: Text(translate('$prefix.items.installed_mods')),
-            ),
-            PaneItem(
               icon: const Icon(FluentIcons.custom_list),
               title: Text(translate('$prefix.items.cosmetic_mods')),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.installation),
+              title: Text(translate('$prefix.items.installed_mods')),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.save_all),
@@ -220,8 +220,8 @@ class _NavigationBarState extends State<NavigationBar> {
             const ServerBrowser(),
             const ServerHost(),
             const ModProfiles(),
-            const InstalledMods(),
             const CosmeticMods(),
+            const InstalledMods(),
             const SavedProfiles(),
             const RunBattlefront(),
             const feedback.Feedback(),
