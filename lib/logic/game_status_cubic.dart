@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/game_status.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 
 class GameStatusCubic extends Cubit<GameStatus> {
   GameStatusCubic() : super(GameStatus(injected: false, running: false));
@@ -21,7 +21,7 @@ class GameStatusCubic extends Cubit<GameStatus> {
     DateTime? started = state.started;
     KyberServer? server = state.server;
     interval++;
-    if (interval == 20 && injected) {
+    if (interval >= 20 && injected) {
       interval = 0;
       server = await _getServer();
     }

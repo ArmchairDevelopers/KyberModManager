@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:kyber_mod_manager/api/kyber/server_response.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 
 part 'game_status.freezed.dart';
 

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/constants/maps.dart';
 import 'package:kyber_mod_manager/constants/modes.dart';
 import 'package:kyber_mod_manager/screens/join_server_dialog/join_dialog.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/mode.dart';
 
 material.DataRow Server(BuildContext context, KyberServer server) {

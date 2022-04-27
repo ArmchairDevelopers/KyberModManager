@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'package:kyber_mod_manager/api/kyber/proxy.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/constants/api_constants.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 
 class KyberApiService {
   static Future<ServerResponse> getServers([int page = 1]) async {
@@ -26,7 +27,14 @@ class KyberApiService {
     return servers;
   }
 
-  static Future<dynamic> host({required String name, required String proxy, required String password, required String mode, required String map, required int maxPlayers, required bool autoBalance}) {
+  static Future<dynamic> host(
+      {required String name,
+      required String proxy,
+      required String password,
+      required String mode,
+      required String map,
+      required int maxPlayers,
+      required bool autoBalance}) {
     return post(
       Uri.parse('$KYBER_API_BASE_URL/config/host'),
       headers: {

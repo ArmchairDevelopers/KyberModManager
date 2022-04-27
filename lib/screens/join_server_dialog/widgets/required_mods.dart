@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 
 class RequiredMods extends StatelessWidget {
   const RequiredMods({Key? key, required this.server}) : super(key: key);
