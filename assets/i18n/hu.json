@@ -18,6 +18,10 @@
   "size": "Size",
   "mods": "Mods",
   "login": "Login",
+  "name": "Name",
+  "description": "Description",
+  "version": "Version",
+  "author": "Author",
   "mods_loaded": "Loaded {count} mods.",
   "last_used": "Last Used",
   "navigation_bar": {
@@ -31,6 +35,7 @@
       "host": "Host Server",
       "mod_profiles": "Mod Profiles",
       "saved_profiles": "Saved Profiles",
+      "installed_mods": "Installed Mods",
       "run_bf2": "Run Battlefront II",
       "cosmetic_mods": "Cosmetic Mods",
       "feedback": "Feedback / Help",
@@ -112,6 +117,7 @@
         "unsupported_mods_3": "Currently only a selected list of mods can be downloaded automatically.",
         "downloading": "Downloading {0}... {1}%",
         "loading_states": {
+          "checking_mods": "Checking mods availability...",
           "0": "Starting browser...",
           "1": "Starting download...",
           "3": "Extracting..."
@@ -214,6 +220,10 @@
   "select_frosty_profile": {
     "title": "Load Frosty profile",
     "label": "Select a Frosty profile to import:"
+  },
+  "installed_mods": {
+    "title": "Installed Mods",
+    "open_directory": "Open directory"
   },
   "edit_mod_profile": {
     "title": "Mod Profile",

@@ -18,6 +18,10 @@
   "size": "Размер",
   "mods": "Моды",
   "login": "Войти",
+  "name": "Name",
+  "description": "Description",
+  "version": "Version",
+  "author": "Author",
   "mods_loaded": "Загружено {count} модов.",
   "last_used": "Last Used",
   "navigation_bar": {
@@ -31,6 +35,7 @@
       "host": "Создать Сервер",
       "mod_profiles": "Профили Модов",
       "saved_profiles": "Сохраненные Профили",
+      "installed_mods": "Installed Mods",
       "run_bf2": "Запустить Battlefront II",
       "cosmetic_mods": "Косметические Моды",
       "feedback": "Отзывы / Помощь",
@@ -112,6 +117,7 @@
         "unsupported_mods_3": "На данный момент только выбранный список модов может быть загружен автоматически.",
         "downloading": "Загрузка {0}... {1}%",
         "loading_states": {
+          "checking_mods": "Checking mods availability...",
           "0": "Запуск браузера...",
           "1": "Начало загрузки...",
           "3": "Извлечение..."
@@ -214,6 +220,10 @@
   "select_frosty_profile": {
     "title": "Загрузить профиль Frosty",
     "label": "Выберите профиль Frosty, чтобы импортировать:"
+  },
+  "installed_mods": {
+    "title": "Installed Mods",
+    "open_directory": "Open directory"
   },
   "edit_mod_profile": {
     "title": "Профиль Модов",

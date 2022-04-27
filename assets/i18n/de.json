@@ -18,6 +18,10 @@
   "size": "Größe",
   "mods": "Mods",
   "login": "Login",
+  "name": "Name",
+  "description": "Beschreibung",
+  "version": "Version",
+  "author": "Autor",
   "mods_loaded": "Es wurden {count} Mods geladen.",
   "last_used": "Zuletzt Verwendet",
   "navigation_bar": {
@@ -31,6 +35,7 @@
       "host": "Server Hosten",
       "mod_profiles": "Mod Profile",
       "saved_profiles": "Gespeicherte Profile",
+      "installed_mods": "Installierte Mods",
       "run_bf2": "Battlefront II starten",
       "cosmetic_mods": "Kosmetische Mods",
       "feedback": "Feedback / Hilfe",
@@ -112,6 +117,7 @@
         "unsupported_mods_3": "Derzeit kann nur eine ausgewählte liste von Mods automatisch installiert werden.",
         "downloading": "Lädt {0} runter... {1}%",
         "loading_states": {
+          "checking_mods": "Überprüfe die Verfügbarkeit von Mods...",
           "0": "Browser wird gestartet...",
           "1": "Starte Download...",
           "3": "Extrahiere..."
@@ -144,7 +150,7 @@
         "creating": "Erstelle Frosty Profil...",
         "frosty": "Warte auf Frosty...",
         "battlefront": "Auf Battlefront II warten...",
-        "battlefront_2": "Wenn das Battlefront II nicht automatisch startet, starte es manuell."
+        "battlefront_2": "Wenn Battlefront II nicht automatisch startet, starte es manuell."
       }
     }
   },
@@ -214,6 +220,10 @@
   "select_frosty_profile": {
     "title": "Frosty Profil importieren",
     "label": "Wähle ein Profil aus, welches du importieren möchtest:"
+  },
+  "installed_mods": {
+    "title": "Installierte Mods",
+    "open_directory": "Verzeichnis öffnen"
   },
   "edit_mod_profile": {
     "title": "Mod Profil",

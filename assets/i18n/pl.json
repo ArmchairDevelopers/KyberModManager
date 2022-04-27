@@ -18,8 +18,12 @@
   "size": "Rozmiar",
   "mods": "Modyfikacje",
   "login": "Zaloguj się",
+  "name": "Nazwa",
+  "description": "Opis",
+  "version": "Wersja",
+  "author": "Autor",
   "mods_loaded": "Ilość załadowanych modyfikacji: {count}",
-  "last_used": "Last Used",
+  "last_used": "Ostatnio używane",
   "navigation_bar": {
     "battlefront_not_running": "Gra Battlefront II nie jest uruchumiona.",
     "kyber": {
@@ -31,6 +35,7 @@
       "host": "Hostowanie serwera",
       "mod_profiles": "Zestawy modyfikacji",
       "saved_profiles": "Zestawy z serwerów",
+      "installed_mods": "Zainstalowane modyfikacje",
       "run_bf2": "Uruchom Battlefront II",
       "cosmetic_mods": "Modyfikacje kosmetyczne",
       "feedback": "Opinie / Pomoc",
@@ -112,6 +117,7 @@
         "unsupported_mods_3": "Obecnie tylko wybrane modyfikacje są dostępne do automatycznego pobierania.",
         "downloading": "Pobieranie {0}... {1}%",
         "loading_states": {
+          "checking_mods": "Sprawdzanie dostępności modyfikacji...",
           "0": "Uruchamianie przeglądarki...",
           "1": "Rozpoczynanie pobierania...",
           "3": "Rozpakowywanie..."
@@ -215,6 +221,10 @@
     "title": "Wybierz profil Frosty",
     "label": "Wybierz profil Frosty, aby zaimportować:"
   },
+  "installed_mods": {
+    "title": "Zainstalowane modyfikacje",
+    "open_directory": "Otwórz folder"
+  },
   "edit_mod_profile": {
     "title": "Zestaw modyfikacji",
     "installed_mods": "Zainstalowane mody",
@@ -243,7 +253,7 @@
     "title": "Uruchom Battlefront II",
     "starting": "Uruchamianie...",
     "copying_profile": "Kopiowanie danych zestawów ({copied}/{total} plików) ...",
-    "cosmetic_mods": "Cosmetic Mods",
+    "cosmetic_mods": "Modyfikacje kosmetyczne",
     "notifications": {
       "no_profile_selected": "Wybierz zestaw modyfikacji.",
       "battlefront_already_running": "Gra Battlefront II jest już uruchomiona."
@@ -261,10 +271,10 @@
   },
   "settings": {
     "title": "Ustawienia",
-    "export_log_file": "Export log file",
+    "export_log_file": "Eksportuj pliki dziennika",
     "check_for_updates": {
-      "title": "Check for updates",
-      "no_updates_available": "No updates available."
+      "title": "Sprawdź dostępność aktualizacji",
+      "no_updates_available": "Brak dostępnych aktualizacji."
     },
     "language": {
       "title": "Język",
