@@ -150,8 +150,10 @@ class _EditProfileState extends State<EditProfile> {
                                 if (newIndex > oldIndex) {
                                   newIndex -= 1;
                                 }
-                                final Mod mod = _profile.mods.removeAt(oldIndex);
-                                _profile.mods.insert(newIndex, mod);
+
+                                var mods = [..._profile.mods];
+                                final Mod mod = mods.removeAt(oldIndex);
+                                _profile = _profile.copyWith(mods: mods..insert(newIndex, mod));
                               });
                             },
                           ),
