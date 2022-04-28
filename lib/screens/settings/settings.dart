@@ -120,7 +120,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Card(
             elevation: 0,
             child: ListTile(
@@ -149,7 +149,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Card(
             elevation: 0,
             child: ListTile(
@@ -174,7 +174,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Card(
             elevation: 0,
             child: ListTile(
@@ -204,7 +204,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Card(
             elevation: 0,
             child: ListTile(
@@ -263,7 +263,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Card(
             elevation: 0,
             child: ListTile(
@@ -293,7 +293,7 @@ class _SettingsState extends State<Settings> {
           ),
           const Center(
             child: Text(
-              'V1.0.3',
+              'V1.0.4',
               style: TextStyle(fontSize: 12),
             ),
           ),
