@@ -1,10 +1,27 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/screens/errors/chromium_not_found.dart';
+import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:puppeteer/plugins/stealth.dart';
 import 'package:puppeteer/puppeteer.dart';
 
 class PuppeteerHelper {
+  static const String _chromiumPath = './970485/chrome-win/chrome.exe';
   static Browser? _browser;
+
+  static void checkFiles() {
+    if (kDebugMode) {
+      return;
+    }
+
+    var file = File(_chromiumPath);
+    if (!file.existsSync()) {
+      NavigatorService.pushErrorPage(const ChromiumNotFound());
+      throw Exception('Chromium not found');
+    }
+  }
 
   static Future<Browser> startBrowser({Function? onClose, Function? onBrowserCreated, bool headless = true}) async {
     if (_browser != null) {
@@ -13,7 +30,7 @@ class PuppeteerHelper {
     }
 
     _browser = await puppeteer.launch(
-      executablePath: kDebugMode ? null : './970485/chrome-win/chrome.exe',
+      executablePath: kDebugMode ? null : _chromiumPath,
       defaultViewport: null,
       args: [
         '--no-sandbox',

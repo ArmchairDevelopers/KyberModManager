@@ -8,9 +8,9 @@ import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
+import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
-import 'package:kyber_mod_manager/screens/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
 import 'package:kyber_mod_manager/screens/saved_profiles.dart';
@@ -24,6 +24,7 @@ import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
+import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:window_manager/window_manager.dart';
@@ -51,7 +52,7 @@ class _NavigationBarState extends State<NavigationBar> {
       try {
         ProfileService.generateFiles();
       } catch (e) {
-        Navigator.of(context).pushAndRemoveUntil(FluentPageRoute(builder: (context) => MissingPermissions()), (route) => false);
+        NavigatorService.pushErrorPage(const MissingPermissions());
         return;
       }
     });

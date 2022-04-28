@@ -8,11 +8,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/download_screen.dart';
 import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/password_input.dart';
 import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/required_mods.dart';
 import 'package:kyber_mod_manager/screens/join_server_dialog/widgets/team_selector.dart';
-import 'package:kyber_mod_manager/screens/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
@@ -21,6 +21,7 @@ import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
@@ -137,7 +138,7 @@ class _ServerDialogState extends State<ServerDialog> {
         Logger.root.info("Applying Frosty mods...");
         bool success = await FrostyService.startFrosty().catchError((error) {
           NotificationService.showNotification(message: error, color: Colors.red);
-          Navigator.of(context).push(FluentPageRoute(builder: (context) => MissingPermissions()));
+          NavigatorService.pushErrorPage(const MissingPermissions());
         });
         if (mounted && !success) {
           NotificationService.showNotification(message: 'Frosty error!', color: Colors.red);
