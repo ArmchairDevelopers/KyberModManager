@@ -23,6 +23,7 @@ import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.d
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
+import 'package:kyber_mod_manager/utils/helpers/system_tray_helper.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
@@ -51,6 +52,7 @@ class _NavigationBarState extends State<NavigationBar> {
     Timer.run(() {
       try {
         ProfileService.generateFiles();
+        SystemTrayHelper.init(context);
       } catch (e) {
         NavigatorService.pushErrorPage(const MissingPermissions());
         return;

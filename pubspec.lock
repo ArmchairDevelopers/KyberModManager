@@ -833,6 +833,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.2"
+  system_tray:
+    dependency: "direct main"
+    description:
+      name: system_tray
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   term_glyph:
     dependency: transitive
     description:
