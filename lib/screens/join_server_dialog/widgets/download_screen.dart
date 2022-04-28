@@ -61,12 +61,13 @@ class _DownloadScreenState extends State<DownloadScreen> {
       downloadService.close();
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
     } catch (_e) {
-      print(_e);
+      Logger.root.severe(_e.toString());
     }
     super.dispose();
   }
 
   void startDownloads() async {
+    WindowsTaskbar.setProgressMode(TaskbarProgressMode.indeterminate);
     await Future.wait(mods.map((e) async {
       bool available = await ApiService.isAvailable(e.toString());
       if (!available) {
@@ -100,9 +101,11 @@ class _DownloadScreenState extends State<DownloadScreen> {
         total = int.parse(event.total);
         progress = received / total * 100;
       });
+      WindowsTaskbar.setProgress(received, total);
     });
     await downloadService.startDownload(
       onWebsiteOpened: () {
+        WindowsTaskbar.setProgressMode(TaskbarProgressMode.normal);
         setState(() => loadingState = 3);
       },
       context: context,
@@ -121,6 +124,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
       },
     );
     onDownloadsFinished();
+    WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
   }
 
   @override
