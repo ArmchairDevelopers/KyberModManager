@@ -41,9 +41,12 @@ class _RunDialogState extends State<RunDialog> {
       onProgress: onProgress,
       setContent: (content) => setState(() => this.content = content),
     );
+    if (!mounted) return;
 
     setState(() => content = translate('$prefix.frosty'));
     await FrostyService.startFrosty();
+
+    if (!mounted) return;
     Navigator.of(context).pop();
   }
 
