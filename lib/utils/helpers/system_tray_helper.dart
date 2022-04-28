@@ -8,6 +8,7 @@ import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_dialog.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:system_tray/system_tray.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:window_manager/window_manager.dart';
 
 class SystemTrayHelper {
@@ -23,9 +24,7 @@ class SystemTrayHelper {
     systemTray.initSystemTray(title: 'Kyber Mod Manager', iconPath: './assets/app_icon.ico');
     systemTray.setContextMenu(_defaultMenu);
     systemTray.registerSystemTrayEventHandler((eventName) {
-      if (eventName == "leftMouseDown") {
-        windowManager.focus();
-      } else if (eventName == "rightMouseDown") {
+      if (eventName == "rightMouseDown" || eventName == "leftMouseDown") {
         systemTray.popUpContextMenu();
       }
     });
@@ -46,7 +45,8 @@ class SystemTrayHelper {
           ...profiles.map((profile) => MenuItem(label: profile, onClicked: () => _onProfileSelected(profile + ' (Frosty Pack)'))).toList(),
         ],
       ),
-      MenuItem(label: 'Mod directory', onClicked: () => print('open dir')),
+      MenuSeparator(),
+      MenuItem(label: 'Mod directory', onClicked: () => launchUrlString('file://${box.get('frostyPath')}\\Mods\\starwarsbattlefrontii')),
       ..._defaultMenu,
     ];
     systemTray.setContextMenu(items);
