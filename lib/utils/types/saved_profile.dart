@@ -27,6 +27,5 @@ class SavedProfile {
       size: json["size"],
       lastUsed: json['lastUsed'] != null ? DateTime.parse(json['lastUsed']) : null);
 
-  Map<String, dynamic> toJson() =>
-      {"mods": List<dynamic>.from(mods.map((x) => x.toJson())), "path": path, "id": id, "size": size, "lastUsed": lastUsed?.toString()};
+  Map<String, dynamic> toJson() => {"mods": List<dynamic>.from(mods.map((x) => x.toJson())), "path": path, "id": id, "size": size, "lastUsed": lastUsed?.toString()};
 }

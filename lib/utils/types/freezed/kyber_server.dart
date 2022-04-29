@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'kyber_server.freezed.dart';
-
 part 'kyber_server.g.dart';
 
 @freezed

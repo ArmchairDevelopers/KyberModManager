@@ -142,8 +142,8 @@ class _SavedProfilesState extends State<SavedProfiles> {
                     Text(
                       e.lastUsed != null
                           ? DateFormat.yMMMMEEEEd(
-                                  Locale.fromSubtags(languageCode: box.get('locale', defaultValue: Platform.localeName.split('_').first)).languageCode)
-                              .format(e.lastUsed!)
+                              Locale.fromSubtags(languageCode: box.get('locale', defaultValue: Platform.localeName.split('_').first)).languageCode,
+                            ).format(e.lastUsed!)
                           : '-',
                       textAlign: TextAlign.center,
                     ),

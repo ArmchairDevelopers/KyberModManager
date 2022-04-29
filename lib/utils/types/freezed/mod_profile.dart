@@ -3,7 +3,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 
 part 'mod_profile.freezed.dart';
-
 part 'mod_profile.g.dart';
 
 @HiveType(typeId: 1)
