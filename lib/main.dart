@@ -66,8 +66,12 @@ void main() async {
         await windowManager.setBackgroundColor(Colors.transparent);
       });
     } else {
-      await windowManager.setTitleBarStyle(TitleBarStyle.normal, windowButtonVisibility: false);
-      await windowManager.setBackgroundColor(Colors.transparent);
+      windowManager.waitUntilReadyToShow().then((_) async {
+        await windowManager.setTitleBarStyle(TitleBarStyle.normal, windowButtonVisibility: false);
+        await windowManager.setSize(const Size(1400, 700));
+        await windowManager.show();
+        await windowManager.setBackgroundColor(Colors.transparent);
+      });
     }
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {
