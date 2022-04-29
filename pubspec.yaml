@@ -14,7 +14,6 @@ dependencies:
   sentry_flutter: ^6.4.0
   dart_discord_rpc: ^0.0.2
   window_manager: ^0.2.1
-  drag_and_drop_windows: ^0.0.2
   windows_taskbar: ^1.1.0
   flutter_fadein: ^2.0.0
   url_launcher: ^6.0.0
@@ -31,6 +30,7 @@ dependencies:
   flutter_bloc: ^8.0.1
   path: ^1.8.0
   path_provider: ^2.0.9
+  desktop_drop: ^0.3.3
   flutter_translate: ^3.0.1
   archive: ^3.2.1
   auto_size_text: ^3.0.0

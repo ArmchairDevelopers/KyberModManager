@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -211,26 +212,31 @@ class _NavigationBarState extends State<NavigationBar> {
           },
           displayMode: PaneDisplayMode.auto,
         ),
-        content: NavigationBody(
-          index: index,
-          transitionBuilder: (child, animation) => EntrancePageTransition(
-            child: child,
-            animation: animation,
-            startFrom: .02,
+        content: DropTarget(
+          onDragDone: (details) {
+            ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
+          },
+          child: NavigationBody(
+            index: index,
+            transitionBuilder: (child, animation) => EntrancePageTransition(
+              child: child,
+              animation: animation,
+              startFrom: .02,
+            ),
+            children: [
+              // const SizedBox(),
+              const ServerBrowser(),
+              const ServerHost(),
+              const ModProfiles(),
+              const CosmeticMods(),
+              const InstalledMods(),
+              const SavedProfiles(),
+              const RunBattlefront(),
+              const feedback.Feedback(),
+              const Settings(),
+              widget.runtimeType != int ? widget.values.first : const SizedBox(height: 0),
+            ],
           ),
-          children: [
-            // const SizedBox(),
-            const ServerBrowser(),
-            const ServerHost(),
-            const ModProfiles(),
-            const CosmeticMods(),
-            const InstalledMods(),
-            const SavedProfiles(),
-            const RunBattlefront(),
-            const feedback.Feedback(),
-            const Settings(),
-            widget.runtimeType != int ? widget.values.first : const SizedBox(height: 0),
-          ],
         ),
       );
     });

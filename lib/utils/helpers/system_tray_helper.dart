@@ -20,6 +20,7 @@ class SystemTrayHelper {
 
   static void init(BuildContext context) {
     _context = context;
+    return;
     systemTray = SystemTray();
     systemTray.initSystemTray(title: 'Kyber Mod Manager', iconPath: './assets/app_icon.ico');
     systemTray.setContextMenu(_defaultMenu);

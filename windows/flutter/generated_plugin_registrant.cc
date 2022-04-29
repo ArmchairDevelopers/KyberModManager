@@ -8,7 +8,7 @@
 
 #include <auto_update/auto_update_plugin.h>
 #include <dart_discord_rpc/dart_discord_rpc_plugin.h>
-#include <drag_and_drop_windows/drag_and_drop_windows_plugin.h>
+#include <desktop_drop/desktop_drop_plugin.h>
 #include <flutter_acrylic/flutter_acrylic_plugin.h>
 #include <sentry_flutter/sentry_flutter_plugin.h>
 #include <system_theme/system_theme_plugin.h>
@@ -22,8 +22,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("AutoUpdatePlugin"));
   DartDiscordRpcPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("DartDiscordRpcPlugin"));
-  DragAndDropWindowsPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("DragAndDropWindowsPlugin"));
+  DesktopDropPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("DesktopDropPlugin"));
   FlutterAcrylicPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterAcrylicPlugin"));
   SentryFlutterPluginRegisterWithRegistrar(

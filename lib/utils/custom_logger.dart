@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:logging/logging.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class CustomLogger {
   static late File _logFile;
@@ -18,6 +20,10 @@ class CustomLogger {
         print(message);
       },
     );
+    FlutterError.onError = (details) {
+      Logger.root.severe('Uncaught exception: ${details.exception}\n${details.stack}');
+      Sentry.captureException(details.exception, stackTrace: details.stack);
+    };
   }
 
   static String getLogs() {

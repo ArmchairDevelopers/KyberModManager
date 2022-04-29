@@ -87,17 +87,13 @@ class _AppState extends State<App> {
   @override
   void initState() {
     Timer.run(() {
+      ModService.watchDirectory();
+      PuppeteerHelper.checkFiles();
       ModService.loadMods(context).then((value) {
         if (box.containsKey('setup')) {
           ProfileService.migrateSavedProfiles();
         }
       });
-      ModService.watchDirectory();
-      PuppeteerHelper.checkFiles();
-      FlutterError.onError = (details) {
-        Logger.root.severe('Uncaught exception: ${details.exception}\n${details.stack}');
-        Sentry.captureException(details.exception, stackTrace: details.stack);
-      };
     });
     super.initState();
   }
