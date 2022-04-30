@@ -13,7 +13,7 @@ import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:logging/logging.dart';
 
 class FrostyProfileService {
-  static createProfile(List<String> list) async {
+  static Future<void> createProfile(List<String> list, [String profile = 'KyberModManager']) async {
     try {
       List<Mod> mods = list.map((e) => ModService.convertToMod(e)).toList();
       FrostyConfig config = await FrostyService.getFrostyConfig();
@@ -23,7 +23,7 @@ class FrostyProfileService {
       config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
       config.globalOptions.useDefaultProfile = true;
       config.games['starwarsbattlefrontii']?.options.selectedPack = 'KyberModManager';
-      config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
+      config.games['starwarsbattlefrontii']?.packs?[profile] =
           mods.where((element) => element.filename.isNotEmpty).map((e) => '${e.filename.substring(e.filename.lastIndexOf('\\') + 1)}:True').join('|');
       await FrostyService.saveFrostyConfig(config);
     } catch (e) {
