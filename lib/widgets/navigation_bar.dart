@@ -107,21 +107,21 @@ class _NavigationBarState extends State<NavigationBar> {
           height: micaSupported ? 0 : 30,
           title: !micaSupported
               ? () {
-                  return DragToMoveArea(
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: const Text('Kyber Mod Manager'),
-                    ),
-                  );
-                }()
+            return DragToMoveArea(
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: const Text('Kyber Mod Manager'),
+              ),
+            );
+          }()
               : null,
           actions: !micaSupported
               ? SizedBox(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [Spacer(), WindowButtons()],
-                  ),
-                )
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [Spacer(), WindowButtons()],
+            ),
+          )
               : null,
         ),
         pane: NavigationPane(

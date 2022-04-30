@@ -4,10 +4,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/settings/platform_selector.dart';
 import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
+import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
@@ -92,9 +94,10 @@ class _SettingsState extends State<Settings> {
               trailing: SizedBox(
                 width: 250,
                 child: Combobox<dynamic>(
-                  onChanged: (dynamic value) {
+                  onChanged: (dynamic value) async {
                     changeLocale(context, value);
-                    box.put('locale', value);
+                    await box.put('locale', value);
+                    Jiffy.locale(AppLocale().getLocale().languageCode);
                   },
                   isExpanded: true,
                   value: LocalizedApp.of(context).delegate.currentLocale.languageCode,
