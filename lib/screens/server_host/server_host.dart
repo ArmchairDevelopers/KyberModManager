@@ -10,7 +10,6 @@ import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/server_host/hosting_dialog.dart';
 import 'package:kyber_mod_manager/utils/helpers/map_helper.dart';
-import 'package:kyber_mod_manager/utils/helpers/system_tasks.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
@@ -147,7 +146,7 @@ class _ServerHostState extends State<ServerHost> {
 
     setState(() => disabled = true);
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.indeterminate);
-    bool running = await SystemTasks.isKyberRunning();
+    bool running = BlocProvider.of<GameStatusCubic>(context).state.injected;
     if (!update) {
       NotificationService.showNotification(message: translate('$prefix.starting'));
       KyberServer? server = await KyberApiService.searchServer(_hostController.text);
