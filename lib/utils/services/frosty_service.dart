@@ -6,11 +6,11 @@ import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FrostyService {
-  static Future<bool> startFrosty() async {
-    String path = box.get('frostyPath');
+  static Future<bool> startFrosty({bool launch = true, String? frostyPath}) async {
+    String path = frostyPath ?? box.get('frostyPath');
     var r = await Process.run(
       '$path/FrostyModManager.exe',
-      ['-launch', 'KyberModManager'],
+      launch ? ['-launch', 'KyberModManager'] : [],
       workingDirectory: path,
       includeParentEnvironment: true,
     );

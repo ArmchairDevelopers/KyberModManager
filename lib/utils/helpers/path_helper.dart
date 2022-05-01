@@ -1,9 +1,53 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
+import 'package:dio/dio.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/github_asset.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 
 class PathHelper {
+  static CancelToken? _cancelToken;
+
+  static Future<List<GitHubAsset>> getFrostyVersions() async {
+    var response = await Dio().get('https://api.github.com/repos/CadeEvs/FrostyToolsuite/releases');
+    List<GitHubAsset> releases = [];
+    response.data.forEach((release) {
+      releases.add(GitHubAsset.fromJson({...release['assets'].where((asset) => asset['name'] == 'FrostyModManager.zip').first, 'version': release['tag_name']}));
+    });
+    return releases;
+  }
+
+  static void cancelDownload() => _cancelToken?.cancel();
+
+  static Future<void> downloadFrosty(Directory path, GitHubAsset gitHubAsset, Function(int, int) onProgress) async {
+    onProgress(0, gitHubAsset.size);
+    _cancelToken = CancelToken();
+    await Dio().download(
+      gitHubAsset.browser_download_url,
+      path.path + '.zip',
+      cancelToken: _cancelToken,
+      onReceiveProgress: (received, total) => onProgress(received, total),
+    );
+    await Future.delayed(const Duration(seconds: 1));
+    final inputStream = InputFileStream(path.path + '.zip');
+    final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
+    for (var file in archive.files) {
+      if (!file.isFile) {
+        continue;
+      }
+
+      if (!path.parent.existsSync()) {
+        path.parent.createSync(recursive: true);
+      }
+      final outputStream = OutputFileStream(path.path + '/' + file.name);
+      file.writeContent(outputStream);
+      outputStream.close();
+    }
+    archive.clear();
+  }
+
   static Future<String?> isValidFrostyDir(String path) async {
     Directory directory = Directory(path);
     if (!directory.existsSync()) {
