@@ -1,19 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FrostyService {
   static Future<bool> startFrosty({bool launch = true, String? frostyPath}) async {
     String path = frostyPath ?? box.get('frostyPath');
-    var r = await Process.run(
+    await Process.run(
       '$path/FrostyModManager.exe',
       launch ? ['-launch', 'KyberModManager'] : [],
       workingDirectory: path,
       includeParentEnvironment: true,
-    );
+    ).onError((error, stackTrace) {
+      NotificationService.showNotification(message: error.toString(), color: Colors.red);
+    });
     return true;
   }
 
