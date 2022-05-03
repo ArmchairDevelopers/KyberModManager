@@ -49,7 +49,7 @@ class _NavigationBarState extends State<NavigationBar> {
 
   @override
   void initState() {
-    Jiffy.locale(AppLocale().getLocale().languageCode);
+    Jiffy.locale(supportedLocales.contains(AppLocale().getLocale().languageCode) ? AppLocale().getLocale().languageCode : 'en');
     Timer.run(() {
       try {
         ProfileService.generateFiles();

@@ -27,6 +27,7 @@ import 'package:system_theme/system_theme.dart';
 import 'package:window_manager/window_manager.dart';
 
 final bool micaSupported = SysInfo.operatingSystemName.contains('Windows 11');
+final supportedLocales = ['en', 'de', 'pl', 'ru'];
 Box box = Hive.box('data');
 String applicationDocumentsDirectory = '';
 
@@ -48,7 +49,7 @@ void main() async {
     await StorageHelper.initialiseHive();
     var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'en',
-      supportedLocales: ['en', 'de', 'pl', 'ru'],
+      supportedLocales: supportedLocales,
       preferences: TranslatePreferences(),
     );
     if (micaSupported) {
