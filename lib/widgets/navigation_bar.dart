@@ -91,7 +91,7 @@ class _NavigationBarState extends State<NavigationBar> {
     }
   }
 
-  void checkKyberStatus(Timer? timer) => BlocProvider.of<GameStatusCubic>(context).check();
+  void checkKyberStatus(Timer? timer) => box.containsKey('setup') ? BlocProvider.of<GameStatusCubic>(context).check() : timer?.cancel();
 
   @override
   Widget build(BuildContext context) {
