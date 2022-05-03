@@ -294,7 +294,7 @@ class _SettingsState extends State<Settings> {
           ),
           const Center(
             child: Text(
-              'V1.0.4',
+              'V1.0.5',
               style: TextStyle(fontSize: 12),
             ),
           ),

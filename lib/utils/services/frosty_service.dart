@@ -5,6 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
+import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FrostyService {
@@ -52,12 +53,15 @@ class FrostyService {
 
     File v5path = File('${tmp.path.replaceAll('Temp', 'Frosty')}\\manager_config.json');
     File v4path = File('${box.get('frostyPath')}\\config.json');
+    Logger.root.info('Checking for Frosty configs at "${v5path.path}" and "${v4path.path}"');
 
     if (await v5path.exists()) {
       return v5path.path;
     } else if (await v4path.exists()) {
       return v4path.path;
     }
+
+    Logger.root.severe('No Frosty config found');
 
     return null;
   }

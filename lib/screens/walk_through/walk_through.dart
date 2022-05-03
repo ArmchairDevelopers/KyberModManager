@@ -17,6 +17,7 @@ import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/github_asset.dart';
+import 'package:logging/logging.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 
@@ -30,7 +31,7 @@ class WalkThrough extends StatefulWidget {
 class _WalkThroughState extends State<WalkThrough> {
   final String prefix = 'walk_through';
   late List<GitHubAsset> frostyVersions;
-  late List<String> supportedFrostyVersions;
+  List<String>? supportedFrostyVersions;
   late GitHubAsset selectedFrostyVersion;
   Directory? _directory;
   bool firstInstall = false;
@@ -94,7 +95,7 @@ class _WalkThroughState extends State<WalkThrough> {
         );
       case 1:
         return FrostySelector(
-          supportedVersions: supportedFrostyVersions,
+          supportedVersions: supportedFrostyVersions ?? ['loading...'],
         );
       case 2:
         return RichText(
@@ -163,7 +164,14 @@ class _WalkThroughState extends State<WalkThrough> {
                 items: frostyVersions
                     .map(
                       (e) => ComboboxItem(
-                        child: Text(e.version + (supportedFrostyVersions.contains(e.version) ? ' (Supported)' : ' (Not Supported)')),
+                        child: Text(
+                          e.version +
+                              (supportedFrostyVersions != null
+                                  ? supportedFrostyVersions!.contains(e.version)
+                                      ? ' (Supported)'
+                                      : ' (Not Supported)'
+                                  : ' (-)'),
+                        ),
                         value: e,
                       ),
                     )
@@ -215,6 +223,8 @@ class _WalkThroughState extends State<WalkThrough> {
         box.put('frostyPath', selectedDirectory);
         String? configPath = await FrostyService.getFrostyConfigPath();
         if (configPath == null) {
+          Logger.root.severe('No config found.');
+          NotificationService.showNotification(message: 'No config found.', color: Colors.red);
           return;
         }
         box.put('frostyConfigPath', configPath);
@@ -233,6 +243,9 @@ class _WalkThroughState extends State<WalkThrough> {
           disabled = true;
         });
         Future.delayed(const Duration(seconds: 4), () => setState(() => disabled = false));
+      } else {
+        Logger.root.severe('Failed to select Frosty directory');
+        NotificationService.showNotification(message: 'Failed to select Frosty path', color: Colors.red);
       }
     } else if (index == 3) {
       setState(() {
@@ -312,11 +325,11 @@ class _WalkThroughState extends State<WalkThrough> {
                   setState(() => index == 3 ? index = 1 : index--);
                 },
         ),
-        if (index == 1)
-          Button(
-            child: const Text("Download Frosty"),
-            onPressed: index == 0 || disabled ? null : () => setState(() => index = 3),
-          ),
+        // if (index == 1)
+        //   Button(
+        //     child: const Text("Download Frosty"),
+        //     onPressed: index == 0 || disabled ? null : () => setState(() => index = 3),
+        //   ),
         FilledButton(
           child: Text(
             index == 1
