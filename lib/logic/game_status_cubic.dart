@@ -46,6 +46,10 @@ class GameStatusCubic extends Cubit<GameStatus> {
     dynamic config = await KyberApiService.getCurrentConfig();
     KyberServer? server;
     if (config['KYBER_MODE'] != 'CLIENT') {
+      if (config['SERVER_OPTIONS'] == null) {
+        return null;
+      }
+
       if (_serverId == null) {
         server = await KyberApiService.searchServer(config['SERVER_OPTIONS']['NAME']);
         _serverId = server?.id;
