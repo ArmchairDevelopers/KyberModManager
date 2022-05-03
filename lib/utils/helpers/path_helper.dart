@@ -34,14 +34,15 @@ class PathHelper {
     final inputStream = InputFileStream(path.path + '.zip');
     final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
     for (var file in archive.files) {
+      String filepath = path.path + '/' + file.name;
       if (!file.isFile) {
         continue;
       }
 
-      if (!path.parent.existsSync()) {
-        path.parent.createSync(recursive: true);
+      if (!File(filepath).existsSync()) {
+        File(filepath).createSync(recursive: true);
       }
-      final outputStream = OutputFileStream(path.path + '/' + file.name);
+      final outputStream = OutputFileStream(filepath);
       file.writeContent(outputStream);
       outputStream.close();
     }
