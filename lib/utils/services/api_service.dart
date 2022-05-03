@@ -22,7 +22,6 @@ class ApiService {
       final response = await get(
         Uri.parse('$BACKEND_API_BASE_URL/frosty/versions'),
       );
-      print('$BACKEND_API_BASE_URL/frosty/versions');
       return List<String>.from(json.decode(response.body));
     } catch (e) {
       print(e);

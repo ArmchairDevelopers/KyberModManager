@@ -11,12 +11,12 @@ import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/path_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/system_tray_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
+import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/github_asset.dart';
-import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 
@@ -137,18 +137,17 @@ class _WalkThroughState extends State<WalkThrough> {
         if (index == 5) {
           return Container(
             alignment: Alignment.center,
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-              const SizedBox(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: const [
+              SizedBox(
                 height: 20,
                 width: 20,
                 child: ProgressRing(),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 20),
               Text(
-                firstInstall
-                    ? "Please close Frosty after it loaded into the menu."
-                    : 'click on "Scan for games" once Frosty starts and, after it loads into the menu, close it.',
-                style: const TextStyle(fontSize: 18),
+                "Please close Frosty after it loaded into the menu",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
               ),
             ]),
           );
@@ -257,11 +256,16 @@ class _WalkThroughState extends State<WalkThrough> {
 
       box.put('frostyPath', _directory!.path);
       String? configPath = await FrostyService.getFrostyConfigPath();
-      box.put('frostyConfigPath', configPath);
-      FrostyConfig config = await FrostyService.getFrostyConfig();
-      setState(() {
-        firstInstall = config.games.keys.contains('starwarsbattlefrontii');
-      });
+      var config;
+      if (configPath != null && File(configPath).existsSync()) {
+        box.put('frostyConfigPath', configPath);
+        config = await FrostyService.getFrostyConfig();
+      } else {
+        await FrostyProfileService.createFrostyConfig();
+      }
+      // setState(() {
+      //   firstInstall = config?.games.keys.contains('starwarsbattlefrontii') ?? true;
+      // });
       await FrostyService.startFrosty(launch: false, frostyPath: _directory!.path);
 
       setState(() {
@@ -299,13 +303,13 @@ class _WalkThroughState extends State<WalkThrough> {
       actions: [
         Button(
           child: index == 3 ? const Text('Cancel') : Text(translate('server_browser.prev_page')),
-          onPressed: index == 0 || disabled
+          onPressed: index < 2 || disabled
               ? null
               : () {
                   if (index == 3) {
                     PathHelper.cancelDownload();
                   }
-                  setState(() => index == 3 ? index = 1 : index);
+                  setState(() => index == 3 ? index = 1 : index--);
                 },
         ),
         if (index == 1)

@@ -24,7 +24,7 @@ class FrostyService {
   static Future<FrostyConfig> getFrostyConfig() async {
     String? filePath = await getFrostyConfigPath();
     if (filePath == null) {
-      return FrostyConfig.fromJson({});
+      return FrostyConfig.fromJson({'Games': [], 'GlobalOptions': Map<String, dynamic>.from({})});
     }
     File file = File(filePath);
     FrostyConfig config = FrostyConfig.fromJson(
@@ -33,8 +33,8 @@ class FrostyService {
     return config;
   }
 
-  static Future<void> saveFrostyConfig(FrostyConfig config) async {
-    String? filePath = await getFrostyConfigPath();
+  static Future<void> saveFrostyConfig(FrostyConfig config, [String? path]) async {
+    String? filePath = path ?? await getFrostyConfigPath();
     if (filePath == null) {
       return;
     }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
@@ -29,6 +30,28 @@ class FrostyProfileService {
     } catch (e) {
       NotificationService.showNotification(message: e.toString(), color: Colors.red);
     }
+  }
+
+  static Future<void> createFrostyConfig() async {
+    String path = applicationDocumentsDirectory.replaceAll(r'Roaming\Kyber Mod Manager', r'Local\Frosty');
+    if (!Directory(path).existsSync()) {
+      Directory(path).createSync(recursive: true);
+    }
+    File file = File('$path\\manager_config.json');
+    if (file.existsSync()) {
+      return;
+    }
+    await file.create();
+    FrostyConfig config = FrostyConfig.fromJson({'Games': {}, 'GlobalOptions': Map<String, dynamic>.from({})});
+    config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
+    config.globalOptions.useDefaultProfile = true;
+    config.games['starwarsbattlefrontii'] = Game(
+      gamePath: OriginHelper.getBattlefrontPath(),
+      bookmarkDb: "[Asset Bookmarks]|[Legacy Bookmarks]",
+      options: Options(),
+      packs: {'Default': '', 'KyberModManager': ''},
+    );
+    await FrostyService.saveFrostyConfig(config, file.path);
   }
 
   static loadFrostyPack(String name, [Function? onProgress]) async {
