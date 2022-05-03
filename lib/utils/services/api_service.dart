@@ -17,6 +17,19 @@ class ApiService {
     }
   }
 
+  static Future<List<String>> supportedFrostyVersions() async {
+    try {
+      final response = await get(
+        Uri.parse('$BACKEND_API_BASE_URL/frosty/versions'),
+      );
+      print('$BACKEND_API_BASE_URL/frosty/versions');
+      return List<String>.from(json.decode(response.body));
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   static Future<_DownloadLinksResponse> getDownloadLinks(List<String> mods) async {
     List<String> links = [];
     List<String> unavailableMods = [];

@@ -10,6 +10,7 @@ import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.d
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/path_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/system_tray_helper.dart';
+import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
@@ -29,6 +30,7 @@ class WalkThrough extends StatefulWidget {
 class _WalkThroughState extends State<WalkThrough> {
   final String prefix = 'walk_through';
   late List<GitHubAsset> frostyVersions;
+  late List<String> supportedFrostyVersions;
   late GitHubAsset selectedFrostyVersion;
   Directory? _directory;
   bool firstInstall = false;
@@ -48,6 +50,7 @@ class _WalkThroughState extends State<WalkThrough> {
         selectedFrostyVersion = frostyVersions.first;
       });
     });
+    ApiService.supportedFrostyVersions().then((value) => setState(() => supportedFrostyVersions = value));
     DllInjector.checkForUpdates().then(
       (value) => setState(() {
         index++;
@@ -90,7 +93,9 @@ class _WalkThroughState extends State<WalkThrough> {
           ),
         );
       case 1:
-        return const FrostySelector();
+        return FrostySelector(
+          supportedVersions: supportedFrostyVersions,
+        );
       case 2:
         return RichText(
           textAlign: TextAlign.center,
@@ -133,10 +138,16 @@ class _WalkThroughState extends State<WalkThrough> {
           return Container(
             alignment: Alignment.center,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-              const ProgressRing(),
+              const SizedBox(
+                height: 20,
+                width: 20,
+                child: ProgressRing(),
+              ),
               const SizedBox(width: 10),
               Text(
-                firstInstall ? "Please close Frosty after it initialised." : 'Please click on "Scan for games" once Frosty started.',
+                firstInstall
+                    ? "Please close Frosty after it loaded into the menu."
+                    : 'click on "Scan for games" once Frosty starts and, after it loads into the menu, close it.',
                 style: const TextStyle(fontSize: 18),
               ),
             ]),
@@ -153,7 +164,7 @@ class _WalkThroughState extends State<WalkThrough> {
                 items: frostyVersions
                     .map(
                       (e) => ComboboxItem(
-                        child: Text(e.version),
+                        child: Text(e.version + (supportedFrostyVersions.contains(e.version) ? ' (Supported)' : ' (Not Supported)')),
                         value: e,
                       ),
                     )

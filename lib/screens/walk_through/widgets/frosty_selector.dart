@@ -2,15 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/widgets/unordered_list.dart';
 
-class FrostySelector extends StatefulWidget {
-  const FrostySelector({Key? key}) : super(key: key);
+class FrostySelector extends StatelessWidget {
+  const FrostySelector({Key? key, required this.supportedVersions}) : super(key: key);
 
-  @override
-  _FrostySelectorState createState() => _FrostySelectorState();
-}
-
-class _FrostySelectorState extends State<FrostySelector> {
   final String prefix = 'walk_through.select_frosty_path';
+  final List<String> supportedVersions;
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +43,8 @@ class _FrostySelectorState extends State<FrostySelector> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const UnorderedList(
-          ['1.0.6.0 - (Alpha 5)', '1.0.6.0 - (Alpha 4)'],
+        UnorderedList(
+          supportedVersions,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
         )
