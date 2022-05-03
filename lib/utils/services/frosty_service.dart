@@ -15,7 +15,7 @@ class FrostyService {
       launch ? ['-launch', 'KyberModManager'] : [],
       workingDirectory: path,
       includeParentEnvironment: true,
-    ).onError((error, stackTrace) {
+    ).catchError((error, stackTrace) {
       NotificationService.showNotification(message: error.toString(), color: Colors.red);
     });
     return true;
