@@ -62,14 +62,15 @@
 
 | <p style="width: 30vw;">Pages</p> |                         <p></p>                     |
 |:---------------------------------:|:--------------------------------------------:|
-|          Server Browser           | <img src="https://share.reax.at/ghMCmR.png"> |
-|           Hosting Page            | <img src="https://share.reax.at/r05ytu.png"> |
-|       Mod Profile Edit Page       | <img src="https://share.reax.at/m52oM9.png"> |
-|       Settings                    | <img src="https://share.reax.at/IXpSOy.png"> |
+|          Server Browser           | <img src="https://img.reax.at/kyber_mod_Manager_YlDm5MeQFR.png"> |
+|           Hosting Page            | <img src="https://img.reax.at/kyber_mod_Manager_OIUg00qc27.png"> |
+|       Mod Profile Edit Page       | <img src="https://img.reax.at/kyber_mod_Manager_E0ZrACAMgF.png"> |
+|       Settings                    | <img src="https://img.reax.at/kyber_mod_Manager_GHGDS85hL9.png"> |
 
 ## Questions
 
 ### How does the automatic mod download work?
+
 The Mod Manager opens NexusMods in the background during the login process. If you successfully logged in, it saves the cookies. If you now want to download mods, it opens the browser again (with the saved cookies) and clicks on the "Download" button
 on the mod page.
 
