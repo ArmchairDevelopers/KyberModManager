@@ -97,6 +97,10 @@ class _ServerDialogState extends State<ServerDialog> {
       return;
     }
     if (modsInstalled) {
+      if (DllInjector.getBattlefrontPID() != -1) {
+        NotificationService.showNotification(message: translate('run_battlefront.notifications.battlefront_already_running'), color: Colors.red);
+        return;
+      }
       setState(() {
         state = 0;
         disabled = true;
