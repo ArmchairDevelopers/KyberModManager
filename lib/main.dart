@@ -35,12 +35,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   runZonedGuarded(() async {
+    var started = DateTime.now();
     await SentryFlutter.init(
       (options) {
         options.autoSessionTrackingInterval = const Duration(minutes: 1);
         options.dsn = 'https://1d0ce9262dcb416e8404c51e396297e4@o1117951.ingest.sentry.io/6233409';
         options.tracesSampleRate = 1.0;
-        options.release = "kyber-mod-manager@1.0.4";
+        options.release = "kyber-mod-manager@1.0.5";
       },
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
@@ -74,6 +75,7 @@ void main() async {
         await windowManager.setBackgroundColor(Colors.transparent);
       });
     }
+    Logger.root.info('Started in ${DateTime.now().difference(started).inMilliseconds}ms');
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {
     Logger.root.severe('Uncaught exception: $exception\n$stackTrace');
