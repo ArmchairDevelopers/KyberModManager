@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
@@ -19,6 +20,9 @@ class StorageHelper {
     Hive.registerAdapter(ModProfileAdapter(), override: true);
     Hive.registerAdapter(ModAdapter(), override: true);
     box = await Hive.openBox('data').catchError((e) {
+      if (kDebugMode) {
+        return null;
+      }
       Logger.root.severe('Error opening box: $e');
       exit(1);
     });
