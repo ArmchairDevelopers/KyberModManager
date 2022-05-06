@@ -1,6 +1,8 @@
 import 'package:auto_update/auto_update.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/github_asset.dart';
 import 'package:logging/logging.dart';
 import 'package:version/version.dart';
 
@@ -25,22 +27,16 @@ class AutoUpdater {
     await AutoUpdate.downloadAndUpdate(available.assetUrl);
   }
 
-  Future<VersionInfo?> getLatestVersion() {
-    return Dio().get('https://api.github.com/repos/7reax/kyber-mod-manager/releases/latest').then((response) {
-      VersionInfo? versionInfo;
-      response.data['assets'].forEach((asset) {
-        if (asset['name'].toString().endsWith('.exe')) {
-          versionInfo = VersionInfo(
-            Version.parse(response.data['tag_name']),
-            asset['browser_download_url'],
-            response.data['body'],
-          );
-        }
-      });
-      return versionInfo;
-    }).catchError((error) {
-      return null;
+  Future<VersionInfo?> getLatestVersion() async {
+    var response = await Dio().get('https://api.github.com/repos/7reax/kyber-mod-manager/releases');
+    List<GitHubAsset> releases = [];
+    response.data.forEach((release) {
+      releases.add(GitHubAsset.fromJson(
+          {...release['assets'].where((asset) => asset['name'].toString().endsWith('.exe')).first, 'version': release['tag_name'], 'id': release['id']}));
     });
+    var version = box.get('beta') ? releases.first : releases.firstWhere((element) => !Version.parse(element.version).isPreRelease);
+    var versionInfo = await Dio().get('https://api.github.com/repos/7reax/kyber-mod-manager/releases/${version.id}');
+    return VersionInfo(Version.parse(version.version), version.browser_download_url, versionInfo.data['body']);
   }
 }
 

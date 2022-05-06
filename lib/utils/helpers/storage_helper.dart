@@ -13,6 +13,7 @@ class StorageHelper {
     'discordRPC': true,
     'saveProfiles': true,
     'enableCosmetics': false,
+    'beta': false,
   };
 
   static Future<void> initialiseHive() async {
