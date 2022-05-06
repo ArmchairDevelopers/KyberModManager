@@ -7,6 +7,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/frosty_selector.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
+import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/path_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/system_tray_helper.dart';
@@ -22,7 +23,9 @@ import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 
 class WalkThrough extends StatefulWidget {
-  const WalkThrough({Key? key}) : super(key: key);
+  const WalkThrough({Key? key, this.changeFrostyPath = false}) : super(key: key);
+
+  final bool changeFrostyPath;
 
   @override
   _WalkThroughState createState() => _WalkThroughState();
@@ -34,7 +37,6 @@ class _WalkThroughState extends State<WalkThrough> {
   List<String>? supportedFrostyVersions;
   late GitHubAsset selectedFrostyVersion;
   Directory? _directory;
-  bool firstInstall = false;
   bool installed = false;
   bool disabled = true;
   bool downloading = false;
@@ -52,12 +54,17 @@ class _WalkThroughState extends State<WalkThrough> {
       });
     });
     ApiService.supportedFrostyVersions().then((value) => setState(() => supportedFrostyVersions = value));
-    DllInjector.checkForUpdates().then(
-      (value) => setState(() {
-        index++;
-        disabled = false;
-      }),
-    );
+    if (widget.changeFrostyPath == true) {
+      index = 1;
+      disabled = false;
+    } else {
+      DllInjector.checkForUpdates().then(
+        (value) => setState(() {
+          index++;
+          disabled = false;
+        }),
+      );
+    }
     super.initState();
   }
 
@@ -238,6 +245,12 @@ class _WalkThroughState extends State<WalkThrough> {
           await box.delete('frostyConfigPath');
           return;
         }
+        if (widget.changeFrostyPath) {
+          setState(() => disabled = true);
+          index = 2;
+          onPressed();
+          return;
+        }
         setState(() {
           index++;
           disabled = true;
@@ -276,9 +289,7 @@ class _WalkThroughState extends State<WalkThrough> {
       } else {
         await FrostyProfileService.createFrostyConfig();
       }
-      // setState(() {
-      //   firstInstall = config?.games.keys.contains('starwarsbattlefrontii') ?? true;
-      // });
+
       await FrostyService.startFrosty(launch: false, frostyPath: _directory!.path);
 
       setState(() {
@@ -302,7 +313,9 @@ class _WalkThroughState extends State<WalkThrough> {
         SystemTrayHelper.setProfiles();
         ModService.watchDirectory();
         Navigator.of(context).pop();
-        showDialog(context: context, builder: (context) => const NexusmodsLogin());
+        if (!widget.changeFrostyPath) {
+          showDialog(context: context, builder: (context) => const NexusmodsLogin());
+        }
       }
     }
   }
@@ -312,7 +325,33 @@ class _WalkThroughState extends State<WalkThrough> {
     return ContentDialog(
       backgroundDismiss: false,
       constraints: const BoxConstraints(maxWidth: 700),
-      title: Text(index == 3 ? 'Frosty Download' : translate('$prefix.title')),
+      title: Row(children: [
+        Expanded(child: Text(index == 3 ? 'Frosty Download' : translate('$prefix.title'))),
+        DropDownButton(
+          leading: Text(translate('server_browser.join_dialog.options.title')),
+          items: [
+            MenuFlyoutItem(
+              text: Text(translate('settings.export_log_file')),
+              leading: const Icon(FluentIcons.paste),
+              onPressed: () async {
+                String? path = await FilePicker.platform.saveFile(
+                  type: FileType.custom,
+                  allowedExtensions: ['txt'],
+                  fileName: 'log.txt',
+                  dialogTitle: translate('settings.export_log_file'),
+                  lockParentWindow: true,
+                );
+                if (path == null) {
+                  return;
+                }
+
+                String content = CustomLogger.getLogs();
+                File(path).writeAsStringSync(content);
+              },
+            ),
+          ],
+        )
+      ]),
       actions: [
         Button(
           child: index == 3 ? const Text('Cancel') : Text(translate('server_browser.prev_page')),
@@ -325,11 +364,11 @@ class _WalkThroughState extends State<WalkThrough> {
                   setState(() => index == 3 ? index = 1 : index--);
                 },
         ),
-        // if (index == 1)
-        //   Button(
-        //     child: const Text("Download Frosty"),
-        //     onPressed: index == 0 || disabled ? null : () => setState(() => index = 3),
-        //   ),
+        if (index == 1)
+          Button(
+            child: const Text("Download Frosty"),
+            onPressed: index == 0 || disabled ? null : () => setState(() => index = 3),
+          ),
         FilledButton(
           child: Text(
             index == 1

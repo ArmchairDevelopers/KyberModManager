@@ -4,8 +4,10 @@ import 'package:kyber_mod_manager/constants/mod_categories.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/frosty_profile.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/active_mods.dart';
+import 'package:kyber_mod_manager/screens/mod_profiles/widgets/export_profile_dialog.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/installed_mods.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
 import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
 
@@ -39,6 +41,27 @@ class _CosmeticModsState extends State<CosmeticMods> {
         title: Text(translate('$prefix.title')),
         commandBar: Row(
           children: [
+            if (activeMods.isNotEmpty) ...[
+              Button(
+                child: const ButtonText(
+                  text: Text("Export"),
+                  icon: Icon(FluentIcons.share),
+                ),
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (_) => ExportProfileDialog(
+                    profile: ModProfile(
+                      name: 'Cosmetics',
+                      mods: activeMods,
+                    ),
+                    enableCosmetics: false,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+            ],
             FilledButton(
               child: ButtonText(
                 icon: const Icon(FluentIcons.download),

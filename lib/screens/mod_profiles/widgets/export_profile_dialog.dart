@@ -6,9 +6,10 @@ import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 
 class ExportProfileDialog extends StatefulWidget {
-  const ExportProfileDialog({Key? key, required this.profile}) : super(key: key);
+  const ExportProfileDialog({Key? key, required this.profile, this.enableCosmetics = true}) : super(key: key);
 
   final ModProfile profile;
+  final bool enableCosmetics;
 
   @override
   _ExportProfileDialogState createState() => _ExportProfileDialogState();
@@ -69,12 +70,14 @@ class _ExportProfileDialogState extends State<ExportProfileDialog> {
             controller: _controller,
             header: 'Profile name',
           ),
-          const SizedBox(height: 15),
-          Checkbox(
-            checked: cosmetics,
-            onChanged: (value) => setState(() => cosmetics = value ?? false),
-            content: const Text("Include cosmetics"),
-          ),
+          if (widget.enableCosmetics) ...[
+            const SizedBox(height: 15),
+            Checkbox(
+              checked: cosmetics,
+              onChanged: (value) => setState(() => cosmetics = value ?? false),
+              content: const Text("Include cosmetics"),
+            ),
+          ],
         ],
       ),
     );
