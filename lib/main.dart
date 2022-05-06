@@ -48,12 +48,12 @@ void main() async {
     CustomLogger.initialise();
     await SystemTheme.accentColor.load();
     await StorageHelper.initialiseHive();
+    await WindowHelper.initialiseWindow();
     var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'en',
       supportedLocales: supportedLocales,
       preferences: TranslatePreferences(),
     );
-    WindowHelper.initialiseWindow();
     Logger.root.info('Started in ${DateTime.now().difference(started).inMilliseconds}ms');
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {

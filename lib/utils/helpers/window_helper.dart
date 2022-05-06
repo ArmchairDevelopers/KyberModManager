@@ -38,6 +38,8 @@ class WindowHelper {
         await windowManager.show();
         if (micaEnabled) {
           await windowManager.setBackgroundColor(Colors.transparent);
+        } else {
+          await windowManager.setBackgroundColor(ThemeData.dark().navigationPaneTheme.backgroundColor!);
         }
       });
     }
