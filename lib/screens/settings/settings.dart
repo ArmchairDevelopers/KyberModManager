@@ -8,6 +8,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/settings/platform_selector.dart';
 import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
+import 'package:kyber_mod_manager/screens/walk_through/walk_through.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
@@ -83,7 +84,7 @@ class _SettingsState extends State<Settings> {
         ),
       ),
       content: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
         children: [
           Card(
             elevation: 0,
@@ -262,6 +263,27 @@ class _SettingsState extends State<Settings> {
                         setState(() => disabled = false);
                       }
                     : null,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: const Text("Relocate Frosty Path"),
+              subtitle: const Text("Change Frosty path to a different location."),
+              leading: const Icon(FluentIcons.folder),
+              trailing: FilledButton(
+                child: const ButtonText(
+                  text: Text("Change"),
+                  icon: Icon(FluentIcons.move_to_folder),
+                ),
+                onPressed: () => showDialog(
+                  builder: (c) => const WalkThrough(
+                    changeFrostyPath: true,
+                  ),
+                  context: context,
+                ),
               ),
             ),
           ),
