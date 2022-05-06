@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -13,6 +12,7 @@ import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/puppeteer_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
+import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
@@ -53,28 +53,7 @@ void main() async {
       supportedLocales: supportedLocales,
       preferences: TranslatePreferences(),
     );
-    if (micaSupported) {
-      await Window.initialize();
-      await Window.setEffect(effect: WindowEffect.mica, dark: true);
-    }
-
-    if (!micaSupported) {
-      windowManager.waitUntilReadyToShow().then((_) async {
-        await windowManager.setTitleBarStyle(TitleBarStyle.hidden, windowButtonVisibility: false);
-        await windowManager.setSize(const Size(1400, 700));
-        await windowManager.center();
-        await windowManager.show();
-        await windowManager.setSkipTaskbar(false);
-        await windowManager.setBackgroundColor(Colors.transparent);
-      });
-    } else {
-      windowManager.waitUntilReadyToShow().then((_) async {
-        await windowManager.setTitleBarStyle(TitleBarStyle.normal, windowButtonVisibility: false);
-        await windowManager.setSize(const Size(1400, 700));
-        await windowManager.show();
-        await windowManager.setBackgroundColor(Colors.transparent);
-      });
-    }
+    WindowHelper.initialiseWindow();
     Logger.root.info('Started in ${DateTime.now().difference(started).inMilliseconds}ms');
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {

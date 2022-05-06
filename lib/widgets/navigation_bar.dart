@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
@@ -25,6 +26,7 @@ import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/system_tray_helper.dart';
+import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
@@ -102,140 +104,159 @@ class _NavigationBarState extends State<NavigationBar> {
         fakeIndex = !isFake ? state : state.keys.toList().first;
       });
     }, builder: (context, widget) {
-      return NavigationView(
-        appBar: NavigationAppBar(
-          height: micaSupported ? 0 : 30,
-          title: !micaSupported
-              ? () {
-                  return DragToMoveArea(
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: const Text('Kyber Mod Manager'),
+      return RawKeyboardListener(
+        autofocus: true,
+        onKey: (event) {
+          if (event.runtimeType == RawKeyDownEvent &&
+              event.isAltPressed &&
+              event.isControlPressed &&
+              event.logicalKey == LogicalKeyboardKey.keyC &&
+              micaSupported) {
+            if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
+              box.put('micaEnabled', false);
+              WindowHelper.changeWindowEffect(false);
+            } else {
+              box.put('micaEnabled', true);
+              WindowHelper.changeWindowEffect(true);
+            }
+          }
+        },
+        focusNode: FocusNode(),
+        child: NavigationView(
+          appBar: NavigationAppBar(
+            height: micaSupported ? 0 : 30,
+            title: !micaSupported
+                ? () {
+                    return DragToMoveArea(
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: const Text('Kyber Mod Manager'),
+                      ),
+                    );
+                  }()
+                : null,
+            actions: !micaSupported
+                ? SizedBox(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [Spacer(), WindowButtons()],
                     ),
-                  );
-                }()
-              : null,
-          actions: !micaSupported
-              ? SizedBox(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [Spacer(), WindowButtons()],
-                  ),
-                )
-              : null,
-        ),
-        pane: NavigationPane(
-          selected: fakeIndex,
-          items: [
-            // PaneItem(
-            //   icon: const Icon(FluentIcons.power_shell),
-            //   tileColor: ButtonState.resolveWith((states) {
-            //     var theme = FluentTheme.of(context);
-            //     if (injectedDll) {
-            //       return theme.accentColor.lighter;
-            //     } else if (states.isPressing) {
-            //       return theme.accentColor.darker;
-            //     } else if (states.isHovering) {
-            //       return theme.accentColor.dark;
-            //     }
-            //     return theme.accentColor;
-            //   }),
-            //   title: Text(
-            //     translate('$prefix.kyber.' + (injectedDll ? 'running' : 'not_running')),
-            //   ),
-            // ),
-            // PaneItemSeparator(),
-            PaneItemHeader(header: const Text('Kyber')),
-            PaneItem(
-              mouseCursor: MouseCursor.defer,
-              icon: const Icon(FluentIcons.server),
-              title: Text(translate('$prefix.items.server_browser')),
-            ),
-            PaneItem(
-              mouseCursor: MouseCursor.defer,
-              icon: const Icon(FluentIcons.package),
-              title: Text(translate('$prefix.items.host')),
-            ),
-            PaneItemSeparator(),
-            PaneItemHeader(header: Text(translate('mods'))),
-            PaneItem(
-              icon: const Icon(FluentIcons.list),
-              title: Text(translate('$prefix.items.mod_profiles')),
-            ),
-            PaneItem(
-              icon: const Icon(FluentIcons.custom_list),
-              title: Text(translate('$prefix.items.cosmetic_mods')),
-            ),
-            PaneItem(
-              icon: const Icon(FluentIcons.installation),
-              title: Text(translate('$prefix.items.installed_mods')),
-            ),
-            PaneItem(
-              icon: const Icon(FluentIcons.save_all),
-              title: Text(translate('$prefix.items.saved_profiles')),
-            ),
-            PaneItemSeparator(),
-            PaneItemHeader(header: const Text('Battlefront 2')),
-            PaneItem(
-              icon: const Icon(FluentIcons.processing_run),
-              title: Text(translate('$prefix.items.run_bf2')),
-            ),
-          ],
-          footerItems: [
-            PaneItemSeparator(),
-            PaneItem(
-              icon: const Icon(FluentIcons.feedback),
-              title: Text(translate('$prefix.items.feedback')),
-            ),
-            PaneItem(
-              icon: const Icon(FluentIcons.settings),
-              title: Text(translate('$prefix.items.settings')),
-            ),
-          ],
-          onChanged: (i) async {
-            // if (i == 0) {
-            //   if (injectedDll) {
-            //     return;
-            //   }
-            //   var result = DllInjector.getBattlefrontPID();
-            //   if (result == -1) {
-            //     NotificationService.showNotification(message: translate('$prefix.battlefront_not_running'), color: Colors.red);
-            //     return;
-            //   }
-            //   DllInjector.inject();
-            //   return;
-            // }
-            setState(() {
-              index = i;
-              fakeIndex = i;
-            });
-          },
-          displayMode: PaneDisplayMode.auto,
-        ),
-        content: DropTarget(
-          onDragDone: (details) {
-            ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
-          },
-          child: NavigationBody(
-            index: index,
-            transitionBuilder: (child, animation) => EntrancePageTransition(
-              child: child,
-              animation: animation,
-              startFrom: .02,
-            ),
-            children: [
-              // const SizedBox(),
-              const ServerBrowser(),
-              const ServerHost(),
-              const ModProfiles(),
-              const CosmeticMods(),
-              const InstalledMods(),
-              const SavedProfiles(),
-              const RunBattlefront(),
-              const feedback.Feedback(),
-              const Settings(),
-              widget.runtimeType != int ? widget.values.first : const SizedBox(height: 0),
+                  )
+                : null,
+          ),
+          pane: NavigationPane(
+            selected: fakeIndex,
+            items: [
+              // PaneItem(
+              //   icon: const Icon(FluentIcons.power_shell),
+              //   tileColor: ButtonState.resolveWith((states) {
+              //     var theme = FluentTheme.of(context);
+              //     if (injectedDll) {
+              //       return theme.accentColor.lighter;
+              //     } else if (states.isPressing) {
+              //       return theme.accentColor.darker;
+              //     } else if (states.isHovering) {
+              //       return theme.accentColor.dark;
+              //     }
+              //     return theme.accentColor;
+              //   }),
+              //   title: Text(
+              //     translate('$prefix.kyber.' + (injectedDll ? 'running' : 'not_running')),
+              //   ),
+              // ),
+              // PaneItemSeparator(),
+              PaneItemHeader(header: const Text('Kyber')),
+              PaneItem(
+                mouseCursor: MouseCursor.defer,
+                icon: const Icon(FluentIcons.server),
+                title: Text(translate('$prefix.items.server_browser')),
+              ),
+              PaneItem(
+                mouseCursor: MouseCursor.defer,
+                icon: const Icon(FluentIcons.package),
+                title: Text(translate('$prefix.items.host')),
+              ),
+              PaneItemSeparator(),
+              PaneItemHeader(header: Text(translate('mods'))),
+              PaneItem(
+                icon: const Icon(FluentIcons.list),
+                title: Text(translate('$prefix.items.mod_profiles')),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.custom_list),
+                title: Text(translate('$prefix.items.cosmetic_mods')),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.installation),
+                title: Text(translate('$prefix.items.installed_mods')),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.save_all),
+                title: Text(translate('$prefix.items.saved_profiles')),
+              ),
+              PaneItemSeparator(),
+              PaneItemHeader(header: const Text('Battlefront 2')),
+              PaneItem(
+                icon: const Icon(FluentIcons.processing_run),
+                title: Text(translate('$prefix.items.run_bf2')),
+              ),
             ],
+            footerItems: [
+              PaneItemSeparator(),
+              PaneItem(
+                icon: const Icon(FluentIcons.feedback),
+                title: Text(translate('$prefix.items.feedback')),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.settings),
+                title: Text(translate('$prefix.items.settings')),
+              ),
+            ],
+            onChanged: (i) async {
+              // if (i == 0) {
+              //   if (injectedDll) {
+              //     return;
+              //   }
+              //   var result = DllInjector.getBattlefrontPID();
+              //   if (result == -1) {
+              //     NotificationService.showNotification(message: translate('$prefix.battlefront_not_running'), color: Colors.red);
+              //     return;
+              //   }
+              //   DllInjector.inject();
+              //   return;
+              // }
+              setState(() {
+                index = i;
+                fakeIndex = i;
+              });
+            },
+            displayMode: PaneDisplayMode.auto,
+          ),
+          content: DropTarget(
+            onDragDone: (details) {
+              ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
+            },
+            child: NavigationBody(
+              index: index,
+              transitionBuilder: (child, animation) => EntrancePageTransition(
+                child: child,
+                animation: animation,
+                startFrom: .02,
+              ),
+              children: [
+                // const SizedBox(),
+                const ServerBrowser(),
+                const ServerHost(),
+                const ModProfiles(),
+                const CosmeticMods(),
+                const InstalledMods(),
+                const SavedProfiles(),
+                const RunBattlefront(),
+                const feedback.Feedback(),
+                const Settings(),
+                widget.runtimeType != int ? widget.values.first : const SizedBox(height: 0),
+              ],
+            ),
           ),
         ),
       );
