@@ -196,6 +196,11 @@ class ProfileService {
     }
 
     var profiles = getSavedProfiles();
+    if (profiles.every((element) => element.mods[0].author != null)) {
+      Logger.root.info('Saved profiles already migrated');
+      return;
+    }
+
     profiles = profiles.map((e) {
       e.mods = e.mods.map((e) => ModService.fromFilename(e.filename)).toList();
       return e;
