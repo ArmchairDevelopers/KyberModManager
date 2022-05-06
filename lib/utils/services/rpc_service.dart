@@ -44,6 +44,7 @@ class RPCService {
     Logger.root.info('Disposing rpc-service');
 
     rpc.clearPresence();
+    _subscription?.cancel();
     _running = false;
   }
 
