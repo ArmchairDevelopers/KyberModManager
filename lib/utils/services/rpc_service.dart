@@ -20,14 +20,17 @@ class RPCService {
     applicationId: '931094111694520350',
   );
   static bool _running = false;
-  static Timer? _timer;
-  static Timer? _applicationTimer;
+  static StreamSubscription? _subscription;
 
   static void initialize(BuildContext context) {
+    if (_subscription != null) {
+      _subscription!.cancel();
+    }
+
     DiscordRPC.initialize();
     RPCService.start();
     _gameStatus = BlocProvider.of<GameStatusCubic>(context).state;
-    BlocProvider.of<GameStatusCubic>(context).stream.forEach((element) {
+    _subscription = BlocProvider.of<GameStatusCubic>(context).stream.listen((element) {
       RPCService._gameStatus = element;
       checkStatus();
     });
@@ -42,9 +45,6 @@ class RPCService {
 
     rpc.clearPresence();
     _running = false;
-    _applicationTimer?.cancel();
-    _timer?.cancel();
-    _timer = null;
   }
 
   static void start() {
@@ -53,7 +53,6 @@ class RPCService {
     }
     rpc.start(autoRegister: true);
     _running = true;
-    _timer = Timer.periodic(const Duration(seconds: 5), (x) => checkStatus());
     Logger.root.info('Started rpc-service');
   }
 
