@@ -24,7 +24,6 @@ class ActiveMods extends StatelessWidget {
           child: ReorderableListView(
             onReorder: (oldIndex, newIndex) => onReorder(oldIndex, newIndex),
             buildDefaultDragHandles: false,
-            shrinkWrap: true,
             header: mods.isEmpty
                 ? Container(
                     key: const Key("empty"),

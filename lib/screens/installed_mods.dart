@@ -52,99 +52,90 @@ class _InstalledModsState extends State<InstalledMods> {
           ],
         ),
       ),
-      content: Stack(
+      content: Column(
         children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: TextBox(
-                  autofocus: true,
-                  onChanged: (String? value) {
-                    setState(() => search = value ?? '');
-                    loadMods();
-                  },
-                  placeholder: translate('search'),
-                ),
-              ),
-              Expanded(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width),
-                  child: SingleChildScrollView(
-                    child: material.DataTable(
-                      dataRowHeight: 40,
-                      columns: [
-                        material.DataColumn(
-                          label: SizedBox(
-                            child: Text(
-                              translate('name'),
-                              style: TextStyle(
-                                color: color.withOpacity(.5),
-                              ),
-                            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: TextBox(
+              autofocus: true,
+              onChanged: (String? value) {
+                setState(() => search = value ?? '');
+                loadMods();
+              },
+              placeholder: translate('search'),
+            ),
+          ),
+          Expanded(
+            child: ConstrainedBox(
+              constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width),
+              child: SingleChildScrollView(
+                child: material.DataTable(
+                  dataRowHeight: 40,
+                  columns: [
+                    material.DataColumn(
+                      label: SizedBox(
+                        child: Text(
+                          translate('name'),
+                          style: TextStyle(
+                            color: color.withOpacity(.5),
                           ),
                         ),
-                        material.DataColumn(
-                          label: SizedBox(
-                            child: Text(
-                              translate('author'),
-                              style: TextStyle(
-                                color: color.withOpacity(.5),
-                              ),
-                            ),
-                          ),
-                        ),
-                        material.DataColumn(
-                          label: SizedBox(
-                            child: Text(
-                              translate('version'),
-                              style: TextStyle(
-                                color: color.withOpacity(.5),
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const material.DataColumn(
-                          label: Text(''),
-                        ),
-                      ],
-                      rows: _installedMods.map((e) {
-                        return material.DataRow(
-                          cells: [
-                            material.DataCell(
-                              Text(e.name),
-                            ),
-                            material.DataCell(
-                              Text(e.author ?? 'Unknown'),
-                            ),
-                            material.DataCell(
-                              Text(e.version, textAlign: TextAlign.center),
-                            ),
-                            material.DataCell(Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomFilledButton(
-                                  color: Colors.red,
-                                  child: ButtonText(
-                                    text: Text(translate('delete')),
-                                    icon: const Icon(FluentIcons.delete),
-                                  ),
-                                  onPressed: () {
-                                    ModService.deleteMod(e);
-                                    loadMods();
-                                  },
-                                ),
-                              ],
-                            )),
-                          ],
-                        );
-                      }).toList(),
+                      ),
                     ),
-                  ),
+                    material.DataColumn(
+                      label: SizedBox(
+                        child: Text(
+                          translate('author'),
+                          style: TextStyle(
+                            color: color.withOpacity(.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                    material.DataColumn(
+                      label: SizedBox(
+                        child: Text(
+                          translate('version'),
+                          style: TextStyle(
+                            color: color.withOpacity(.5),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    const material.DataColumn(
+                      label: Text(''),
+                    ),
+                  ],
+                  rows: _installedMods.map((e) {
+                    return material.DataRow(
+                      cells: [
+                        material.DataCell(
+                          Text(e.name),
+                        ),
+                        material.DataCell(
+                          Text(e.author ?? 'Unknown'),
+                        ),
+                        material.DataCell(
+                          Text(e.version, textAlign: TextAlign.center),
+                        ),
+                        material.DataCell(CustomFilledButton(
+                          color: Colors.red,
+                          child: ButtonText(
+                            text: Text(translate('delete')),
+                            icon: const Icon(FluentIcons.delete),
+                          ),
+                          onPressed: () {
+                            ModService.deleteMod(e);
+                            loadMods();
+                          },
+                        )),
+                      ],
+                    );
+                  }).toList(),
                 ),
               ),
-            ],
+            ),
           ),
         ],
       ),
