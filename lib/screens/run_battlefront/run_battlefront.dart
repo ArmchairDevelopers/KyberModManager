@@ -34,7 +34,7 @@ class _RunBattlefrontState extends State<RunBattlefront> {
         profiles = [
           translate('host_server.forms.mod_profile.no_mods_profile'),
           translate('host_server.forms.cosmetic_mods.header'),
-          ...frostyProfiles?.map((e) => '${e.name} (Frosty Pack)') ?? [],
+          ...frostyProfiles?.where((e) => !e.name.toLowerCase().startsWith("kybermodmanager")).map((e) => '${e.name} (Frosty Pack)') ?? [],
         ];
         if (lastProfile != null) {
           if (lastProfile == 'no_mods') {
