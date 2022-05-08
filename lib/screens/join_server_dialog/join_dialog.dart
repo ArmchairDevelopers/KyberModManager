@@ -140,15 +140,10 @@ class _ServerDialogState extends State<ServerDialog> {
       var serverMods = mods.map((e) => ModService.convertToMod(e)).toList();
       if (!listEquals(appliedMods, serverMods)) {
         Logger.root.info("Applying Frosty mods...");
-        bool success = await FrostyService.startFrosty().catchError((error) {
+        await FrostyService.startFrosty().catchError((error) {
           NotificationService.showNotification(message: error, color: Colors.red);
           NavigatorService.pushErrorPage(const MissingPermissions());
         });
-        if (mounted && !success) {
-          NotificationService.showNotification(message: 'Frosty error!', color: Colors.red);
-          Navigator.pop(context);
-          return;
-        }
       } else {
         try {
           Logger.root.info("Mods are already applied.");

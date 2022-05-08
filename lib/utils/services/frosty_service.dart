@@ -9,17 +9,19 @@ import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FrostyService {
-  static Future<bool> startFrosty({bool launch = true, String? frostyPath}) async {
+  static Future<ProcessResult> startFrosty({bool launch = true, String? frostyPath}) async {
     String path = frostyPath ?? box.get('frostyPath');
-    await Process.run(
+    var r = await Process.run(
       '$path/FrostyModManager.exe',
       launch ? ['-launch', 'KyberModManager'] : [],
       workingDirectory: path,
       includeParentEnvironment: true,
+      runInShell: true,
     ).catchError((error, stackTrace) {
       NotificationService.showNotification(message: error.toString(), color: Colors.red);
     });
-    return true;
+
+    return r;
   }
 
   static Future<FrostyConfig> getFrostyConfig() async {

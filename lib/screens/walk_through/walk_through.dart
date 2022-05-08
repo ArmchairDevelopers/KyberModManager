@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -21,6 +22,7 @@ import 'package:kyber_mod_manager/utils/types/freezed/github_asset.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
+import 'package:process_run/cmd_run.dart';
 
 class WalkThrough extends StatefulWidget {
   const WalkThrough({Key? key, this.changeFrostyPath = false}) : super(key: key);
@@ -290,7 +292,20 @@ class _WalkThroughState extends State<WalkThrough> {
         await FrostyProfileService.createFrostyConfig();
       }
 
-      await FrostyService.startFrosty(launch: false, frostyPath: _directory!.path);
+      final Completer<Process> processCompleter = Completer<Process>();
+      runExecutableArguments(
+        _directory!.path + '\\FrostyModManager.exe',
+        [],
+        workingDirectory: _directory!.path,
+        onProcess: (e) => processCompleter.complete(e),
+      );
+      Process process = await processCompleter.future;
+      await Directory(_directory!.path).watch(recursive: true).firstWhere((FileSystemEvent event) {
+        return event.path.endsWith('FrostyModManager\\Caches') && event.type == FileSystemEvent.modify;
+      });
+      await Future.delayed(const Duration(milliseconds: 50));
+      process.kill();
+      print('done');
 
       setState(() {
         downloading = false;
