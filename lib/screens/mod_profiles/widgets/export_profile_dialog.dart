@@ -62,7 +62,7 @@ class _ExportProfileDialogState extends State<ExportProfileDialog> {
               value: 'Frosty Pack',
               isExpanded: true,
               onChanged: (String? e) => setState(() => selectedType = e ?? 'Frosty Pack'),
-              items: ['Frosty Pack', 'File'].map((e) => ComboboxItem(child: Text(e), value: e)).toList(),
+              items: ['Frosty Pack' /*, 'File'*/].map((e) => ComboboxItem(child: Text(e), value: e)).toList(),
             ),
           ),
           const SizedBox(height: 15),
