@@ -38,28 +38,14 @@ class _ModProfilesState extends State<ModProfiles> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('mod_profiles.title')),
-        commandBar: Row(
-          children: [
-            Button(
-              child: const ButtonText(
-                text: Text('Import profile'),
-                icon: Icon(FluentIcons.download),
-              ),
-              onPressed: () {
-                // TODO: open dialog
-              },
-            ),
-            const SizedBox(width: 10),
-            FilledButton(
-              child: ButtonText(
-                text: Text(translate('mod_profiles.create_profile')),
-                icon: const Icon(FluentIcons.add),
-              ),
-              onPressed: () {
-                BlocProvider.of<WidgetCubit>(context).navigate(2, const EditProfile());
-              },
-            ),
-          ],
+        commandBar: FilledButton(
+          child: ButtonText(
+            text: Text(translate('mod_profiles.create_profile')),
+            icon: const Icon(FluentIcons.add),
+          ),
+          onPressed: () {
+            BlocProvider.of<WidgetCubit>(context).navigate(2, const EditProfile());
+          },
         ),
       ),
       content: Padding(
