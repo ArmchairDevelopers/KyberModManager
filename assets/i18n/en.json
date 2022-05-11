@@ -102,7 +102,8 @@
     "table": {
       "info": "Info",
       "players": "Players",
-      "location": "Location"
+      "location": "Location",
+      "started": "Started"
     },
     "join_dialog": {
       "frosty_profile_disabled": "Frosty Profile is disabled.",
@@ -303,6 +304,11 @@
     "discord_activity": {
       "title": "Discord Activity",
       "subtitle": "Shows your current server activity on Discord."
+    },
+    "change_frosty_directory": {
+      "title": "Relocate Frosty Path",
+      "subtitle": "Change Frosty path to a different location.",
+      "change": "Change"
     },
     "reset": {
       "title": "Reset",

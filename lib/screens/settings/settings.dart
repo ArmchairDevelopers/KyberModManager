@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/settings/platform_selector.dart';
 import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
@@ -99,6 +101,9 @@ class _SettingsState extends State<Settings> {
                     changeLocale(context, value);
                     await box.put('locale', value);
                     Jiffy.locale(AppLocale().getLocale().languageCode);
+                    var cubit = BlocProvider.of<WidgetCubit>(context);
+                    cubit.toIndex(7);
+                    cubit.toIndex(8);
                   },
                   isExpanded: true,
                   value: LocalizedApp.of(context).delegate.currentLocale.languageCode,
@@ -270,16 +275,16 @@ class _SettingsState extends State<Settings> {
           Card(
             elevation: 0,
             child: ListTile(
-              title: const Text("Relocate Frosty Path"),
-              subtitle: const Text("Change Frosty path to a different location."),
+              title: Text(translate('$prefix.change_frosty_directory.title')),
+              subtitle: Text(translate('$prefix.change_frosty_directory.subtitle')),
               leading: const Icon(FluentIcons.folder),
               trailing: FilledButton(
-                child: const ButtonText(
-                  text: Text("Change"),
-                  icon: Icon(FluentIcons.move_to_folder),
+                child: ButtonText(
+                  text: Text(translate('$prefix.change_frosty_directory.change')),
+                  icon: const Icon(FluentIcons.move_to_folder),
                 ),
                 onPressed: () => showDialog(
-                  builder: (c) => const WalkThrough(
+                  builder: (_) => const WalkThrough(
                     changeFrostyPath: true,
                   ),
                   context: context,

@@ -121,7 +121,7 @@ class _ServerBrowserState extends State<ServerBrowser> {
         material.DataColumn(
           label: SizedBox(
             child: Text(
-              'Started',
+              translate('$prefix.table.started'),
               style: TextStyle(
                 color: color.withOpacity(.5),
               ),
