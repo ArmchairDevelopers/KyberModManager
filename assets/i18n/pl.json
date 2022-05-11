@@ -102,7 +102,8 @@
     "table": {
       "info": "Informacje",
       "players": "Gracze",
-      "location": "Lokalizacja"
+      "location": "Lokalizacja",
+      "started": "Started"
     },
     "join_dialog": {
       "frosty_profile_disabled": "Profil Frosty jest wyłączony.",
@@ -303,6 +304,11 @@
     "discord_activity": {
       "title": "Aktywność na Discordzie",
       "subtitle": "Pokazuje obecny serwer jako aktywność na Discordzie."
+    },
+    "change_frosty_directory": {
+      "title": "Relocate Frosty Path",
+      "subtitle": "Change Frosty path to a different location.",
+      "change": "Change"
     },
     "reset": {
       "title": "Powrót do ustawień domyślnych",
