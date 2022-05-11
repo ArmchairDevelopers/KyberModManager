@@ -292,6 +292,17 @@ class _WalkThroughState extends State<WalkThrough> {
         await FrostyProfileService.createFrostyConfig();
       }
 
+      String? valid = await PathHelper.isValidFrostyDir(_directory!.path);
+      if (valid == null) {
+        setState(() {
+          downloading = false;
+          installed = true;
+          index = 1;
+          disabled = false;
+        });
+        onPressed();
+      }
+
       final Completer<Process> processCompleter = Completer<Process>();
       runExecutableArguments(
         _directory!.path + '\\FrostyModManager.exe',
@@ -305,7 +316,6 @@ class _WalkThroughState extends State<WalkThrough> {
       });
       await Future.delayed(const Duration(milliseconds: 50));
       process.kill();
-      print('done');
 
       setState(() {
         downloading = false;
