@@ -57,7 +57,6 @@ void main() async {
     Logger.root.info('Started in ${DateTime.now().difference(started).inMilliseconds}ms');
     runApp(LocalizedApp(delegate, const App()));
   }, (exception, stackTrace) async {
-    Logger.root.severe('Uncaught exception: $exception\n$stackTrace');
     await Sentry.captureException(exception, stackTrace: stackTrace);
   });
 }
