@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:http/http.dart';
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
 import 'package:kyber_mod_manager/constants/api_constants.dart';
+import 'package:kyber_mod_manager/main.dart';
 
 class ApiService {
   static Future<bool> isAvailable(String name) async {
@@ -55,7 +57,10 @@ class ApiService {
 
   static Dio dio({Duration? maxCacheStale, CachePolicy? cachePolicy}) {
     var cacheOptions = CacheOptions(
-      store: MemCacheStore(),
+      store: HiveCacheStore(
+        applicationDocumentsDirectory,
+        hiveBoxName: 'cache',
+      ),
       maxStale: maxCacheStale,
       policy: cachePolicy ?? CachePolicy.request,
       priority: CachePriority.high,

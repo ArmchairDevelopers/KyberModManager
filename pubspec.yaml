@@ -19,6 +19,7 @@ dependencies:
   url_launcher: ^6.0.0
   intl: ^0.17.0
   dio_cache_interceptor: ^3.2.7
+  dio_cache_interceptor_hive_store: ^3.1.1
   package_info_plus: ^1.4.2
   system_info2: ^2.0.3
   bot_toast: ^4.0.1
