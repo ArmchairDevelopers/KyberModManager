@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:http/http.dart';
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
 import 'package:kyber_mod_manager/constants/api_constants.dart';
@@ -49,6 +51,17 @@ class ApiService {
       return DownloadInfo.fromJson(json.decode(resp.body));
     }
     return null;
+  }
+
+  static Dio dio({Duration? maxCacheStale, CachePolicy? cachePolicy}) {
+    var cacheOptions = CacheOptions(
+      store: MemCacheStore(),
+      maxStale: maxCacheStale,
+      policy: cachePolicy ?? CachePolicy.request,
+      priority: CachePriority.high,
+    );
+
+    return Dio()..interceptors.add(DioCacheInterceptor(options: cacheOptions));
   }
 }
 

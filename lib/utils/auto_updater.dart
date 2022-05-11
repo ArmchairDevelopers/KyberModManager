@@ -1,7 +1,9 @@
 import 'package:auto_update/auto_update.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/services.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/github_asset.dart';
 import 'package:logging/logging.dart';
 import 'package:version/version.dart';
@@ -28,7 +30,8 @@ class AutoUpdater {
   }
 
   Future<VersionInfo?> getLatestVersion() async {
-    var response = await Dio().get('https://api.github.com/repos/7reax/kyber-mod-manager/releases');
+    var response = await ApiService.dio(cachePolicy: CachePolicy.forceCache, maxCacheStale: const Duration(hours: 1))
+        .get('https://api.github.com/repos/7reax/kyber-mod-manager/releases');
     List<GitHubAsset> releases = [];
     response.data.forEach((release) {
       releases.add(GitHubAsset.fromJson(

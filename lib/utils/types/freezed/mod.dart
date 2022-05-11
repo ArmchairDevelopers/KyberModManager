@@ -24,7 +24,7 @@ class Mod with _$Mod {
   factory Mod.fromJson(Map<String, dynamic> json) => _$ModFromJson(json);
 
   factory Mod.fromString(String filename, [String? data]) {
-    List<String> formatted = data != null ? Uri.encodeComponent(data).split('%00') : ['', '', '', ''];
+    List<String> formatted = data != null ? Uri.encodeComponent(data).split('%00') : ['Invalid', 'Unknown', 'Unknown', 'Unknown'];
     return Mod(
       name: Uri.decodeComponent(formatted[0]),
       author: Uri.decodeComponent(formatted[1]),

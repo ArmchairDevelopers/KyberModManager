@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/github_asset.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
@@ -11,10 +13,12 @@ class PathHelper {
   static CancelToken? _cancelToken;
 
   static Future<List<GitHubAsset>> getFrostyVersions() async {
-    var response = await Dio().get('https://api.github.com/repos/CadeEvs/FrostyToolsuite/releases');
+    var response = await ApiService.dio(cachePolicy: CachePolicy.forceCache, maxCacheStale: const Duration(hours: 3))
+        .get('https://api.github.com/repos/CadeEvs/FrostyToolsuite/releases');
     List<GitHubAsset> releases = [];
     response.data.forEach((release) {
-      releases.add(GitHubAsset.fromJson({...release['assets'].where((asset) => asset['name'] == 'FrostyModManager.zip').first, 'version': release['tag_name']}));
+      releases
+          .add(GitHubAsset.fromJson({...release['assets'].where((asset) => asset['name'] == 'FrostyModManager.zip').first, 'version': release['tag_name']}));
     });
     return releases;
   }
