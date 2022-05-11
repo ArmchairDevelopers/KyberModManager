@@ -43,7 +43,7 @@ material.DataRow Server(BuildContext context, KyberServer server) {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.25,
               height: 20,
-              child: AutoSizeText('${mode.name} - ${map['name']} - ${server.host}'),
+              child: AutoSizeText('${mode.name} - ${map['name']} - ${server.host.isNotEmpty ? server.host : 'Unknown'}'),
             )
           ],
         ),
