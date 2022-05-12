@@ -135,22 +135,22 @@ class _RunBattlefrontState extends State<RunBattlefront> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 FilledButton(
-                  child: Text(translate('server_browser.join_dialog.buttons.view_mods')),
                   style: ButtonStyle(
                     padding: ButtonState.all(
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 7),
                     ),
                   ),
-                  onPressed: () => showMods(),
+                  onPressed: _controller.text.isNotEmpty && profiles!.contains(_controller.text) ? () => showMods() : null,
+                  child: Text(translate('server_browser.join_dialog.buttons.view_mods')),
                 ),
                 FilledButton(
-                  child: Text(translate('start')),
                   style: ButtonStyle(
                     padding: ButtonState.all(
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 7),
                     ),
                   ),
                   onPressed: () => launchFrosty(),
+                  child: Text(translate('start')),
                 ),
               ],
             )
