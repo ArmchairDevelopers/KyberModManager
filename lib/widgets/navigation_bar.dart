@@ -65,7 +65,7 @@ class _NavigationBarState extends State<NavigationBar> {
       Timer.run(() => showDialog(context: context, builder: (context) => const NexusmodsLogin()));
     } else {
       ModInstallerService.initialise();
-      DllInjector.checkForUpdates();
+      DllInjector.downloadDll();
     }
 
     AutoUpdater().updateAvailable().then((value) {
@@ -105,7 +105,11 @@ class _NavigationBarState extends State<NavigationBar> {
       return RawKeyboardListener(
         autofocus: true,
         onKey: (event) {
-          if (event.runtimeType == RawKeyDownEvent && event.isAltPressed && event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyC && micaSupported) {
+          if (event.runtimeType == RawKeyDownEvent &&
+              event.isAltPressed &&
+              event.isControlPressed &&
+              event.logicalKey == LogicalKeyboardKey.keyC &&
+              micaSupported) {
             if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
               box.put('micaEnabled', false);
               WindowHelper.changeWindowEffect(false);
@@ -233,9 +237,9 @@ class _NavigationBarState extends State<NavigationBar> {
             child: NavigationBody(
               index: index,
               transitionBuilder: (child, animation) => EntrancePageTransition(
-                child: child,
                 animation: animation,
-                startFrom: .02,
+                startFrom: .015,
+                child: child,
               ),
               children: [
                 // const SizedBox(),
