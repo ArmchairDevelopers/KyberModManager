@@ -31,7 +31,7 @@ class CustomLogger {
   }
 
   static void _logToFile(String message) {
-    _logFile.writeAsStringSync('$message\n', mode: FileMode.append);
+    _logFile.writeAsString('$message\n', mode: FileMode.append);
   }
 
   static void _createLogFile() {
