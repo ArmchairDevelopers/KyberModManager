@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 
 class UpdateDialog extends StatefulWidget {
@@ -22,15 +23,18 @@ class _UpdateDialogState extends State<UpdateDialog> {
         maxWidth: 800,
       ),
       actions: [
-        Button(child: const Text('Ignore'), onPressed: installing ? null : () => Navigator.pop(context)),
+        Button(
+          onPressed: installing ? null : () => Navigator.pop(context),
+          child: Text(translate('ignore')),
+        ),
         FilledButton(
-          child: const Text('Install'),
           onPressed: !installing
               ? () {
                   setState(() => installing = true);
                   AutoUpdater().update();
                 }
               : null,
+          child: Text(translate('install')),
         ),
       ],
       content: SizedBox(
