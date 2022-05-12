@@ -25,7 +25,6 @@ import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.d
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
-import 'package:kyber_mod_manager/utils/helpers/system_tray_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
@@ -55,7 +54,6 @@ class _NavigationBarState extends State<NavigationBar> {
     Timer.run(() {
       try {
         ProfileService.generateFiles();
-        SystemTrayHelper.init(context);
       } catch (e) {
         NavigatorService.pushErrorPage(const MissingPermissions());
         return;
@@ -107,11 +105,7 @@ class _NavigationBarState extends State<NavigationBar> {
       return RawKeyboardListener(
         autofocus: true,
         onKey: (event) {
-          if (event.runtimeType == RawKeyDownEvent &&
-              event.isAltPressed &&
-              event.isControlPressed &&
-              event.logicalKey == LogicalKeyboardKey.keyC &&
-              micaSupported) {
+          if (event.runtimeType == RawKeyDownEvent && event.isAltPressed && event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyC && micaSupported) {
             if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
               box.put('micaEnabled', false);
               WindowHelper.changeWindowEffect(false);

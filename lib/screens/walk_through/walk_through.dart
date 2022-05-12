@@ -11,7 +11,6 @@ import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.d
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/path_helper.dart';
-import 'package:kyber_mod_manager/utils/helpers/system_tray_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
@@ -335,7 +334,6 @@ class _WalkThroughState extends State<WalkThrough> {
         await box.put('setup', true);
         await ModService.loadMods(context);
         ModInstallerService.initialise();
-        SystemTrayHelper.setProfiles();
         ModService.watchDirectory();
         Navigator.of(context).pop();
         if (!widget.changeFrostyPath) {

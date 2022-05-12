@@ -17,8 +17,7 @@ class PathHelper {
         .get('https://api.github.com/repos/CadeEvs/FrostyToolsuite/releases');
     List<GitHubAsset> releases = [];
     response.data.forEach((release) {
-      releases
-          .add(GitHubAsset.fromJson({...release['assets'].where((asset) => asset['name'] == 'FrostyModManager.zip').first, 'version': release['tag_name']}));
+      releases.add(GitHubAsset.fromJson({...release['assets'].where((asset) => asset['name'] == 'FrostyModManager.zip').first, 'version': release['tag_name']}));
     });
     return releases;
   }

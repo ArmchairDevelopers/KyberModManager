@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'github_asset.freezed.dart';
-
 part 'github_asset.g.dart';
 
 @freezed
