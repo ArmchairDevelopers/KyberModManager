@@ -119,17 +119,22 @@ class _InstalledModsState extends State<InstalledMods> {
                         material.DataCell(
                           Text(e.version, textAlign: TextAlign.center),
                         ),
-                        material.DataCell(CustomFilledButton(
-                          color: Colors.red,
-                          child: ButtonText(
-                            text: Text(translate('delete')),
-                            icon: const Icon(FluentIcons.delete),
+                        material.DataCell(
+                          SizedBox(
+                            width: 85,
+                            child: CustomFilledButton(
+                              color: Colors.red,
+                              child: ButtonText(
+                                text: Text(translate('delete')),
+                                icon: const Icon(FluentIcons.delete),
+                              ),
+                              onPressed: () {
+                                ModService.deleteMod(e);
+                                loadMods();
+                              },
+                            ),
                           ),
-                          onPressed: () {
-                            ModService.deleteMod(e);
-                            loadMods();
-                          },
-                        )),
+                        ),
                       ],
                     );
                   }).toList(),
