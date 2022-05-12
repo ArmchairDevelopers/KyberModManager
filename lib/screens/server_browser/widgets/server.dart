@@ -24,6 +24,9 @@ material.DataRow Server(BuildContext context, KyberServer server) {
             Row(
               children: [
                 Container(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.22,
+                  ),
                   child: Text(
                     server.name.trimRight(),
                     overflow: TextOverflow.ellipsis,
@@ -32,16 +35,13 @@ material.DataRow Server(BuildContext context, KyberServer server) {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.25,
-                  ),
                 ),
                 const SizedBox(width: 4),
                 server.requiresPassword ? const Icon(FluentIcons.lock, size: 14) : Container(),
               ],
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.25,
+              width: MediaQuery.of(context).size.width * 0.22,
               height: 20,
               child: AutoSizeText('${mode.name} - ${map['name']} - ${server.host.isNotEmpty ? server.host : 'Unknown'}'),
             )
