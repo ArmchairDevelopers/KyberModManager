@@ -1,3 +1,19 @@
+## [1.0.6] - [13/05/2022]
+
+- Added export buttons to both the mod profiles and cosmetics list.
+- Added a shortcut to disable the background effect.
+- Added an option to automatically download Frosty in the setup process.
+- Added caching to not exceed GitHub Api limits.
+- Fixed a bug where KMM would search in the wrong directories for the Frosty config.
+- Added missing translations.
+- Several UI changes.
+
+## [1.0.5] - [3/05/2022]
+
+- Fixes a bug where unsupported languages could cause some errors.
+- Fixes a bug where the Kyber Config could not be loaded correctly
+- The supported Frosty versions are now dynamically loaded.
+
 ## [1.0.4] - [27/04/2022]
 
 - Added support for NexusMods premium.
