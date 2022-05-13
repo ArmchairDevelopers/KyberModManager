@@ -4,6 +4,7 @@
   "back": "Назад",
   "continue": "Продолжить",
   "installed": "Установлено",
+  "install": "Install",
   "not_installed": "Не установлено",
   "password": "Пароль",
   "enter_password": "Введите пароль сервера:",
@@ -11,10 +12,12 @@
   "copy_link": "Скопировать Ссылку",
   "edit": "Изменить",
   "start": "Запустить",
+  "exit": "Exit",
   "delete": "Удалить",
   "save": "Сохранить",
   "search": "Поиск",
   "load": "Загрузить",
+  "ignore": "Ignore",
   "size": "Размер",
   "mods": "Моды",
   "login": "Войти",
@@ -101,7 +104,8 @@
     "table": {
       "info": "Информация",
       "players": "Игроки",
-      "location": "Местоположение"
+      "location": "Местоположение",
+      "started": "Started"
     },
     "join_dialog": {
       "frosty_profile_disabled": "Профиль Frosty отключен.",
@@ -302,6 +306,11 @@
     "discord_activity": {
       "title": "Активность Discord",
       "subtitle": "Показывает вашу текущую активность в Discord."
+    },
+    "change_frosty_directory": {
+      "title": "Relocate Frosty Path",
+      "subtitle": "Change Frosty path to a different location.",
+      "change": "Change"
     },
     "reset": {
       "title": "Сбросить Настройки",

@@ -4,6 +4,7 @@
   "back": "Zurück",
   "continue": "Weiter",
   "installed": "Installiert",
+  "install": "Installieren",
   "not_installed": "Nicht installiert",
   "password": "Passwort",
   "enter_password": "Gebe das Server Passwort ein:",
@@ -11,10 +12,12 @@
   "copy_link": "Link kopieren",
   "edit": "Bearbeiten",
   "start": "Starten",
+  "exit": "Beenden",
   "delete": "Löschen",
   "save": "Speichern",
   "search": "Suchen",
   "load": "Laden",
+  "ignore": "Ignorieren",
   "size": "Größe",
   "mods": "Mods",
   "login": "Login",
@@ -101,7 +104,8 @@
     "table": {
       "info": "Info",
       "players": "Spieler",
-      "location": "Standort"
+      "location": "Standort",
+      "started": "Gestartet"
     },
     "join_dialog": {
       "frosty_profile_disabled": "Frosty Profil ist deaktiviert.",
@@ -302,6 +306,11 @@
     "discord_activity": {
       "title": "Discord Aktivität",
       "subtitle": "Zeigt deine aktuelle Server Aktivität auf Discord an."
+    },
+    "change_frosty_directory": {
+      "title": "Frosty Pfad neu auswählen",
+      "subtitle": "Ändere Frosty Pfad an einen anderen Ort.",
+      "change": "Ändern"
     },
     "reset": {
       "title": "Zurücksetzen",
