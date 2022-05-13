@@ -6,7 +6,6 @@ import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:logging/logging.dart';
-import 'package:path_provider/path_provider.dart';
 
 class FrostyService {
   static Future<ProcessResult> startFrosty({bool launch = true, String? frostyPath}) async {
@@ -51,9 +50,7 @@ class FrostyService {
       return box.get('frostyConfigPath');
     }
 
-    Directory tmp = await getTemporaryDirectory();
-
-    File v5path = File('${tmp.path.replaceAll('Temp', 'Frosty')}\\manager_config.json');
+    File v5path = File('${Platform.environment['LOCALAPPDATA']}\\Frosty\\manager_config.json');
     File v4path = File('${box.get('frostyPath')}\\config.json');
     Logger.root.info('Checking for Frosty configs at "${v5path.path}" and "${v4path.path}"');
 
