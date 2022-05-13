@@ -41,7 +41,7 @@ void main() async {
         options.autoSessionTrackingInterval = const Duration(minutes: 1);
         options.dsn = 'https://1d0ce9262dcb416e8404c51e396297e4@o1117951.ingest.sentry.io/6233409';
         options.tracesSampleRate = 1.0;
-        options.release = "kyber-mod-manager@1.0.5";
+        options.release = "kyber-mod-manager@1.0.6";
       },
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
