@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:fluent_ui/fluent_ui.dart' show Colors, BuildContext;
+import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/helpers/puppeteer_helper.dart';
@@ -47,9 +48,8 @@ class DownloadService {
       _progressController?.close();
       _progressSubscription?.cancel();
     }
-    _browser
-        .close()
-        .then((value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
+    _browser.close().then(
+        (value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
   }
 
   Future<void> startDownload({
@@ -76,9 +76,10 @@ class DownloadService {
         return;
       }
       onFileInfo(info);
-      String filename = await _download(info.fileUrl + '?tab=files&file_id=' + info.fileId, info, onClose, onWebsiteOpened);
+      String filename = await _download('${info.fileUrl}?tab=files&file_id=${info.fileId}', info, onClose, onWebsiteOpened);
       onExtracting();
-      await _unpackFile(filename);
+      await compute(_unpackFile, [_downloadFolder, filename]);
+      await ModService.loadMods();
     });
     _done = true;
     await _browser.close();
@@ -131,27 +132,29 @@ class DownloadService {
     _timer?.cancel();
     return filename;
   }
+}
 
-  Future<void> _unpackFile(String filename) async {
-    if (!filename.endsWith('.rar')) {
-      final inputStream = InputFileStream('$_downloadFolder$filename');
-      final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
-      for (var file in archive.files) {
-        final outputStream = OutputFileStream(_downloadFolder + file.name);
-        file.writeContent(outputStream);
-        outputStream.close();
-      }
-      archive.clear();
-    } else {
-      await Future.delayed(const Duration(seconds: 1));
-      await UnzipHelper.unrar(File('$_downloadFolder$filename'), Directory(_downloadFolder)).catchError((error) {
-        NotificationService.showNotification(message: error.toString(), color: Colors.red);
-        Logger.root.severe('Could not unrar $filename. $error');
-      });
+Future<void> _unpackFile(List<dynamic> args) async {
+  String downloadFolder = args[0];
+  String filename = args[1];
+
+  if (!filename.endsWith('.rar')) {
+    final inputStream = InputFileStream('$downloadFolder$filename');
+    final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
+    for (var file in archive.files) {
+      final outputStream = OutputFileStream(downloadFolder + file.name);
+      file.writeContent(outputStream);
+      outputStream.close();
     }
-    await File('$_downloadFolder\\$filename').delete();
-    await ModService.loadMods();
+    archive.clear();
+  } else {
+    await Future.delayed(const Duration(seconds: 1));
+    await UnzipHelper.unrar(File('$downloadFolder$filename'), Directory(downloadFolder)).catchError((error) {
+      NotificationService.showNotification(message: error.toString(), color: Colors.red);
+      Logger.root.severe('Could not unrar $filename. $error');
+    });
   }
+  await File('$downloadFolder\\$filename').delete();
 }
 
 class _DownloadInfo {
