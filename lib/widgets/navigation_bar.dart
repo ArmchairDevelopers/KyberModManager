@@ -105,11 +105,7 @@ class _NavigationBarState extends State<NavigationBar> {
       return RawKeyboardListener(
         autofocus: true,
         onKey: (event) {
-          if (event.runtimeType == RawKeyDownEvent &&
-              event.isAltPressed &&
-              event.isControlPressed &&
-              event.logicalKey == LogicalKeyboardKey.keyC &&
-              micaSupported) {
+          if (event.runtimeType == RawKeyDownEvent && event.isAltPressed && event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyC && micaSupported) {
             if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
               box.put('micaEnabled', false);
               WindowHelper.changeWindowEffect(false);
