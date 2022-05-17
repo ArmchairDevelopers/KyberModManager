@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -29,10 +30,12 @@ class _DownloadScreenState extends State<DownloadScreen> {
   List<String> unsupportedModList = [];
   DownloadInfo? downloadInfo;
   ModInfo? currentMod;
+  Timer? downloadSpeedTimer;
   bool done = false;
   bool unsupportedMods = false;
   int loadingState = 0;
   double progress = 0;
+  int speed = 0;
   int received = 0;
   int total = 0;
 
@@ -44,8 +47,21 @@ class _DownloadScreenState extends State<DownloadScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    try {
+      downloadService.close();
+      downloadSpeedTimer?.cancel();
+      WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
+    } catch (_e) {
+      Logger.root.severe(_e.toString());
+    }
+    super.dispose();
+  }
+
   void onDownloadsFinished() {
     Logger.root.info('Downloads complete');
+    downloadSpeedTimer?.cancel();
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
     if (!unsupportedMods) {
       widget.onDownloadComplete();
@@ -53,17 +69,6 @@ class _DownloadScreenState extends State<DownloadScreen> {
       widget.onUnsupportedMods();
     }
     setState(() => done = true);
-  }
-
-  @override
-  void dispose() {
-    try {
-      downloadService.close();
-      WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
-    } catch (_e) {
-      Logger.root.severe(_e.toString());
-    }
-    super.dispose();
   }
 
   void startDownloads() async {
@@ -95,13 +100,21 @@ class _DownloadScreenState extends State<DownloadScreen> {
       currentMod = mods.first;
       loadingState = 2;
     });
+    int lastChunk = 0;
+    int lastTotal = 0;
     downloadService.onReceiveProgress().listen((event) {
       setState(() {
         received = int.parse(event.received);
         total = int.parse(event.total);
         progress = received / total * 100;
       });
+      lastTotal = (received - lastChunk);
       WindowsTaskbar.setProgress(received, total);
+    });
+
+    downloadSpeedTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      lastChunk += lastTotal;
+      setState(() => speed = lastTotal);
     });
     await downloadService.startDownload(
       onWebsiteOpened: () {
@@ -111,13 +124,17 @@ class _DownloadScreenState extends State<DownloadScreen> {
       context: context,
       onClose: () => Navigator.of(context).pop(),
       onFileInfo: (i) => setState(() => downloadInfo = i),
-      onExtracting: () => setState(() => loadingState = 4),
+      onExtracting: () => setState(() {
+        loadingState = 4;
+        speed = 0;
+      }),
       mods: mods.map((e) => e.toString()).toList(),
       onNextMod: (String s) {
         setState(() {
           total = 0;
           progress = 0;
           received = 0;
+          speed = 0;
           currentMod = mods.firstWhere((element) => s == element.toString());
           loadingState = 2;
         });
@@ -201,7 +218,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
           ),
         ),
         const SizedBox(height: 5),
-        Text(formatBytes(received, 1) + ' / ' + formatBytes(total, 1), style: const TextStyle(fontSize: 14)),
+        Text('${formatBytes(received, 1)} / ${formatBytes(total, 1)} (${formatBytes(speed, 1)}/s)', style: const TextStyle(fontSize: 14)),
         const SizedBox(height: 10),
         Text(translate('$prefix.file', args: {'0': downloadInfo?.fileName ?? '-'})),
         if (loadingState == 2 || loadingState == 4)
