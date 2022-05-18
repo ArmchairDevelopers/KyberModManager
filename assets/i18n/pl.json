@@ -105,7 +105,7 @@
       "info": "Informacje",
       "players": "Gracze",
       "location": "Lokalizacja",
-      "started": "Started"
+      "started": "Rozpoczęto"
     },
     "join_dialog": {
       "frosty_profile_disabled": "Profil Frosty jest wyłączony.",
@@ -308,9 +308,9 @@
       "subtitle": "Pokazuje obecny serwer jako aktywność na Discordzie."
     },
     "change_frosty_directory": {
-      "title": "Relocate Frosty Path",
-      "subtitle": "Change Frosty path to a different location.",
-      "change": "Change"
+      "title": "Zmień ścieżkę Frosty",
+      "subtitle": "Zmień ścieżkę Frosty do innej lokalizacji.",
+      "change": "Zmień"
     },
     "reset": {
       "title": "Powrót do ustawień domyślnych",
