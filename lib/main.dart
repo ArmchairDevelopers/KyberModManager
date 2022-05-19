@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
@@ -54,10 +56,18 @@ void main() async {
       supportedLocales: supportedLocales,
       preferences: TranslatePreferences(),
     );
-    Logger.root.info('Started in ${DateTime.now().difference(started).inMilliseconds}ms');
     runApp(LocalizedApp(delegate, const App()));
+    Logger.root.info('Started in ${DateTime.now().difference(started).inMilliseconds}ms');
   }, (exception, stackTrace) async {
+    Logger.root.severe('$exception\n$stackTrace');
     await Sentry.captureException(exception, stackTrace: stackTrace);
+    await FlutterPlatformAlert.showAlert(
+      windowTitle: 'Error',
+      text: 'An unknown error occurred:\n$exception\n$stackTrace',
+      alertStyle: AlertButtonStyle.ok,
+      iconStyle: IconStyle.error,
+    );
+    exit(-1);
   });
 }
 
