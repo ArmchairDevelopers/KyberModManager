@@ -33,9 +33,11 @@ class ModService {
   }) async {
     const String prefix = 'server_browser.join_dialog.joining_states';
     List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
+    bool enableCosmetics = cosmetics && box.get('enableCosmetics');
+    Logger.root.info('Loading mods for $profileName (cosmetics: $enableCosmetics | type: $packType)');
 
     if (packType == PackType.NO_MODS) {
-      if (cosmetics && box.get('enableCosmetics')) {
+      if (enableCosmetics) {
         await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
       } else {
         await FrostyProfileService.createProfile([]);
@@ -43,7 +45,7 @@ class ModService {
     } else if (packType == PackType.MOD_PROFILE) {
       ModProfile profile = List<ModProfile>.from(box.get('profiles')).where((p) => p.name == profileName).first;
       List<Mod> mods = List.from(profile.mods);
-      if (cosmetics && box.get('enableCosmetics')) {
+      if (enableCosmetics) {
         mods = [...mods, ...cosmeticMods];
       }
 
@@ -52,7 +54,7 @@ class ModService {
     } else if (packType == PackType.FROSTY_PACK) {
       var currentMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
       List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(profileName);
-      if (cosmetics && box.get('enableCosmetics')) {
+      if (enableCosmetics) {
         mods = [...mods, ...cosmeticMods];
       }
 

@@ -67,6 +67,7 @@ class FrostyProfileService {
         return;
       }
 
+      Logger.root.info('Copying profile data for $name');
       await ProfileService.copyProfileData(d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress);
     }
   }
