@@ -43,7 +43,7 @@ class ModService {
     } else if (packType == PackType.MOD_PROFILE) {
       ModProfile profile = List<ModProfile>.from(box.get('profiles')).where((p) => p.name == profileName).first;
       List<Mod> mods = List.from(profile.mods);
-      if (cosmetics && box.get('enableCosmetics') && mods.length < 20) {
+      if (cosmetics && box.get('enableCosmetics')) {
         mods = [...mods, ...cosmeticMods];
       }
 
@@ -52,7 +52,7 @@ class ModService {
     } else if (packType == PackType.FROSTY_PACK) {
       var currentMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
       List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(profileName);
-      if (cosmetics && box.get('enableCosmetics') && mods.length < 20) {
+      if (cosmetics && box.get('enableCosmetics')) {
         mods = [...mods, ...cosmeticMods];
       }
 
@@ -69,6 +69,25 @@ class ModService {
       await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
     } else {
       return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'));
+    }
+  }
+
+  static Future<List<Mod>> getModsFromModPack(String name) async {
+    PackType packType = getPackType(name);
+    if (packType == PackType.FROSTY_PACK || packType == PackType.MOD_PROFILE) {
+      name = name.replaceAll(' ${packType.name}', '');
+    }
+    switch (packType) {
+      case PackType.NO_MODS:
+        return [];
+      case PackType.MOD_PROFILE:
+        return List<ModProfile>.from(box.get('profiles')).where((p) => p.name == name).first.mods;
+      case PackType.FROSTY_PACK:
+        return await FrostyProfileService.getModsFromConfigProfile(name);
+      case PackType.COSMETICS:
+        return List<Mod>.from(box.get('cosmetics'));
+      default:
+        return [];
     }
   }
 

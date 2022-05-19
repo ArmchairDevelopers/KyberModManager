@@ -12,6 +12,7 @@ import 'package:kyber_mod_manager/screens/server_host/hosting_dialog.dart';
 import 'package:kyber_mod_manager/utils/helpers/map_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
+import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/game_status.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
@@ -45,6 +46,7 @@ class _ServerHostState extends State<ServerHost> {
   String? formattedServerName;
   String? proxy;
   int maxPlayers = 40;
+  bool warning = false;
   bool disabled = false;
   bool cosmetics = false;
   bool isHosting = false;
@@ -74,26 +76,39 @@ class _ServerHostState extends State<ServerHost> {
       }),
     );
     FrostyProfileService.getProfiles().then(
-      (value) => setState(() {
+      (value) async {
         String noMods = translate('$prefix.forms.mod_profile.no_mods_profile');
         String? lastProfile = box.get('lastProfile');
         frostyProfiles = value;
         if (lastProfile != null) {
           if (lastProfile == 'no_mods') {
-            _profileController.text = noMods;
+            setState(() => _profileController.text = noMods);
             return;
           }
-          _profileController.text = lastProfile;
+          setState(() => _profileController.text = lastProfile);
+          checkWarnings();
           return;
         }
         if (frostyProfiles == null || frostyProfiles!.isEmpty) {
-          _profileController.text = noMods;
+          setState(() => _profileController.text = noMods);
           return;
         }
-        _profileController.text = frostyProfiles!.first + ' (Frosty Pack)';
-      }),
+        setState(() => _profileController.text = '${frostyProfiles!.first} (Frosty Pack)');
+        checkWarnings();
+      },
     );
     super.initState();
+  }
+
+  void checkWarnings() async {
+    var mods = await ModService.getModsFromModPack(_profileController.text);
+
+    if (mods.length > 20 || mods.where((element) => element.name.contains('BF2022')).isNotEmpty) {
+      setState(() => warning = true);
+      return;
+    } else if (warning == true) {
+      setState(() => warning = false);
+    }
   }
 
   @override
@@ -345,6 +360,7 @@ class _ServerHostState extends State<ServerHost> {
                   ],
                   onSelected: (text) {
                     box.put('lastProfile', text == translate('$prefix.forms.mod_profile.no_mods_profile') ? 'no_mods' : text);
+                    Timer.run(() => checkWarnings());
                     FocusScope.of(context).unfocus();
                   },
                 ),
@@ -380,13 +396,24 @@ class _ServerHostState extends State<ServerHost> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Checkbox(
-                  checked: cosmetics,
-                  content: Text(translate('$prefix.forms.cosmetic_mods.header')),
-                  onChanged: (value) {
-                    setState(() => cosmetics = value!);
-                    box.put('enableCosmetics', value);
-                  },
+                Row(
+                  children: [
+                    Checkbox(
+                      checked: cosmetics,
+                      content: Text(translate('$prefix.forms.cosmetic_mods.header')),
+                      onChanged: (value) {
+                        setState(() => cosmetics = value!);
+                        box.put('enableCosmetics', value);
+                      },
+                    ),
+                    if (warning) ...[
+                      Tooltip(
+                        message: 'Cosmetic mods could cause crashes.',
+                        child: Icon(FluentIcons.warning, color: Colors.yellow),
+                      ),
+                      const SizedBox(width: 4),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 21),
                 Row(
