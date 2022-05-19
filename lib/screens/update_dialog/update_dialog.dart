@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class UpdateDialog extends StatefulWidget {
   const UpdateDialog({Key? key, required this.versionInfo}) : super(key: key);
@@ -53,7 +54,16 @@ class _UpdateDialogState extends State<UpdateDialog> {
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              MarkdownBody(data: widget.versionInfo.body),
+              MarkdownBody(
+                data: widget.versionInfo.body,
+                onTapLink: (String text, String? href, String title) {
+                  if (href == null) {
+                    return;
+                  }
+
+                  launchUrlString(href);
+                },
+              ),
             ],
           ),
         ),
