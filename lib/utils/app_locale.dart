@@ -5,6 +5,10 @@ import 'package:kyber_mod_manager/main.dart';
 
 class AppLocale {
   Locale getLocale() {
-    return Locale.fromSubtags(languageCode: box.get('locale', defaultValue: Platform.localeName.split('_').first));
+    try {
+      return Locale.fromSubtags(languageCode: box.get('locale', defaultValue: Platform.localeName.split('_').first));
+    } catch (e) {
+      return const Locale.fromSubtags(languageCode: 'en-US');
+    }
   }
 }
