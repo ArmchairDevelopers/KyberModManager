@@ -125,6 +125,9 @@ class _RunBattlefrontState extends State<RunBattlefront> {
                 placeholder: translate('host_server.forms.mod_profile.placeholder'),
                 items: profiles ?? [],
                 onSelected: (text) {
+                  if (text == translate('host_server.forms.mod_profile.no_mods_profile')) {
+                    text = 'no_mods';
+                  }
                   box.put('runBf2lastProfile', text);
                   FocusScope.of(context).unfocus();
                 },

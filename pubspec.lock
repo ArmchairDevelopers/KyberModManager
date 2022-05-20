@@ -62,7 +62,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "9b1bd3ac737014f0a0ed1fcaba2e2a49131f3c05"
+      resolved-ref: "5e711b7250d8bf99fc5084fcf78eed1a2de21d19"
       url: "https://github.com/MMMzq/bot_toast.git"
     source: git
     version: "4.0.2"
@@ -684,7 +684,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "4.4.0"
   pigment:
     dependency: transitive
     description:
@@ -754,7 +754,7 @@ packages:
       name: puppeteer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.9.0"
+    version: "2.7.0"
   recase:
     dependency: transitive
     description:
@@ -941,7 +941,7 @@ packages:
       name: url_launcher_ios
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.16"
+    version: "6.0.17"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -1053,7 +1053,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.4.1"
+    version: "5.3.1"
   yaml:
     dependency: transitive
     description:
