@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:intl/intl.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:logging/logging.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -15,7 +14,7 @@ class CustomLogger {
     Logger.root.level = Level.INFO;
     Logger.root.onRecord.listen(
       (record) {
-        String message = '${DateFormat('HH:mm:ss').format(DateTime.now())} ${record.level.name}: ${record.message}';
+        String message = '[${DateTime.now().toString().split('.').first}] ${record.level.name}: ${record.message}';
         _logToFile(message);
         print(message);
       },

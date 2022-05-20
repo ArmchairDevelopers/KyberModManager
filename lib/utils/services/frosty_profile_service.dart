@@ -42,6 +42,9 @@ class FrostyProfileService {
       return;
     }
     await file.create();
+    String battlefrontPath = OriginHelper.getBattlefrontPath();
+    Logger.root.info('Creating Frosty config at "${file.path}"');
+    Logger.root.info('Battlefront path: $battlefrontPath');
     FrostyConfig config = FrostyConfig.fromJson({'Games': {}, 'GlobalOptions': Map<String, dynamic>.from({})});
     config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
     config.globalOptions.useDefaultProfile = true;
