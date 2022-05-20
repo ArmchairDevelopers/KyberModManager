@@ -72,6 +72,7 @@ class _NavigationBarState extends State<NavigationBar> {
       if (value == null) {
         return;
       }
+
       showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
     });
 
@@ -118,6 +119,7 @@ class _NavigationBarState extends State<NavigationBar> {
         focusNode: FocusNode(),
         child: NavigationView(
           appBar: NavigationAppBar(
+            leading: const SizedBox(),
             height: micaSupported ? 0 : 30,
             title: !micaSupported
                 ? () {
