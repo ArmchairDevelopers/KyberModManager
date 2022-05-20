@@ -20,6 +20,7 @@ class InstalledMods extends StatefulWidget {
 class _InstalledModsState extends State<InstalledMods> {
   final String prefix = 'installed_mods';
   List<Mod> _installedMods = [];
+  bool loaded = false;
   String search = '';
 
   @override
@@ -28,8 +29,10 @@ class _InstalledModsState extends State<InstalledMods> {
     super.initState();
   }
 
-  void loadMods() {
-    setState(() => _installedMods = _installedMods = ModService.mods.where((element) => element.toString().toLowerCase().contains(search.toLowerCase())).toList()
+  void loadMods() async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    loaded = true;
+    setState(() => _installedMods = ModService.mods.where((element) => element.toString().toLowerCase().contains(search.toLowerCase())).toList()
       ..sort((a, b) => a.name.compareTo(b.name)));
   }
 
@@ -68,80 +71,98 @@ class _InstalledModsState extends State<InstalledMods> {
           Expanded(
             child: ConstrainedBox(
               constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width),
-              child: SingleChildScrollView(
-                child: material.DataTable(
-                  dataRowHeight: 40,
-                  columns: [
-                    material.DataColumn(
-                      label: SizedBox(
-                        child: Text(
-                          translate('name'),
-                          style: TextStyle(
-                            color: color.withOpacity(.5),
-                          ),
-                        ),
-                      ),
-                    ),
-                    material.DataColumn(
-                      label: SizedBox(
-                        child: Text(
-                          translate('author'),
-                          style: TextStyle(
-                            color: color.withOpacity(.5),
-                          ),
-                        ),
-                      ),
-                    ),
-                    material.DataColumn(
-                      label: SizedBox(
-                        child: Text(
-                          translate('version'),
-                          style: TextStyle(
-                            color: color.withOpacity(.5),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    const material.DataColumn(
-                      label: Text(''),
-                    ),
-                  ],
-                  rows: _installedMods.map((e) {
-                    return material.DataRow(
-                      cells: [
-                        material.DataCell(
-                          Text(e.name),
-                        ),
-                        material.DataCell(
-                          Text(e.author ?? 'Unknown'),
-                        ),
-                        material.DataCell(
-                          Text(e.version, textAlign: TextAlign.center),
-                        ),
-                        material.DataCell(
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: SizedBox(
-                              width: 85,
-                              child: CustomFilledButton(
-                                color: Colors.red,
-                                child: ButtonText(
-                                  text: Text(translate('delete')),
-                                  icon: const Icon(FluentIcons.delete),
+              child: Stack(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 200,
+                    child: SingleChildScrollView(
+                      child: material.DataTable(
+                        dataRowHeight: 40,
+                        columns: [
+                          material.DataColumn(
+                            label: SizedBox(
+                              child: Text(
+                                translate('name'),
+                                style: TextStyle(
+                                  color: color.withOpacity(.5),
                                 ),
-                                onPressed: () {
-                                  ModService.deleteMod(e);
-                                  loadMods();
-                                },
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                ),
+                          material.DataColumn(
+                            label: SizedBox(
+                              child: Text(
+                                translate('author'),
+                                style: TextStyle(
+                                  color: color.withOpacity(.5),
+                                ),
+                              ),
+                            ),
+                          ),
+                          material.DataColumn(
+                            label: SizedBox(
+                              child: Text(
+                                translate('version'),
+                                style: TextStyle(
+                                  color: color.withOpacity(.5),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                          const material.DataColumn(
+                            label: Text(''),
+                          ),
+                        ],
+                        rows: _installedMods.map((e) {
+                          return material.DataRow(
+                            cells: [
+                              material.DataCell(
+                                Text(e.name),
+                              ),
+                              material.DataCell(
+                                Text(e.author ?? 'Unknown'),
+                              ),
+                              material.DataCell(
+                                Text(e.version, textAlign: TextAlign.center),
+                              ),
+                              material.DataCell(
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: SizedBox(
+                                    width: 85,
+                                    child: CustomFilledButton(
+                                      color: Colors.red,
+                                      child: ButtonText(
+                                        text: Text(translate('delete')),
+                                        icon: const Icon(FluentIcons.delete),
+                                      ),
+                                      onPressed: () {
+                                        ModService.deleteMod(e);
+                                        loadMods();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  if (!loaded)
+                    Positioned(
+                      top: MediaQuery.of(context).size.height * 0.4,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 50,
+                        alignment: Alignment.center,
+                        child: const ProgressRing(),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
