@@ -1,6 +1,11 @@
+import 'dart:math';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
+
+const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+final Random _rnd = Random();
 
 class ActiveMods extends StatelessWidget {
   const ActiveMods({Key? key, required this.mods, required this.onReorder, required this.onRemove}) : super(key: key);
@@ -38,7 +43,7 @@ class ActiveMods extends StatelessWidget {
             children: List<Widget>.of(mods.map((e) {
               return ReorderableDragStartListener(
                 index: mods.indexWhere((element) => element.filename == e.filename),
-                key: Key(e.filename),
+                key: Key(e.version == 'Unknown' ? getRandomString(10) : e.filename),
                 child: ListTile(
                   leading: IconButton(
                     icon: const Icon(FluentIcons.delete),
@@ -66,4 +71,6 @@ class ActiveMods extends StatelessWidget {
       ],
     );
   }
+
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 }
