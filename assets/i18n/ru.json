@@ -1,326 +1,333 @@
 {
-  "cancel": "Отменить",
-  "close": "Закрыть",
-  "back": "Назад",
-  "continue": "Продолжить",
-  "installed": "Установлено",
-  "install": "Install",
-  "not_installed": "Не установлено",
-  "password": "Пароль",
-  "enter_password": "Введите пароль сервера:",
-  "join": "Подключиться к Серверу",
-  "copy_link": "Скопировать Ссылку",
-  "edit": "Изменить",
-  "start": "Запустить",
-  "exit": "Exit",
-  "delete": "Удалить",
-  "save": "Сохранить",
-  "search": "Поиск",
-  "load": "Загрузить",
-  "ignore": "Ignore",
-  "size": "Размер",
-  "mods": "Моды",
-  "login": "Войти",
-  "name": "Name",
-  "description": "Description",
-  "version": "Version",
-  "author": "Author",
-  "mods_loaded": "Загружено {count} модов.",
-  "last_used": "Last Used",
-  "navigation_bar": {
-    "battlefront_not_running": "Battlefront II не запущен.",
-    "kyber": {
-      "running": "Kyber запущен",
-      "not_running": "Запустить Kyber"
-    },
-    "items": {
-      "server_browser": "Поиск Сервера",
-      "host": "Создать Сервер",
-      "mod_profiles": "Профили Модов",
-      "saved_profiles": "Сохраненные Профили",
-      "installed_mods": "Installed Mods",
-      "run_bf2": "Запустить Battlefront II",
-      "cosmetic_mods": "Косметические Моды",
-      "feedback": "Отзывы / Помощь",
-      "settings": "Настройки"
-    }
-  },
-  "active_mods": "Активные Моды",
-  "saved_profiles": {
-    "title": "Сохраненные Профили",
-    "tooltip": "Эта опция позволяет автоматически сохранять профили для ранее подключенных серверов.\nВ следующий раз, если вы захотите создать или присоединиться к определенному серверу с тем же набором модов, вам не придется ждать их запуск.\nПредупреждение! Поскольку весь набор модов будет заново запущен в определенном порядке, это может занять много места на вашем жестком диске.\nУбедитесь, что у вас его достаточно."
-  },
-  "walk_through": {
-    "title": "Конфигурация",
-    "bugs_notice": "Пожалуйста, обратите внимание, что Менеджер Модов по-прежнему находится в бета-версии и могут возникнуть ошибки. Если вы столкнулись с ошибкой, пожалуйста, сообщите нам о ней через #bugs в нашем дискорд сервере.",
-    "downloading_dependencies": "Загрузка недостающих зависимостей...",
-    "dependencies": {
-      "downloading": "Загрузка недостающих зависимостей...",
-      "finished": "Загрузка завершена!"
-    },
-    "select_frosty_path": {
-      "button": "Выберите строку Frosty",
-      "description": "Чтобы менеджер модов работал правильно, необходимо сначала выбрать папку Frosty. Если вы используете неподдерживаемую версию Frosty, менеджер модов может перестать работать.",
-      "notice": "ВНИМАНИЕ",
-      "notice_text": "Пожалуйста, выберите папку Frosty, в которой находится FrostyModManager.exe. Это необходимо для определения и загрузки модов.",
-      "important": "ВАЖНО",
-      "important_text": "Пожалуйста, убедитесь, что Frosty уже обнаружил Star Wars Battlefront II, иначе менеджер модов не будет работать должным образом.",
-      "supported_versions": "Поддерживаемые версии Frosty:",
-      "error_messages": {
-        "invalid_dir": "Неверная папка.",
-        "bf2_not_found": "Frosty не обнаружил Star Wars Battlefront II."
-      }
-    }
-  },
-  "nexus_mods_login": {
-    "title": "Вход в NexusMods",
-    "notifications": {
-      "invalid_code": "Неверный код. Пожалуйста, попробуйте снова.",
-      "invalid_credentials": "Неверные логин или пароль. Пожалуйста, попробуйте еще раз.",
-      "login_success": "Вход выполнен успешно!"
-    },
-    "buttons": {
-      "waiting": "Ожидание...",
-      "skip": "Пропустить",
-      "loading": "Загрузка Nexusmods.com..."
-    },
-    "text_0": "Чтобы продолжить, вам нужно будет войти в свою учетную запись NexusMods в браузере, который скоро откроется.",
-    "text_1": "Пожалуйста, обратите внимание, что для автоматической загрузки модов вам необходимо войти в свой аккаунт Nexusmods.",
-    "text_2": "Данные обрабатываются локально и будут отправлены только в Nexusmods.\nВы также можете включить/отключить эту функцию позже в меню настроек.",
-    "waiting_for_login": "Ожидание авторизации..."
-  },
-  "server_browser": {
-    "title": "Поиск Сервера",
-    "next_page": "Следующая Страница",
-    "prev_page": "Предыдущая Страница",
-    "current_page": "Страница {0} из {1}",
-    "refresh": "Обновить",
-    "search_server": "Поиск Сервера",
-    "search_dialog": {
-      "title": "Поиск сервера",
-      "placeholder": "Ссылка-ID сервера",
-      "not_found": "Серверы не найдены!"
-    },
-    "table": {
-      "info": "Информация",
-      "players": "Игроки",
-      "location": "Местоположение",
-      "started": "Started"
-    },
-    "join_dialog": {
-      "frosty_profile_disabled": "Профиль Frosty отключен.",
-      "required_mods": {
-        "not_in_database": "Некоторые моды отсутствуют в базе данных!",
-        "click_on_download": "Нажмите на кнопку загрузки ниже.",
-        "required_mods": "Вы не установили необходимые моды для присоединения к этому серверу.",
-        "none": "Нет требуемых модов."
-      },
-      "download_page": {
-        "unsupported_mods_1": "Обнаружены неподдерживаемые моды.",
-        "unsupported_mods_2": "Вы можете отправить моды в канале Discord #mod-submissions.",
-        "unsupported_mods_3": "На данный момент только выбранный список модов может быть загружен автоматически.",
-        "downloading": "Загрузка {0}... {1}%",
-        "loading_states": {
-          "checking_mods": "Checking mods availability...",
-          "0": "Запуск браузера...",
-          "1": "Начало загрузки...",
-          "3": "Извлечение..."
+    "cancel": "Отменить",
+    "close": "Закрыть",
+    "back": "Назад",
+    "continue": "Продолжить",
+    "installed": "Установлено",
+    "install": "Install",
+    "not_installed": "Не установлено",
+    "password": "Пароль",
+    "enter_password": "Введите пароль сервера:",
+    "join": "Подключиться к Серверу",
+    "copy_link": "Скопировать Ссылку",
+    "edit": "Изменить",
+    "start": "Запустить",
+    "exit": "Exit",
+    "delete": "Удалить",
+    "save": "Сохранить",
+    "search": "Поиск",
+    "load": "Загрузить",
+    "ignore": "Ignore",
+    "size": "Размер",
+    "mods": "Моды",
+    "login": "Войти",
+    "name": "Name",
+    "description": "Description",
+    "version": "Version",
+    "author": "Author",
+    "mods_loaded": "Загружено {count} модов.",
+    "last_used": "Last Used",
+    "navigation_bar": {
+        "battlefront_not_running": "Battlefront II не запущен.",
+        "kyber": {
+            "running": "Kyber запущен",
+            "not_running": "Запустить Kyber"
         },
-        "file": "Файл: {0}"
-      },
-      "cosmetic_mods": {
-        "apply_cosmetic_mods": "Применить косметические моды",
-        "warning": "Если сервер использует много модов (особенно те, которые изменяют внешний вид), то применение этой опции может привести к некорректной работе вашей игры."
-      },
-      "team_selector": {
-        "auto_balancing": "Автобалансировка включена.",
-        "select_team": "Выберите Вашу Команду:",
-        "light_side": "Светлая сторона",
-        "dark_side": "Темная сторона"
-      },
-      "options": {
-        "title": "Опции",
-        "import_mods": "Импорт списка модов"
-      },
-      "buttons": {
-        "open_mods": "Открыть моды в браузере",
-        "view_mods": "Показать моды",
-        "downloading": "Загрузка...",
-        "download": "Скачать"
-      },
-      "joining_states": {
-        "searching": "Поиск сохраненных профилей...",
-        "joining": "Подключение к серверу...",
-        "creating": "Создание профиля Frosty...",
-        "frosty": "Ожидание Frosty...",
-        "battlefront": "В ожидании старта Battlefront II...",
-        "battlefront_2": "Если Battlefront II не запускается автоматически, запустите его вручную."
-      }
-    }
-  },
-  "host_server": {
-    "title": "Создать Сервер",
-    "starting": "Запуск...",
-    "server_updated": "Обновлено! Чтобы применить изменения, нажмите ESC в Battlefront 2 и перезапустите.",
-    "buttons": {
-      "server_info": "Показать данные сервера",
-      "server_is_starting": "Сервер запускается",
-      "update_server": "Обновить сервер",
-      "host": "Создать сервер"
+        "items": {
+            "server_browser": "Поиск Сервера",
+            "host": "Создать Сервер",
+            "mod_profiles": "Профили Модов",
+            "saved_profiles": "Сохраненные Профили",
+            "installed_mods": "Installed Mods",
+            "run_bf2": "Запустить Battlefront II",
+            "cosmetic_mods": "Косметические Моды",
+            "feedback": "Отзывы / Помощь",
+            "settings": "Настройки"
+        }
     },
-    "hosting_dialog": {
-      "title": "Хостинг",
-      "server_link": "Ссылка на сервер:",
-      "wait_for_bf2": "В ожидании старта Battlefront II...",
-      "wait_for_server": "Ожидание запуска сервера..."
-    },
-    "forms": {
-      "name": {
-        "header": "Название сервера",
-        "placeholder": "1vs1 - IOI",
-        "error": "Название сервера не может быть пустым."
-      },
-      "password": {
-        "header": "Пароль к серверу",
-        "placeholder": "Пароль к серверу",
-        "error": "Пожалуйста, введите правильный пароль."
-      },
-      "game_mode": {
-        "header": "Режим игры",
-        "placeholder": "Выбери режим игры..."
-      },
-      "map": {
-        "header": "Карта",
-        "placeholder": "Выберите карту...",
-        "map_not_found": "Карта не найдена."
-      },
-      "mod_profile": {
-        "header": "Профиль Модов",
-        "placeholder": "Выберите профиль мода...",
-        "no_mods_profile": "Нет модов",
-        "no_profile_found": "Выбранный профиль мода не найден.",
-        "tooltip": "Выберите профиль модов, который вы хотите использовать для этого сервера.\nЕсли вы ничего не выбираете, ваш последний использованный профиль будет применен.\nЧтобы разместить Kyber сервер без каких-либо модов, пожалуйста, выберите \"Без модов\"."
-      },
-      "proxy": {
-        "header": "Прокси"
-      },
-      "max_players": {
-        "header": "макс. игроков ({0})",
-        "tooltip": "Выберите нужное количество игроков для вашего сервера.\nТребуется быстрое подключение к Интернету, чтобы позволить многим игрокам присоединиться к вашему серверу и играть на нем без каких-либо задержек."
-      },
-      "cosmetic_mods": {
-        "header": "Косметические Моды"
-      },
-      "auto_balance": {
-        "header": "Автобаланс",
-        "tooltip": "Когда включено, игроки не смогут выбрать команду, которую они предпочитают, - они будут попадать в случайную команду в зависимости от числа игроков, которые в настоящее время в игре."
-      }
-    }
-  },
-  "mod_profiles": {
-    "title": "Профили Модов",
-    "create_profile": "Создать профиль"
-  },
-  "select_frosty_profile": {
-    "title": "Загрузить профиль Frosty",
-    "label": "Выберите профиль Frosty, чтобы импортировать:"
-  },
-  "installed_mods": {
-    "title": "Installed Mods",
-    "open_directory": "Open directory"
-  },
-  "edit_mod_profile": {
-    "title": "Профиль Модов",
-    "installed_mods": "Установленные моды",
     "active_mods": "Активные Моды",
-    "load_frosty_profile": {
-      "title": "Импортировать профиль Frosty",
-      "tooltip": "Если у вас уже есть профили модов в Менеджере модов Frosty, вы можете импортировать их в KMM с помощью этой кнопки."
-    },
-    "forms": {
-      "name": {
-        "header": "Название",
-        "placeholder": "Мой профиль",
-        "error": "Название профиля не может быть пустым."
-      },
-      "description": {
-        "header": "Описание",
-        "placeholder": "Описание моего Профиля"
-      },
-      "mods": {
-        "header": "Моды",
-        "no_mods_selected": "Моды не выбраны"
-      }
-    }
-  },
-  "run_battlefront": {
-    "title": "Запустить Battlefront II",
-    "starting": "Запуск...",
-    "copying_profile": "Копирование данных профиля ({copied}/{total} файлов) ...",
-    "cosmetic_mods": "Cosmetic Mods",
-    "notifications": {
-      "no_profile_selected": "Выберите профиль.",
-      "battlefront_already_running": "Battlefront II уже запущен."
-    },
-    "buttons": {
-      "run": "Запустить"
-    }
-  },
-  "cosmetic_mods": {
-    "title": "Косметические Mоды"
-  },
-  "feedback": {
-    "title": "Отзыв",
-    "description": "Если у вас есть предложения или проблемы, пожалуйста, свяжитесь с нами в Discord или на странице GitHub."
-  },
-  "settings": {
-    "title": "Настройки",
-    "export_log_file": "Export log file",
-    "check_for_updates": {
-      "title": "Check for updates",
-      "no_updates_available": "No updates available."
-    },
-    "language": {
-      "title": "Язык",
-      "subtitle": "Выберите Ваш Язык."
-    },
-    "platform_selector": {
-      "title": "Выберите платформу",
-      "subtitle": "Платформа",
-      "enable": "Активировать"
-    },
-    "frosty_profile": {
-      "title": "Профиль Frosty",
-      "subtitle": "Включить глобальный профиль Frosty для Battlefront II. (Переписывает FrostyFix и перезапускает выбранную платформу)",
-      "tooltip": "Эта опция — интегрированная часть FrostyFix, необходимая для выполнения задачи. Она позволяет модам запустится на всех платформах, к которым у вас есть доступ. \nВнимание! До тех пор, пока вы не отключите его, он будет работать даже после перезапуска ПК или закрытия приложения."
-    },
     "saved_profiles": {
-      "title": "Сохраненные Профили",
-      "subtitle": "Сохраняет ваши Frosty профили и восстанавливает их при необходимости."
+        "title": "Сохраненные Профили",
+        "tooltip": "Эта опция позволяет автоматически сохранять профили для ранее подключенных серверов.\nВ следующий раз, если вы захотите создать или присоединиться к определенному серверу с тем же набором модов, вам не придется ждать их запуск.\nПредупреждение! Поскольку весь набор модов будет заново запущен в определенном порядке, это может занять много места на вашем жестком диске.\nУбедитесь, что у вас его достаточно."
     },
-    "nexus_mods": {
-      "title": "Nexus Mods",
-      "subtitle": "Войдите в аккаунт NexusMods, чтобы включить автоматическую загрузку модов.",
-      "logout": "Выйти"
+    "walk_through": {
+        "title": "Конфигурация",
+        "bugs_notice": "Пожалуйста, обратите внимание, что Менеджер Модов по-прежнему находится в бета-версии и могут возникнуть ошибки. Если вы столкнулись с ошибкой, пожалуйста, сообщите нам о ней через #bugs в нашем дискорд сервере.",
+        "downloading_dependencies": "Загрузка недостающих зависимостей...",
+        "dependencies": {
+            "downloading": "Загрузка недостающих зависимостей...",
+            "finished": "Загрузка завершена!"
+        },
+        "select_frosty_path": {
+            "button": "Выберите строку Frosty",
+            "description": "Чтобы менеджер модов работал правильно, необходимо сначала выбрать папку Frosty. Если вы используете неподдерживаемую версию Frosty, менеджер модов может перестать работать.",
+            "notice": "ВНИМАНИЕ",
+            "notice_text": "Пожалуйста, выберите папку Frosty, в которой находится FrostyModManager.exe. Это необходимо для определения и загрузки модов.",
+            "important": "ВАЖНО",
+            "important_text": "Пожалуйста, убедитесь, что Frosty уже обнаружил Star Wars Battlefront II, иначе менеджер модов не будет работать должным образом.",
+            "supported_versions": "Поддерживаемые версии Frosty:",
+            "error_messages": {
+                "invalid_dir": "Неверная папка.",
+                "bf2_not_found": "Frosty не обнаружил Star Wars Battlefront II."
+            }
+        }
     },
-    "discord_activity": {
-      "title": "Активность Discord",
-      "subtitle": "Показывает вашу текущую активность в Discord."
+    "nexus_mods_login": {
+        "title": "Вход в NexusMods",
+        "notifications": {
+            "invalid_code": "Неверный код. Пожалуйста, попробуйте снова.",
+            "invalid_credentials": "Неверные логин или пароль. Пожалуйста, попробуйте еще раз.",
+            "login_success": "Вход выполнен успешно!"
+        },
+        "buttons": {
+            "waiting": "Ожидание...",
+            "skip": "Пропустить",
+            "loading": "Загрузка Nexusmods.com..."
+        },
+        "text_0": "Чтобы продолжить, вам нужно будет войти в свою учетную запись NexusMods в браузере, который скоро откроется.",
+        "text_1": "Пожалуйста, обратите внимание, что для автоматической загрузки модов вам необходимо войти в свой аккаунт Nexusmods.",
+        "text_2": "Данные обрабатываются локально и будут отправлены только в Nexusmods.\nВы также можете включить/отключить эту функцию позже в меню настроек.",
+        "waiting_for_login": "Ожидание авторизации..."
     },
-    "change_frosty_directory": {
-      "title": "Relocate Frosty Path",
-      "subtitle": "Change Frosty path to a different location.",
-      "change": "Change"
+    "server_browser": {
+        "title": "Поиск Сервера",
+        "next_page": "Следующая Страница",
+        "prev_page": "Предыдущая Страница",
+        "current_page": "Страница {0} из {1}",
+        "refresh": "Обновить",
+        "search_server": "Поиск Сервера",
+        "search_dialog": {
+            "title": "Поиск сервера",
+            "placeholder": "Ссылка-ID сервера",
+            "not_found": "Серверы не найдены!"
+        },
+        "table": {
+            "info": "Информация",
+            "players": "Игроки",
+            "location": "Местоположение",
+            "started": "Started"
+        },
+        "join_dialog": {
+            "frosty_profile_disabled": "Профиль Frosty отключен.",
+            "required_mods": {
+                "not_in_database": "Некоторые моды отсутствуют в базе данных!",
+                "click_on_download": "Нажмите на кнопку загрузки ниже.",
+                "required_mods": "Вы не установили необходимые моды для присоединения к этому серверу.",
+                "none": "Нет требуемых модов."
+            },
+            "download_page": {
+                "unsupported_mods_1": "Обнаружены неподдерживаемые моды.",
+                "unsupported_mods_2": "Вы можете отправить моды в канале Discord #mod-submissions.",
+                "unsupported_mods_3": "На данный момент только выбранный список модов может быть загружен автоматически.",
+                "downloading": "Загрузка {0}... {1}%",
+                "loading_states": {
+                    "checking_mods": "Checking mods availability...",
+                    "0": "Запуск браузера...",
+                    "1": "Начало загрузки...",
+                    "3": "Извлечение..."
+                },
+                "file": "Файл: {0}"
+            },
+            "cosmetic_mods": {
+                "apply_cosmetic_mods": "Применить косметические моды",
+                "warning": "Если сервер использует много модов (особенно те, которые изменяют внешний вид), то применение этой опции может привести к некорректной работе вашей игры."
+            },
+            "team_selector": {
+                "auto_balancing": "Автобалансировка включена.",
+                "select_team": "Выберите Вашу Команду:",
+                "light_side": "Светлая сторона",
+                "dark_side": "Темная сторона"
+            },
+            "options": {
+                "title": "Опции",
+                "import_mods": "Импорт списка модов"
+            },
+            "buttons": {
+                "open_mods": "Открыть моды в браузере",
+                "view_mods": "Показать моды",
+                "downloading": "Загрузка...",
+                "download": "Скачать"
+            },
+            "joining_states": {
+                "searching": "Поиск сохраненных профилей...",
+                "joining": "Подключение к серверу...",
+                "creating": "Создание профиля Frosty...",
+                "frosty": "Ожидание Frosty...",
+                "battlefront": "В ожидании старта Battlefront II...",
+                "battlefront_2": "Если Battlefront II не запускается автоматически, запустите его вручную."
+            }
+        }
     },
-    "reset": {
-      "title": "Сбросить Настройки",
-      "subtitle": "Сбрасывает все настройки. (KyberModManager)"
+    "host_server": {
+        "title": "Создать Сервер",
+        "starting": "Запуск...",
+        "server_updated": "Обновлено! Чтобы применить изменения, нажмите ESC в Battlefront 2 и перезапустите.",
+        "buttons": {
+            "server_info": "Показать данные сервера",
+            "server_is_starting": "Сервер запускается",
+            "update_server": "Обновить сервер",
+            "host": "Создать сервер"
+        },
+        "hosting_dialog": {
+            "title": "Хостинг",
+            "server_link": "Ссылка на сервер:",
+            "wait_for_bf2": "В ожидании старта Battlefront II...",
+            "wait_for_server": "Ожидание запуска сервера..."
+        },
+        "forms": {
+            "name": {
+                "header": "Название сервера",
+                "placeholder": "1vs1 - IOI",
+                "error": "Название сервера не может быть пустым."
+            },
+            "password": {
+                "header": "Пароль к серверу",
+                "placeholder": "Пароль к серверу",
+                "error": "Пожалуйста, введите правильный пароль."
+            },
+            "game_mode": {
+                "header": "Режим игры",
+                "placeholder": "Выбери режим игры..."
+            },
+            "map": {
+                "header": "Карта",
+                "placeholder": "Выберите карту...",
+                "map_not_found": "Карта не найдена."
+            },
+            "mod_profile": {
+                "header": "Профиль Модов",
+                "placeholder": "Выберите профиль мода...",
+                "no_mods_profile": "Нет модов",
+                "no_profile_found": "Выбранный профиль мода не найден.",
+                "tooltip": "Выберите профиль модов, который вы хотите использовать для этого сервера.\nЕсли вы ничего не выбираете, ваш последний использованный профиль будет применен.\nЧтобы разместить Kyber сервер без каких-либо модов, пожалуйста, выберите \"Без модов\"."
+            },
+            "proxy": {
+                "header": "Прокси"
+            },
+            "max_players": {
+                "header": "макс. игроков ({0})",
+                "tooltip": "Выберите нужное количество игроков для вашего сервера.\nТребуется быстрое подключение к Интернету, чтобы позволить многим игрокам присоединиться к вашему серверу и играть на нем без каких-либо задержек."
+            },
+            "cosmetic_mods": {
+                "header": "Косметические Моды"
+            },
+            "auto_balance": {
+                "header": "Автобаланс",
+                "tooltip": "Когда включено, игроки не смогут выбрать команду, которую они предпочитают, - они будут попадать в случайную команду в зависимости от числа игроков, которые в настоящее время в игре."
+            }
+        }
+    },
+    "mod_profiles": {
+        "title": "Профили Модов",
+        "create_profile": "Создать профиль"
+    },
+    "select_frosty_profile": {
+        "title": "Загрузить профиль Frosty",
+        "label": "Выберите профиль Frosty, чтобы импортировать:"
+    },
+    "installed_mods": {
+        "title": "Installed Mods",
+        "open_directory": "Open directory"
+    },
+    "export_profile_dialog": {
+        "title": "Export Profile",
+        "export": "Export",
+        "export_type": "Export Type",
+        "profile_name": "Profile Name",
+        "include_cosmetics": "Include Cosmetic Mods"
+    },
+    "edit_mod_profile": {
+        "title": "Профиль Модов",
+        "installed_mods": "Установленные моды",
+        "active_mods": "Активные Моды",
+        "load_frosty_profile": {
+            "title": "Импортировать профиль Frosty",
+            "tooltip": "Если у вас уже есть профили модов в Менеджере модов Frosty, вы можете импортировать их в KMM с помощью этой кнопки."
+        },
+        "forms": {
+            "name": {
+                "header": "Название",
+                "placeholder": "Мой профиль",
+                "error": "Название профиля не может быть пустым."
+            },
+            "description": {
+                "header": "Описание",
+                "placeholder": "Описание моего Профиля"
+            },
+            "mods": {
+                "header": "Моды",
+                "no_mods_selected": "Моды не выбраны"
+            }
+        }
+    },
+    "run_battlefront": {
+        "title": "Запустить Battlefront II",
+        "starting": "Запуск...",
+        "copying_profile": "Копирование данных профиля ({copied}/{total} файлов) ...",
+        "cosmetic_mods": "Cosmetic Mods",
+        "notifications": {
+            "no_profile_selected": "Выберите профиль.",
+            "battlefront_already_running": "Battlefront II уже запущен."
+        },
+        "buttons": {
+            "run": "Запустить"
+        }
+    },
+    "cosmetic_mods": {
+        "title": "Косметические Mоды"
+    },
+    "feedback": {
+        "title": "Отзыв",
+        "description": "Если у вас есть предложения или проблемы, пожалуйста, свяжитесь с нами в Discord или на странице GitHub."
+    },
+    "settings": {
+        "title": "Настройки",
+        "export_log_file": "Export log file",
+        "check_for_updates": {
+            "title": "Check for updates",
+            "no_updates_available": "No updates available."
+        },
+        "language": {
+            "title": "Язык",
+            "subtitle": "Выберите Ваш Язык."
+        },
+        "platform_selector": {
+            "title": "Выберите платформу",
+            "subtitle": "Платформа",
+            "enable": "Активировать"
+        },
+        "frosty_profile": {
+            "title": "Профиль Frosty",
+            "subtitle": "Включить глобальный профиль Frosty для Battlefront II. (Переписывает FrostyFix и перезапускает выбранную платформу)",
+            "tooltip": "Эта опция — интегрированная часть FrostyFix, необходимая для выполнения задачи. Она позволяет модам запустится на всех платформах, к которым у вас есть доступ. \nВнимание! До тех пор, пока вы не отключите его, он будет работать даже после перезапуска ПК или закрытия приложения."
+        },
+        "saved_profiles": {
+            "title": "Сохраненные Профили",
+            "subtitle": "Сохраняет ваши Frosty профили и восстанавливает их при необходимости."
+        },
+        "nexus_mods": {
+            "title": "Nexus Mods",
+            "subtitle": "Войдите в аккаунт NexusMods, чтобы включить автоматическую загрузку модов.",
+            "logout": "Выйти"
+        },
+        "discord_activity": {
+            "title": "Активность Discord",
+            "subtitle": "Показывает вашу текущую активность в Discord."
+        },
+        "change_frosty_directory": {
+            "title": "Relocate Frosty Path",
+            "subtitle": "Change Frosty path to a different location.",
+            "change": "Change"
+        },
+        "reset": {
+            "title": "Сбросить Настройки",
+            "subtitle": "Сбрасывает все настройки. (KyberModManager)"
+        }
+    },
+    "languages": {
+        "en": "Английский",
+        "de": "Немецкий",
+        "pl": "Польский",
+        "ru": "Русский"
     }
-  },
-  "languages": {
-    "en": "Английский",
-    "de": "Немецкий",
-    "pl": "Польский",
-    "ru": "Русский"
-  }
 }
