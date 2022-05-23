@@ -28,7 +28,7 @@ import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:logging/logging.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
 class ServerDialog extends StatefulWidget {
@@ -118,6 +118,8 @@ class _ServerDialogState extends State<ServerDialog> {
       }).catchError((e) {
         NotificationService.showNotification(message: e.toString(), color: Colors.red);
       });
+
+      if (!mounted) return;
       setState(() {
         startingState = 1;
         content = null;
@@ -134,6 +136,8 @@ class _ServerDialogState extends State<ServerDialog> {
       }
       setState(() => startingState = 2);
       await FrostyProfileService.createProfile(mods);
+
+      if (!mounted) return;
       setState(() => startingState = 3);
 
       var appliedMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
@@ -152,6 +156,8 @@ class _ServerDialogState extends State<ServerDialog> {
           NotificationService.showNotification(message: e.toString());
         }
       }
+
+      if (!mounted) return;
       setState(() => startingState = 4);
       timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (!mounted) {
@@ -177,7 +183,7 @@ class _ServerDialogState extends State<ServerDialog> {
           NotificationService.showNotification(message: translate('$prefix.required_mods.not_in_database'), color: Colors.red);
           await Future.delayed(const Duration(seconds: 1));
         }
-        links.links.toSet().toList().forEach((element) => launch(element));
+        links.links.toSet().toList().forEach((element) => launchUrlString(element));
         return;
       }
       setState(() {
@@ -231,10 +237,11 @@ class _ServerDialogState extends State<ServerDialog> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         Button(
-          child: Text(state == 1 ? translate('back') : translate('$prefix.buttons.view_mods')),
           onPressed: downloading || unsupportedMods ? null : () => setState(() => state = state == 1 ? 0 : 1),
+          child: Text(state == 1 ? translate('back') : translate('$prefix.buttons.view_mods')),
         ),
         FilledButton(
+          onPressed: disabled ? null : onButtonPressed,
           child: Text(
             translate(
               correctPassword && !unsupportedMods
@@ -248,7 +255,6 @@ class _ServerDialogState extends State<ServerDialog> {
                   : 'continue',
             ),
           ),
-          onPressed: disabled ? null : onButtonPressed,
         ),
       ],
       content: SizedBox(
