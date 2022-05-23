@@ -89,7 +89,6 @@ class _SettingsState extends State<Settings> {
         padding: const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
         children: [
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.language.title')),
               subtitle: Text(translate('$prefix.language.subtitle')),
@@ -130,7 +129,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.nexus_mods.title')),
               subtitle: Text(translate('$prefix.nexus_mods.subtitle')),
@@ -159,7 +157,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -184,7 +181,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -214,7 +210,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -273,7 +268,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.change_frosty_directory.title')),
               subtitle: Text(translate('$prefix.change_frosty_directory.subtitle')),
@@ -294,7 +288,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.reset.title')),
               subtitle: Text(translate('$prefix.reset.subtitle')),
