@@ -34,7 +34,7 @@ class _ServerHostState extends State<ServerHost> {
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _mapController = TextEditingController();
-  final TextEditingController _profileController = TextEditingController();
+  final TextEditingController _profileController = TextEditingController(text: translate('host_server.forms.mod_profile.no_mods_profile'));
 
   late List<ModProfile> _profiles;
 
@@ -349,10 +349,16 @@ class _ServerHostState extends State<ServerHost> {
                     )
                   ],
                 ),
-                AutoSuggestBox(
+                AutoSuggestBox.form(
                   controller: _profileController,
-                  clearButtonEnabled: true,
                   placeholder: translate('$prefix.forms.mod_profile.placeholder'),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return translate('$prefix.forms.mod_profile.error');
+                    }
+                    return null;
+                  },
+                  onChanged: (String? value, TextChangedReason _) => _formKey.currentState?.validate(),
                   items: [
                     translate('$prefix.forms.mod_profile.no_mods_profile'),
                     ...frostyProfiles?.where((e) => e != 'KyberModManager').map((e) => '$e (Frosty Pack)') ?? [],
@@ -408,7 +414,7 @@ class _ServerHostState extends State<ServerHost> {
                     ),
                     if (warning) ...[
                       Tooltip(
-                        message: 'Cosmetic mods could cause crashes.',
+                        message: 'Cosmetic mods might cause crashes with your selected gameplay mods',
                         child: Icon(FluentIcons.warning, color: Colors.yellow),
                       ),
                       const SizedBox(width: 4),
