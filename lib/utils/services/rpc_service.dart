@@ -82,7 +82,7 @@ class RPCService {
           state:
               '${config['KYBER_MODE'] == 'CLIENT' ? 'Playing' : 'Hosting'} ${mode.name} on ${map['name']} (${_gameStatus.server!.users}/${_gameStatus.server!.maxPlayers})',
           startTimeStamp: _gameStatus.started?.millisecondsSinceEpoch,
-          largeImageText: 'SW: Battlefront II',
+          largeImageText: 'Star Wars: Battlefront II',
           largeImageKey: 'bf2',
           smallImageText: map['name'],
           smallImageKey: 'test',
