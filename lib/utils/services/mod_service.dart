@@ -204,6 +204,18 @@ class ModService {
     return mods = List<Mod>.from(list);
   }
 
+  static Future<Mod> getDataFromFile(File file) async {
+    List<int> data = [];
+    await file.openRead(0, 1500).toList().then((value) => value.forEach((element) => element.forEach((element1) => data.add(element1))));
+    return Mod.fromString(
+      file.path,
+      utf8.decode(
+        data.getRange(50, data.length).toList(),
+        allowMalformed: true,
+      ),
+    );
+  }
+
   static _loadMods(List<dynamic> data) async {
     List<Mod> loadedMods = [];
     await Future.forEach(List<String>.from(data[0]).where((element) => element.endsWith('.fbmod')), (String element) async {
