@@ -17,6 +17,7 @@ class ExportProfileDialog extends StatefulWidget {
 
 class _ExportProfileDialogState extends State<ExportProfileDialog> {
   final TextEditingController _controller = TextEditingController();
+  final String prefix = "export_profile_dialog";
   String selectedType = "Frosty Pack";
   bool cosmetics = false;
 
@@ -42,7 +43,7 @@ class _ExportProfileDialogState extends State<ExportProfileDialog> {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      title: const Text("Export Profile"),
+      title: Text(translate('$prefix.title')),
       actions: [
         Button(
           child: Text(translate('close')),
@@ -50,34 +51,34 @@ class _ExportProfileDialogState extends State<ExportProfileDialog> {
             Navigator.of(context).pop();
           },
         ),
-        FilledButton(child: const Text('Export'), onPressed: export),
+        FilledButton(onPressed: export, child: Text(translate('$prefix.export'))),
       ],
       constraints: const BoxConstraints(maxWidth: 500, maxHeight: 325),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InfoLabel(
-            label: "Export type",
+            label: translate('$prefix.export_type'),
             child: Combobox(
               value: 'Frosty Pack',
               isExpanded: true,
               onChanged: (String? e) => setState(() => selectedType = e ?? 'Frosty Pack'),
               items: [
                 'Frosty Pack' /*, 'File'*/
-              ].map((e) => ComboboxItem(child: Text(e), value: e)).toList(),
+              ].map((e) => ComboboxItem(value: e, child: Text(e))).toList(),
             ),
           ),
           const SizedBox(height: 15),
           TextBox(
             controller: _controller,
-            header: 'Profile name',
+            header: translate('$prefix.export_type'),
           ),
           if (widget.enableCosmetics) ...[
             const SizedBox(height: 15),
             Checkbox(
               checked: cosmetics,
               onChanged: (value) => setState(() => cosmetics = value ?? false),
-              content: const Text("Include cosmetics"),
+              content: Text(translate('$prefix.include_cosmetics')),
             ),
           ],
         ],
