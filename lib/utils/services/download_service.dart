@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:archive/archive_io.dart';
 import 'package:fluent_ui/fluent_ui.dart' show Colors, BuildContext;
@@ -11,6 +12,7 @@ import 'package:kyber_mod_manager/utils/helpers/unzip_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:logging/logging.dart';
 import 'package:puppeteer/puppeteer.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -141,10 +143,28 @@ Future<void> _unpackFile(List<dynamic> args) async {
   if (!filename.endsWith('.rar')) {
     final inputStream = InputFileStream('$downloadFolder$filename');
     final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
-    for (var file in archive.files) {
-      final outputStream = OutputFileStream(downloadFolder + file.name);
-      file.writeContent(outputStream);
+    for (var archiveFile in archive.files) {
+      String path = '$downloadFolder${getRandomString(8)}';
+      final outputStream = OutputFileStream(path);
+      archiveFile.writeContent(outputStream);
       outputStream.close();
+
+      String finalPath = '$downloadFolder${archiveFile.name}';
+      File file = File(path);
+      File destFile = File(finalPath);
+      if (destFile.existsSync() && destFile.path.endsWith('.fbmod')) {
+        Mod mod = await ModService.getDataFromFile(destFile);
+        Mod installedMod = await ModService.getDataFromFile(file);
+        if (mod.version != installedMod.version) {
+          String extension = archiveFile.name.split('.').last;
+          finalPath = '$downloadFolder${archiveFile.name.replaceAll('.$extension', '')}_${installedMod.version}.$extension';
+        } else {
+          file.deleteSync();
+          continue;
+        }
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
+      file.rename(finalPath);
     }
     archive.clear();
   } else {
@@ -156,6 +176,11 @@ Future<void> _unpackFile(List<dynamic> args) async {
   }
   await File('$downloadFolder\\$filename').delete();
 }
+
+const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+Random _rnd = Random();
+
+String getRandomString(int length) => String.fromCharCodes(Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
 class _DownloadInfo {
   final String total;
