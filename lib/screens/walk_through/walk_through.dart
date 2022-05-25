@@ -123,7 +123,7 @@ class _WalkThroughState extends State<WalkThrough> {
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               Text(
-                "Downloading Frosty " + selectedFrostyVersion.version,
+                "Downloading Frosty ${selectedFrostyVersion.version}",
                 style: const TextStyle(fontSize: 15),
               ),
               const SizedBox(height: 5),
@@ -135,10 +135,10 @@ class _WalkThroughState extends State<WalkThrough> {
                 ),
               ),
               const SizedBox(height: 5),
-              Text(formatBytes(current, 1) + ' / ' + formatBytes(selectedFrostyVersion.size, 1), style: const TextStyle(fontSize: 14)),
+              Text('${formatBytes(current, 1)} / ${formatBytes(selectedFrostyVersion.size, 1)}', style: const TextStyle(fontSize: 14)),
               const SizedBox(height: 10),
-              Text('Path: ' + (_directory?.path ?? ''), style: const TextStyle(fontSize: 14)),
-              Text('Version: ' + selectedFrostyVersion.version, style: const TextStyle(fontSize: 14)),
+              Text('Path: ${_directory?.path ?? ''}', style: const TextStyle(fontSize: 14)),
+              Text('Version: ${selectedFrostyVersion.version}', style: const TextStyle(fontSize: 14)),
             ],
           );
         }
@@ -172,6 +172,7 @@ class _WalkThroughState extends State<WalkThrough> {
                 items: frostyVersions
                     .map(
                       (e) => ComboboxItem(
+                        value: e,
                         child: Text(
                           e.version +
                               (supportedFrostyVersions != null
@@ -180,7 +181,6 @@ class _WalkThroughState extends State<WalkThrough> {
                                       : ' (Not Supported)'
                                   : ' (-)'),
                         ),
-                        value: e,
                       ),
                     )
                     .toList(),
@@ -304,7 +304,7 @@ class _WalkThroughState extends State<WalkThrough> {
 
       final Completer<Process> processCompleter = Completer<Process>();
       runExecutableArguments(
-        _directory!.path + '\\FrostyModManager.exe',
+        '${_directory!.path}\\FrostyModManager.exe',
         [],
         workingDirectory: _directory!.path,
         onProcess: (e) => processCompleter.complete(e),
@@ -377,22 +377,31 @@ class _WalkThroughState extends State<WalkThrough> {
       ]),
       actions: [
         Button(
-          child: index == 3 ? const Text('Cancel') : Text(translate('server_browser.prev_page')),
-          onPressed: index < 2 || disabled
+          onPressed: (index < 2 || disabled) && !widget.changeFrostyPath
               ? null
               : () {
+                  if (widget.changeFrostyPath) {
+                    Navigator.of(context).pop();
+                    return;
+                  }
                   if (index == 3) {
                     PathHelper.cancelDownload();
                   }
                   setState(() => index == 3 ? index = 1 : index--);
                 },
+          child: widget.changeFrostyPath
+              ? Text(translate('close'))
+              : index == 3
+                  ? const Text('Cancel')
+                  : Text(translate('server_browser.prev_page')),
         ),
         if (index == 1)
           Button(
-            child: const Text("Download Frosty"),
             onPressed: index == 0 || disabled ? null : () => setState(() => index = 3),
+            child: const Text("Download Frosty"),
           ),
         FilledButton(
+          onPressed: disabled ? null : onPressed,
           child: Text(
             index == 1
                 ? translate('$prefix.select_frosty_path.button')
@@ -400,7 +409,6 @@ class _WalkThroughState extends State<WalkThrough> {
                     ? 'Download'
                     : translate('continue'),
           ),
-          onPressed: disabled ? null : onPressed,
         ),
       ],
       content: SizedBox(
@@ -414,6 +422,6 @@ class _WalkThroughState extends State<WalkThrough> {
     if (bytes <= 0) return "0 B";
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
-    return ((bytes / pow(1024, i)).toStringAsFixed(decimals)) + ' ' + suffixes[i];
+    return '${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
   }
 }
