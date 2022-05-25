@@ -124,6 +124,10 @@ class _DownloadScreenState extends State<DownloadScreen> {
     });
 
     downloadSpeedTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (loadingState != 3) {
+        setState(() => speed = 0);
+        return;
+      }
       lastChunk += lastTotal;
       setState(() => speed = lastTotal);
     });
