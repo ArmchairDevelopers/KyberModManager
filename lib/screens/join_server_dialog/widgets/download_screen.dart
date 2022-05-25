@@ -4,9 +4,12 @@ import 'dart:math';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
+import 'package:kyber_mod_manager/screens/errors/no_executable.dart';
+import 'package:kyber_mod_manager/utils/helpers/unzip_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/download_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/mod_info.dart';
 import 'package:logging/logging.dart';
@@ -42,8 +45,8 @@ class _DownloadScreenState extends State<DownloadScreen> {
   @override
   void initState() {
     mods = widget.server.mods.where((element) => !ModService.isInstalled(element)).map((e) => ModService.convertToModInfo(e)).toList();
-    startDownloads();
     Logger.root.info('Downloading mods for ${widget.server.name}');
+    Timer.run(() => init());
     super.initState();
   }
 
@@ -57,6 +60,14 @@ class _DownloadScreenState extends State<DownloadScreen> {
       Logger.root.severe(_e.toString());
     }
     super.dispose();
+  }
+
+  void init() async {
+    String? unrarExecutable = UnzipHelper.getExecutable();
+    if (unrarExecutable == null) {
+      await NavigatorService.pushErrorPage(const NoExecutable());
+    }
+    startDownloads();
   }
 
   void onDownloadsFinished() {
