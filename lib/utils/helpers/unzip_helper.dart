@@ -11,7 +11,7 @@ class UnzipHelper {
     if (exe.endsWith('7z.exe')) {
       await Process.run(exe, ['e', file.path, '-y'], workingDirectory: to.path);
     } else {
-      await Process.run(exe, ['x', '-ibck', file.path, '*.*', to.path]);
+      await Process.run(exe, ['e', '-ibck', file.path, '*.*', to.path]);
     }
   }
 
@@ -20,7 +20,7 @@ class UnzipHelper {
     if (key.subkeyNames.contains('WinRAR')) {
       return Registry.openPath(RegistryHive.localMachine, path: r'SOFTWARE\WinRAR').getValueAsString('exe64');
     } else if (key.subkeyNames.contains('7-Zip')) {
-      return Registry.openPath(RegistryHive.localMachine, path: r'SOFTWARE\7-Zip').getValueAsString('Path64')! + '\\7z.exe';
+      return '${Registry.openPath(RegistryHive.localMachine, path: r'SOFTWARE\7-Zip').getValueAsString('Path64')!}\\7z.exe';
     }
     return null;
   }
