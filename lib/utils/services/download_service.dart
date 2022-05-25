@@ -94,18 +94,6 @@ class DownloadService {
       _initializedPage = true;
     }
     bool isPremium = await _page.evaluate(r'''document.querySelectorAll('#startDownloadButton').length > 0''');
-    await _page.click(isPremium ? 'button[id\$="startDownloadButton"]' : 'button[id\$="slowDownloadButton"]').onError((error, stackTrace) async {
-      await _page
-          .screenshot(fullPage: true)
-          .then((value) => File('$applicationDocumentsDirectory\\${DateTime.now().toString().replaceAll(':', '-')}.png').writeAsBytesSync(value));
-      NotificationService.showNotification(message: 'Download button not found! Please try again!', color: Colors.red);
-      close();
-      onClose();
-      Sentry.captureException(
-        error,
-        stackTrace: stackTrace,
-      );
-    });
     String filename = await _page.evaluate(r'''document.querySelectorAll('.page-layout .header')[0].innerHTML.split('<')[0]''');
     String name = filename.substring(0, filename.lastIndexOf('.'));
     String extension = filename.split('.').last;
@@ -118,6 +106,18 @@ class DownloadService {
         .listen((element) async => fileCompleter.complete(filename));
     _progressSubscription = _page.onResponse.firstWhere((element) => element.url.contains(extension)).asStream().listen((value) {
       downloadCompleter.complete(value.headers['content-length']);
+    });
+    await _page.click(isPremium ? 'button[id\$="startDownloadButton"]' : 'button[id\$="slowDownloadButton"]').onError((error, stackTrace) async {
+      await _page
+          .screenshot(fullPage: true)
+          .then((value) => File('$applicationDocumentsDirectory\\${DateTime.now().toString().replaceAll(':', '-')}.png').writeAsBytesSync(value));
+      NotificationService.showNotification(message: 'Download button not found! Please try again!', color: Colors.red);
+      close();
+      onClose();
+      Sentry.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
     });
     String size = await downloadCompleter.future;
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
