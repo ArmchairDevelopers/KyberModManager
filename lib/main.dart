@@ -46,9 +46,9 @@ void main() async {
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
     CustomLogger.initialise();
-    await SystemTheme.accentColor.load();
     await StorageHelper.initialiseHive();
     await WindowHelper.initialiseWindow();
+    await SystemTheme.accentColor.load();
     var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'en',
       supportedLocales: supportedLocales,
@@ -115,7 +115,7 @@ class _AppState extends State<App> {
       ],
       supportedLocales: localizationDelegate.supportedLocales,
       locale: localizationDelegate.currentLocale,
-      navigatorKey: NavigatorService.navigatorKey,
+      navigatorKey: navigatorKey,
       builder: (context, child) {
         child = MultiBlocProvider(
           providers: [
