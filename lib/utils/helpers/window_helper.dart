@@ -29,7 +29,7 @@ class WindowHelper {
         await windowManager.center();
         await windowManager.show();
         await windowManager.setSkipTaskbar(false);
-        await windowManager.setBackgroundColor(ThemeData.dark().navigationPaneTheme.backgroundColor!);
+        await windowManager.setBackgroundColor(Colors.transparent);
       });
     } else {
       windowManager.waitUntilReadyToShow().then((_) async {
