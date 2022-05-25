@@ -9,6 +9,7 @@ import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
+import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/game_status.dart';
 import 'package:kyber_mod_manager/utils/types/mode.dart';
 import 'package:logging/logging.dart';
@@ -22,15 +23,15 @@ class RPCService {
   static bool _running = false;
   static StreamSubscription? _subscription;
 
-  static void initialize(BuildContext context) {
+  static void initialize() {
     if (_subscription != null) {
       _subscription!.cancel();
     }
 
     DiscordRPC.initialize();
     RPCService.start();
-    _gameStatus = BlocProvider.of<GameStatusCubic>(context).state;
-    _subscription = BlocProvider.of<GameStatusCubic>(context).stream.listen((element) {
+    _gameStatus = BlocProvider.of<GameStatusCubic>(navigatorKey.currentContext!).state;
+    _subscription = BlocProvider.of<GameStatusCubic>(navigatorKey.currentContext!).stream.listen((element) {
       RPCService._gameStatus = element;
       checkStatus();
     });

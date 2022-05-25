@@ -76,7 +76,7 @@ class _NavigationBarState extends State<NavigationBar> {
       showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
     });
 
-    RPCService.initialize(context);
+    RPCService.initialize();
     Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
 
     super.initState();
@@ -92,7 +92,7 @@ class _NavigationBarState extends State<NavigationBar> {
     }
   }
 
-  void checkKyberStatus(Timer? timer) => box.containsKey('setup') ? BlocProvider.of<GameStatusCubic>(context).check() : timer?.cancel();
+  void checkKyberStatus(Timer? timer) => box.containsKey('setup') && mounted ? BlocProvider.of<GameStatusCubic>(context).check() : timer?.cancel();
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,11 @@ class _NavigationBarState extends State<NavigationBar> {
       return RawKeyboardListener(
         autofocus: true,
         onKey: (event) {
-          if (event.runtimeType == RawKeyDownEvent && event.isAltPressed && event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyC && micaSupported) {
+          if (event.runtimeType == RawKeyDownEvent &&
+              event.isAltPressed &&
+              event.isControlPressed &&
+              event.logicalKey == LogicalKeyboardKey.keyC &&
+              micaSupported) {
             if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
               box.put('micaEnabled', false);
               WindowHelper.changeWindowEffect(false);
