@@ -247,8 +247,10 @@ class _WalkThroughState extends State<WalkThrough> {
           return;
         }
         if (widget.changeFrostyPath) {
-          setState(() => disabled = true);
-          index = 2;
+          setState(() {
+            disabled = true;
+            index = 2;
+          });
           onPressed();
           return;
         }
@@ -269,9 +271,9 @@ class _WalkThroughState extends State<WalkThrough> {
       await PathHelper.downloadFrosty(
         _directory!,
         selectedFrostyVersion,
-        (p0, p1) => setState(() {
-          current = p0;
-          total = p1;
+        (current, total) => setState(() {
+          this.current = current;
+          this.total = total;
         }),
       );
 
@@ -285,6 +287,11 @@ class _WalkThroughState extends State<WalkThrough> {
       String? configPath = await FrostyService.getFrostyConfigPath();
       var config;
       if (configPath != null && File(configPath).existsSync()) {
+        bool validConfig = await FrostyProfileService.checkConfig(configPath);
+        if (!validConfig) {
+          await FrostyProfileService.loadBattlefront(configPath);
+        }
+
         box.put('frostyConfigPath', configPath);
         config = await FrostyService.getFrostyConfig();
       } else {
@@ -311,9 +318,9 @@ class _WalkThroughState extends State<WalkThrough> {
       );
       Process process = await processCompleter.future;
       await Directory(_directory!.path).watch(recursive: true).firstWhere((FileSystemEvent event) {
-        return event.path.endsWith('FrostyModManager\\Caches') && event.type == FileSystemEvent.modify;
+        return event.path.endsWith('FrostyModManager\\Mods\\starwarsbattlefrontii');
       });
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 200));
       process.kill();
 
       setState(() {
@@ -377,7 +384,7 @@ class _WalkThroughState extends State<WalkThrough> {
       ]),
       actions: [
         Button(
-          onPressed: (index < 2 || disabled) && !widget.changeFrostyPath
+          onPressed: (index < 2 || disabled) && !widget.changeFrostyPath || downloading
               ? null
               : () {
                   if (widget.changeFrostyPath) {
@@ -389,7 +396,7 @@ class _WalkThroughState extends State<WalkThrough> {
                   }
                   setState(() => index == 3 ? index = 1 : index--);
                 },
-          child: widget.changeFrostyPath
+          child: widget.changeFrostyPath && !downloading
               ? Text(translate('close'))
               : index == 3
                   ? const Text('Cancel')

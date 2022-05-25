@@ -14,6 +14,13 @@ import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:logging/logging.dart';
 
 class FrostyProfileService {
+  static final Game _battlefront = Game(
+    gamePath: OriginHelper.getBattlefrontPath(),
+    bookmarkDb: "[Asset Bookmarks]|[Legacy Bookmarks]",
+    options: Options(),
+    packs: {'Default': '', 'KyberModManager': ''},
+  );
+
   static Future<void> createProfile(List<String> list, [String profile = 'KyberModManager']) async {
     try {
       List<Mod> mods = list.map((e) => ModService.convertToMod(e)).toList();
@@ -32,6 +39,26 @@ class FrostyProfileService {
     }
   }
 
+  static Future<bool> checkConfig(String path) async {
+    FrostyConfig config = await FrostyService.getFrostyConfig(path);
+    if (config.games['starwarsbattlefrontii'] == null) {
+      return false;
+    }
+
+    return true;
+  }
+
+  static Future<void> loadBattlefront(String configPath) async {
+    FrostyConfig config = await FrostyService.getFrostyConfig(configPath);
+    if (config.games['starwarsbattlefrontii'] == null) {
+      config.games['starwarsbattlefrontii'] = _battlefront;
+      config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
+      config.globalOptions.useDefaultProfile = true;
+    }
+
+    await FrostyService.saveFrostyConfig(config);
+  }
+
   static Future<void> createFrostyConfig() async {
     String path = applicationDocumentsDirectory.replaceAll(r'Roaming\Kyber Mod Manager', r'Local\Frosty');
     if (!Directory(path).existsSync()) {
@@ -48,12 +75,7 @@ class FrostyProfileService {
     FrostyConfig config = FrostyConfig.fromJson({'Games': {}, 'GlobalOptions': Map<String, dynamic>.from({})});
     config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
     config.globalOptions.useDefaultProfile = true;
-    config.games['starwarsbattlefrontii'] = Game(
-      gamePath: OriginHelper.getBattlefrontPath(),
-      bookmarkDb: "[Asset Bookmarks]|[Legacy Bookmarks]",
-      options: Options(),
-      packs: {'Default': '', 'KyberModManager': ''},
-    );
+    config.games['starwarsbattlefrontii'] = _battlefront;
     await FrostyService.saveFrostyConfig(config, file.path);
   }
 

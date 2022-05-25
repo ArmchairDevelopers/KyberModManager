@@ -23,8 +23,8 @@ class FrostyService {
     return r;
   }
 
-  static Future<FrostyConfig> getFrostyConfig() async {
-    String? filePath = await getFrostyConfigPath();
+  static Future<FrostyConfig> getFrostyConfig([String? path]) async {
+    String? filePath = path ?? await getFrostyConfigPath();
     if (filePath == null) {
       return FrostyConfig.fromJson({'Games': [], 'GlobalOptions': Map<String, dynamic>.from({})});
     }
