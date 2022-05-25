@@ -46,7 +46,6 @@ dependencies:
   fluent_ui:
     git:
       url: https://github.com/bdlukaa/fluent_ui.git
-      ref: ui-updates
   system_tray: ^0.1.0
   tinycolor2: ^2.0.0
   http: ^0.13.4

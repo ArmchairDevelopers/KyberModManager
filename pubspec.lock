@@ -280,8 +280,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: ui-updates
-      resolved-ref: c9493718076671614734c328dc3e8b3fc7d44f44
+      ref: HEAD
+      resolved-ref: "512705673718ff0798d7498a10acacd5587f8237"
       url: "https://github.com/bdlukaa/fluent_ui.git"
     source: git
     version: "3.12.0"
