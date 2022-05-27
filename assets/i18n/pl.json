@@ -230,11 +230,11 @@
         "open_directory": "Otwórz folder"
     },
     "export_profile_dialog": {
-        "title": "Export Profile",
-        "export": "Export",
-        "export_type": "Export Type",
-        "profile_name": "Profile Name",
-        "include_cosmetics": "Include Cosmetic Mods"
+        "title": "Eksportuj zestaw",
+        "export": "Eksportuj",
+        "export_type": "Typ eksportu",
+        "profile_name": "Nazwa zestawu",
+        "include_cosmetics": "Uwzględnij modyfikacje kosmetyczne"
     },
     "edit_mod_profile": {
         "title": "Zestaw modyfikacji",
