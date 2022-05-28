@@ -1,3 +1,21 @@
+## [1.0.7] - [-/-/-]
+
+- Added warnings for using cosmetic mods with large mod packs.
+- Added validation for selecting a mod profile on the host page.
+- Fixed that if a mod is already installed, the new mod gets a different name so that you can use both versions.
+- Fixed a bug where extracting mods after downloading could cause lags.
+- Fixed a window border issue on Windows 10.
+- Fixed that sometimes KMM wouldn't detect that the download has already started.
+- Fixed the cancel button while launching into a server.
+- Fixed WinRAR extraction.
+- Fixed links in the update changelog
+- Fixed that opening the cosmetics page too early could cause crashes.
+- Added missing translations.
+- Download speed is now being shown.
+- Not installed mods are now being handled correctly.
+- Several UI fixes
+- Upgraded to Flutter 3.0
+
 ## [1.0.6] - [13/05/2022]
 
 - Added export buttons to both the mod profiles and cosmetics list.
