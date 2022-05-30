@@ -304,8 +304,6 @@ class _SettingsState extends State<Settings> {
                   if (s.existsSync()) {
                     s.deleteSync(recursive: true);
                   }
-                  String path = await PlatformHelper.activateProfile(box.get('previousProfile') ?? '', previous: true);
-                  await PlatformHelper.restartPlatform(box.get('platform', defaultValue: 'origin'), path);
                   Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
                 }),
               ),
