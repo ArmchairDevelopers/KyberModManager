@@ -387,7 +387,7 @@ class _WalkThroughState extends State<WalkThrough> {
           onPressed: (index < 2 || disabled) && !widget.changeFrostyPath || downloading
               ? null
               : () {
-                  if (widget.changeFrostyPath) {
+                  if (widget.changeFrostyPath && index != 3) {
                     Navigator.of(context).pop();
                     return;
                   }
@@ -396,7 +396,7 @@ class _WalkThroughState extends State<WalkThrough> {
                   }
                   setState(() => index == 3 ? index = 1 : index--);
                 },
-          child: widget.changeFrostyPath && !downloading
+          child: widget.changeFrostyPath && index != 3
               ? Text(translate('close'))
               : index == 3
                   ? const Text('Cancel')
