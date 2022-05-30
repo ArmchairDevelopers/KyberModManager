@@ -4,10 +4,10 @@ import 'package:kyber_mod_manager/utils/types/map.dart';
 import 'package:kyber_mod_manager/utils/types/mode.dart';
 
 class MapHelper {
-  static List<KyberMap> getMapsForMode(String mode) {
-    Mode m = modes.firstWhere((element) => element.mode == mode);
-    return m.maps.map((e) {
-      MapOverride? override = m.mapOverrides?.firstWhere((x) => x.map == e, orElse: () => MapOverride(map: '', name: ''));
+  static List<KyberMap> getMapsForMode(String x) {
+    Mode mode = modes.firstWhere((element) => element.mode == x);
+    return mode.maps.map((e) {
+      MapOverride? override = mode.mapOverrides?.firstWhere((x) => x.map == e, orElse: () => MapOverride(map: '', name: ''));
       if (override != null && override.name != '') {
         return KyberMap(map: override.map, name: override.name);
       }

@@ -24,8 +24,8 @@ class _NoExecutableState extends State<NoExecutable> {
           FilledButton(
             child: const Text('Try again'),
             onPressed: () {
-              var exectuable = UnzipHelper.getExecutable();
-              if (exectuable == null) {
+              var executable = UnzipHelper.getExecutable();
+              if (executable == null) {
                 NotificationService.showNotification(message: 'No executable found.', color: Colors.red);
                 return;
               }
