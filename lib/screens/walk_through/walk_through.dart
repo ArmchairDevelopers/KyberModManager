@@ -6,16 +6,19 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/screens/errors/battlefront_not_installed.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/frosty_selector.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
+import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/path_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/github_asset.dart';
 import 'package:logging/logging.dart';
@@ -65,6 +68,10 @@ class _WalkThroughState extends State<WalkThrough> {
           disabled = false;
         }),
       );
+    }
+    String path = OriginHelper.getBattlefrontPath();
+    if (path.isEmpty) {
+      NavigatorService.pushErrorPage(const BattlefrontNotFound());
     }
     super.initState();
   }
