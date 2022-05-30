@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Feedback extends StatefulWidget {
   const Feedback({Key? key}) : super(key: key);
@@ -32,15 +32,21 @@ class _FeedbackState extends State<Feedback> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomFilledButton(
-                  child: const Text('Discord'),
-                  onPressed: () => launch('https://discord.gg/t2YBaHqbkb'),
+                  onPressed: () => launchUrlString('https://discord.gg/t2YBaHqbkb'),
                   color: const Color.fromRGBO(88, 101, 242, 1),
+                  child: const Text(
+                    'Discord',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 CustomFilledButton(
-                  child: const Text('GitHub'),
-                  onPressed: () => launch('https://github.com/7reax/kyber-mod-manager'),
+                  onPressed: () => launchUrlString('https://github.com/7reax/kyber-mod-manager'),
                   color: Colors.grey,
+                  child: const Text(
+                    'GitHub',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
