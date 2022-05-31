@@ -58,9 +58,15 @@ class _FeedbackState extends State<Feedback> {
             const SizedBox(
               height: 32,
             ),
-            const Text(
-              'Kyber related:',
-              style: TextStyle(fontSize: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  'Kyber related: ',
+                  style: TextStyle(fontSize: 18),
+                ),
+                Text(' (not affiliated)', style: TextStyle(fontSize: 12)),
+              ],
             ),
             const SizedBox(
               height: 8,
