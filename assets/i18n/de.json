@@ -129,11 +129,11 @@
         "file": "Datei: {0}"
       },
       "failed_injection": {
-        "notification": "Error - Failed to inject Kyber",
-        "title": "Failed to inject Kyber",
-        "text": "To fix this you can do the following:",
-        "text_1": "Restart Kyber Mod Manager with administrator rights.",
-        "text_2": "Add '%appdata%/Kyber Mod Manager/Kyber.dll' as a exception to your antivirus."
+        "notification": "Fehler - Fehler beim Injizieren von Kyber",
+        "title": "Fehler beim Injizieren von Kyber",
+        "text": "Um dies zu beheben, kannst du folgendes tun:",
+        "text_1": "Starte Kyber Mod Manager mit Administratorrechten neu.",
+        "text_2": "Füge '%appdata%/Kyber Mod Manager/Kyber.dll' als Ausnahme zu deinem Antivirus hinzu."
       },
       "cosmetic_mods": {
         "apply_cosmetic_mods": "Kosmetische Mods verwenden",
@@ -237,11 +237,11 @@
     "open_directory": "Verzeichnis öffnen"
   },
   "export_profile_dialog": {
-    "title": "Export Profile",
-    "export": "Export",
-    "export_type": "Export Type",
-    "profile_name": "Profile Name",
-    "include_cosmetics": "Include Cosmetic Mods"
+    "title": "Profil exportieren",
+    "export": "Exportieren",
+    "export_type": "Export-Typ",
+    "profile_name": "Profilname",
+    "include_cosmetics": "Kosmetische Mods einbeziehen"
   },
   "edit_mod_profile": {
     "title": "Mod Profil",
@@ -286,7 +286,7 @@
   "feedback": {
     "title": "Feedback",
     "description": "Wenn du irgendwelche Vorschläge oder Probleme hast, kontaktiert uns bitte auf Discord oder auf der GitHub-Seite.",
-    "kyber_related": "Kyber related",
+    "kyber_related": "Kyber",
     "not_affiliated": "not affiliated"
   },
   "settings": {
