@@ -4,6 +4,9 @@ import 'package:kyber_mod_manager/main.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WindowHelper {
+  static const Size _minimumSize = Size(900, 600);
+  static const Size _size = Size(1400, 700);
+
   static Future<void> changeWindowEffect(bool enabled) async {
     if (enabled) {
       await Window.setEffect(effect: WindowEffect.mica, dark: true);
@@ -25,7 +28,8 @@ class WindowHelper {
     if (!micaSupported) {
       windowManager.waitUntilReadyToShow().then((_) async {
         await windowManager.setTitleBarStyle(TitleBarStyle.hidden, windowButtonVisibility: false);
-        await windowManager.setSize(const Size(1400, 700));
+        await windowManager.setSize(_size);
+        await windowManager.setMinimumSize(_minimumSize);
         await windowManager.center();
         await windowManager.show();
         await windowManager.setSkipTaskbar(false);
@@ -33,7 +37,8 @@ class WindowHelper {
     } else {
       windowManager.waitUntilReadyToShow().then((_) async {
         await windowManager.setTitleBarStyle(TitleBarStyle.normal, windowButtonVisibility: false);
-        await windowManager.setSize(const Size(1400, 700));
+        await windowManager.setSize(_size);
+        await windowManager.setMinimumSize(_minimumSize);
         await windowManager.show();
         if (micaEnabled) {
           await windowManager.setBackgroundColor(Colors.transparent);
