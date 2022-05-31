@@ -18,11 +18,12 @@ class _FeedbackState extends State<Feedback> {
         title: Text(translate('feedback.title')),
       ),
       content: Container(
-        alignment: Alignment.center,
+        alignment: Alignment.topCenter,
         padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(height: MediaQuery.of(context).size.height / 4),
             Text(
               translate('feedback.description'),
               style: const TextStyle(fontSize: 18),
@@ -45,6 +46,60 @@ class _FeedbackState extends State<Feedback> {
                   color: Colors.grey,
                   child: const Text(
                     'GitHub',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 32,
+            ),
+            const Divider(),
+            const SizedBox(
+              height: 32,
+            ),
+            const Text(
+              'Kyber related:',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomFilledButton(
+                  onPressed: () => launchUrlString('https://discord.gg/kyber'),
+                  color: const Color.fromRGBO(88, 101, 242, 1),
+                  child: const Text(
+                    'Discord',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                CustomFilledButton(
+                  onPressed: () => launchUrlString('https://twitter.com/KyberServers'),
+                  color: const Color.fromRGBO(29, 161, 242, 1),
+                  child: const Text(
+                    'Twitter',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                CustomFilledButton(
+                  onPressed: () => launchUrlString('https://github.com/BattleDash/Kyber'),
+                  color: Colors.grey,
+                  child: const Text(
+                    'GitHub',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                CustomFilledButton(
+                  onPressed: () => launchUrlString('https://patreon.com/KyberServers'),
+                  color: const Color.fromRGBO(249, 104, 84, 1),
+                  child: const Text(
+                    'Patreon',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
