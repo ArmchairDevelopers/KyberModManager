@@ -1,333 +1,342 @@
 {
-    "cancel": "Cancel",
-    "close": "Close",
-    "back": "Back",
-    "continue": "Continue",
-    "installed": "Installed",
-    "install": "Install",
-    "not_installed": "Not Installed",
-    "password": "Password",
-    "enter_password": "Enter the server password:",
-    "join": "Join Server",
-    "copy_link": "Copy Link",
-    "edit": "Edit",
-    "start": "Start",
-    "exit": "Exit",
-    "delete": "Delete",
-    "save": "Save",
-    "search": "Search",
-    "load": "Load",
-    "ignore": "Ignore",
-    "size": "Size",
-    "mods": "Mods",
-    "login": "Login",
-    "name": "Name",
-    "description": "Description",
-    "version": "Version",
-    "author": "Author",
-    "mods_loaded": "Loaded {count} mods.",
-    "last_used": "Last Used",
-    "navigation_bar": {
-        "battlefront_not_running": "Battlefront II isn't running.",
-        "kyber": {
-            "running": "Kyber is running",
-            "not_running": "Start Kyber"
-        },
-        "items": {
-            "server_browser": "Server Browser",
-            "host": "Host Server",
-            "mod_profiles": "Mod Profiles",
-            "saved_profiles": "Saved Profiles",
-            "installed_mods": "Installed Mods",
-            "run_bf2": "Run Battlefront II",
-            "cosmetic_mods": "Cosmetic Mods",
-            "feedback": "Feedback / Help",
-            "settings": "Settings"
-        }
+  "cancel": "Cancel",
+  "close": "Close",
+  "back": "Back",
+  "continue": "Continue",
+  "installed": "Installed",
+  "install": "Install",
+  "not_installed": "Not Installed",
+  "password": "Password",
+  "enter_password": "Enter the server password:",
+  "join": "Join Server",
+  "copy_link": "Copy Link",
+  "edit": "Edit",
+  "start": "Start",
+  "exit": "Exit",
+  "delete": "Delete",
+  "save": "Save",
+  "search": "Search",
+  "load": "Load",
+  "ignore": "Ignore",
+  "size": "Size",
+  "mods": "Mods",
+  "login": "Login",
+  "name": "Name",
+  "description": "Description",
+  "version": "Version",
+  "author": "Author",
+  "mods_loaded": "Loaded {count} mods.",
+  "last_used": "Last Used",
+  "navigation_bar": {
+    "battlefront_not_running": "Battlefront II isn't running.",
+    "kyber": {
+      "running": "Kyber is running",
+      "not_running": "Start Kyber"
     },
-    "active_mods": "Active mods",
-    "saved_profiles": {
-        "title": "Saved Profiles",
-        "tooltip": "This option allows you to automatically save profiles for the servers you have previously joined.\nSo the next time you want to host or join a certain server with the same set of mods you will not have to wait for the mods to apply.\nWarning! As it is copying a whole set of mods in a certain order, it can take a lot of space on your hard drive.\nEnsure yourself you have enough of it."
-    },
-    "walk_through": {
-        "title": "Setup",
-        "bugs_notice": "Please note that the mod manager is still in beta and bugs may occur. If you encounter a bug, please post it in #bugs on the Discord server.",
-        "downloading_dependencies": "Downloading missing dependencies...",
-        "dependencies": {
-            "downloading": "Downloading missing dependencies...",
-            "finished": "Downloads finished!"
-        },
-        "select_frosty_path": {
-            "button": "Select Frosty path",
-            "description": "In order for the Mod Manager to work properly, you need to first select your Frosty Folder. If you are using an unsupported Frosty version, the Mod Manager might stop working.",
-            "notice": "NOTICE",
-            "notice_text": "Please select your Frosty folder where the FrostyModManager.exe is located. This is necessary for that mod detection and the mod downloading.",
-            "important": "IMPORTANT",
-            "important_text": "Please make sure, that Frosty has already detected Star Wars Battlefront II otherwise the Mod Manager will not work properly.",
-            "supported_versions": "Supported Frosty versions:",
-            "error_messages": {
-                "invalid_dir": "Invalid directory.",
-                "bf2_not_found": "Frosty has not detected Star Wars Battlefront II."
-            }
-        }
-    },
-    "nexus_mods_login": {
-        "title": "NexusMods Login",
-        "notifications": {
-            "invalid_code": "Invalid two factor code. Please try again.",
-            "invalid_credentials": "Invalid credentials. Please try again.",
-            "login_success": "Login successful!"
-        },
-        "buttons": {
-            "waiting": "Waiting...",
-            "skip": "Skip",
-            "loading": "Loading Nexusmods.com..."
-        },
-        "text_0": "To continue, you will need to log in with your NexusMods account in the browser that is about to open.",
-        "text_1": "Please note that if you want to have automatic mod downloading you have to log in with your Nexusmods account.",
-        "text_2": "The data is processed locally and will only be sent to Nexusmods.\nYou can also enable/disable this feature later in the settings menu.",
-        "waiting_for_login": "Waiting for login..."
-    },
-    "server_browser": {
-        "title": "Server Browser",
-        "next_page": "Next Page",
-        "prev_page": "Previous Page",
-        "current_page": "Page {0} of {1}",
-        "refresh": "Refresh",
-        "search_server": "Search Server",
-        "search_dialog": {
-            "title": "Search server",
-            "placeholder": "Server-Link or ID",
-            "not_found": "No server found!"
-        },
-        "table": {
-            "info": "Info",
-            "players": "Players",
-            "location": "Location",
-            "started": "Started"
-        },
-        "join_dialog": {
-            "frosty_profile_disabled": "Frosty Profile is disabled.",
-            "required_mods": {
-                "not_in_database": "Some mods are not in the Moddatabase!",
-                "click_on_download": "Click on the download button below.",
-                "required_mods": "You haven't installed the required mods to join this server.",
-                "none": "No required mods."
-            },
-            "download_page": {
-                "unsupported_mods_1": "Unsupported mods detected.",
-                "unsupported_mods_2": "You can submit mods in the Discord channel #mod-submissions.",
-                "unsupported_mods_3": "Currently only a selected list of mods can be downloaded automatically.",
-                "downloading": "Downloading {0}... {1}%",
-                "loading_states": {
-                    "checking_mods": "Checking mods availability...",
-                    "0": "Starting browser...",
-                    "1": "Starting download...",
-                    "3": "Extracting..."
-                },
-                "file": "File: {0}"
-            },
-            "cosmetic_mods": {
-                "apply_cosmetic_mods": "Apply cosmetic mods",
-                "warning": "If the server is using many mods (especially ones that change appearances), applying this option may cause your game to not work properly."
-            },
-            "team_selector": {
-                "auto_balancing": "Auto balancing is enabled.",
-                "select_team": "Select your preferred team:",
-                "light_side": "Light side",
-                "dark_side": "Dark side"
-            },
-            "options": {
-                "title": "Options",
-                "import_mods": "Import mod list"
-            },
-            "buttons": {
-                "open_mods": "Open mods in browser",
-                "view_mods": "View mods",
-                "downloading": "Downloading...",
-                "download": "Download"
-            },
-            "joining_states": {
-                "searching": "Searching for saved profiles...",
-                "joining": "Joining server...",
-                "creating": "Creating Frosty profile...",
-                "frosty": "Waiting for Frosty...",
-                "battlefront": "Waiting for Battlefront II to start...",
-                "battlefront_2": "If Battlefront II doesn't start automatically, start it manually."
-            }
-        }
-    },
-    "host_server": {
-        "title": "Host Server",
-        "starting": "Starting...",
-        "server_updated": "Updated! To apply the changes, press ESC in Battlefront 2 and then hit restart.",
-        "buttons": {
-            "server_info": "Show server info",
-            "server_is_starting": "Server is starting",
-            "update_server": "Update server",
-            "host": "Host"
-        },
-        "hosting_dialog": {
-            "title": "Hosting",
-            "server_link": "Server link:",
-            "wait_for_bf2": "Waiting for Battlefront II to start...",
-            "wait_for_server": "Waiting for the server to start..."
-        },
-        "forms": {
-            "name": {
-                "header": "Server Name",
-                "placeholder": "1vs1 - IOI",
-                "error": "The server name can't be empty."
-            },
-            "password": {
-                "header": "Server Password",
-                "placeholder": "Server Password",
-                "error": "Please enter a valid password."
-            },
-            "game_mode": {
-                "header": "Game mode",
-                "placeholder": "Select a game mode..."
-            },
-            "map": {
-                "header": "Map",
-                "placeholder": "Select a map...",
-                "map_not_found": "Map not found."
-            },
-            "mod_profile": {
-                "header": "Mod Profile",
-                "placeholder": "Select a mod profile...",
-                "no_mods_profile": "No mods",
-                "no_profile_found": "The select mod profile was not found.",
-                "tooltip": "Choose the mod profile you want to use for this server.\nIf you do not choose anything, your last used profile will be applied.\nTo host Kyber server without any mods, please select No Mods."
-            },
-            "proxy": {
-                "header": "Proxy"
-            },
-            "max_players": {
-                "header": "max players ({0})",
-                "tooltip": "Choose the desired number of players your server will be for.\nRemember: Fast internet connection is required to allow many players to join your server and play on it without lags."
-            },
-            "cosmetic_mods": {
-                "header": "Cosmetic Mods"
-            },
-            "auto_balance": {
-                "header": "Auto Balance",
-                "tooltip": "When turned on, players will not be able to choose the team they prefer - they will be put into a random team depending on a number of players currently in-game."
-            }
-        }
-    },
-    "mod_profiles": {
-        "title": "Mod Profiles",
-        "create_profile": "Create Profile"
-    },
-    "select_frosty_profile": {
-        "title": "Load Frosty profile",
-        "label": "Select a Frosty profile to import:"
-    },
-    "installed_mods": {
-        "title": "Installed Mods",
-        "open_directory": "Open directory"
-    },
-    "export_profile_dialog": {
-        "title": "Export Profile",
-        "export": "Export",
-        "export_type": "Export Type",
-        "profile_name": "Profile Name",
-        "include_cosmetics": "Include Cosmetic Mods"
-    },
-    "edit_mod_profile": {
-        "title": "Mod Profile",
-        "installed_mods": "Installed mods",
-        "active_mods": "Active mods",
-        "load_frosty_profile": {
-            "title": "Import Frosty profile",
-            "tooltip": "If you already have mod profiles made in the Frosty Mod Manager, you can import them to KMM with this button."
-        },
-        "forms": {
-            "name": {
-                "header": "Name",
-                "placeholder": "My Profile",
-                "error": "The profile name can't be empty."
-            },
-            "description": {
-                "header": "Description",
-                "placeholder": "My Profile Description"
-            },
-            "mods": {
-                "header": "Mods",
-                "no_mods_selected": "No mods selected"
-            }
-        }
-    },
-    "run_battlefront": {
-        "title": "Run Battlefront II",
-        "starting": "Starting...",
-        "copying_profile": "Copying profile data ({copied}/{total} Files) ...",
-        "cosmetic_mods": "Cosmetic Mods",
-        "notifications": {
-            "no_profile_selected": "Please select a profile.",
-            "battlefront_already_running": "Battlefront II is already running."
-        },
-        "buttons": {
-            "run": "Run"
-        }
-    },
-    "cosmetic_mods": {
-        "title": "Cosmetic Mods"
-    },
-    "feedback": {
-        "title": "Feedback",
-        "description": "If you have any suggestions or issues, please contact us on Discord or on the GitHub page."
-    },
-    "settings": {
-        "title": "Settings",
-        "export_log_file": "Export log file",
-        "check_for_updates": {
-            "title": "Check for updates",
-            "no_updates_available": "No updates available."
-        },
-        "language": {
-            "title": "Language",
-            "subtitle": "Select your language."
-        },
-        "platform_selector": {
-            "title": "Select your platform",
-            "subtitle": "Platform",
-            "enable": "Enable"
-        },
-        "frosty_profile": {
-            "title": "Frosty Profile",
-            "subtitle": "Enables the Frosty Profile globally for Battlefront II. (Overwrites FrostyFix & restarts your selected platform)",
-            "tooltip": "This option is an integrated FrostyFix counterpart, essential doing the same task as it. It enables mods for all platforms you have access to. \nWarning! Until you disable it, it will work even after PC restart or closing KMM app."
-        },
-        "saved_profiles": {
-            "title": "Saved Profiles",
-            "subtitle": "Saves your applied frost profiles and restores them when needed."
-        },
-        "nexus_mods": {
-            "title": "Nexus Mods",
-            "subtitle": "Login into your NexusMods account to enable automatic mod downloading.",
-            "logout": "Logout"
-        },
-        "discord_activity": {
-            "title": "Discord Activity",
-            "subtitle": "Shows your current server activity on Discord."
-        },
-        "change_frosty_directory": {
-            "title": "Relocate Frosty Path",
-            "subtitle": "Change Frosty path to a different location.",
-            "change": "Change"
-        },
-        "reset": {
-            "title": "Reset",
-            "subtitle": "Resets all settings to default. (KyberModManager)"
-        }
-    },
-    "languages": {
-        "en": "English",
-        "de": "German",
-        "pl": "Polish",
-        "ru": "Russian"
+    "items": {
+      "server_browser": "Server Browser",
+      "host": "Host Server",
+      "mod_profiles": "Mod Profiles",
+      "saved_profiles": "Saved Profiles",
+      "installed_mods": "Installed Mods",
+      "run_bf2": "Run Battlefront II",
+      "cosmetic_mods": "Cosmetic Mods",
+      "feedback": "Feedback / Help",
+      "settings": "Settings"
     }
+  },
+  "active_mods": "Active mods",
+  "saved_profiles": {
+    "title": "Saved Profiles",
+    "tooltip": "This option allows you to automatically save profiles for the servers you have previously joined.\nSo the next time you want to host or join a certain server with the same set of mods you will not have to wait for the mods to apply.\nWarning! As it is copying a whole set of mods in a certain order, it can take a lot of space on your hard drive.\nEnsure yourself you have enough of it."
+  },
+  "walk_through": {
+    "title": "Setup",
+    "bugs_notice": "Please note that the mod manager is still in beta and bugs may occur. If you encounter a bug, please post it in #bugs on the Discord server.",
+    "downloading_dependencies": "Downloading missing dependencies...",
+    "dependencies": {
+      "downloading": "Downloading missing dependencies...",
+      "finished": "Downloads finished!"
+    },
+    "select_frosty_path": {
+      "button": "Select Frosty path",
+      "description": "In order for the Mod Manager to work properly, you need to first select your Frosty Folder. If you are using an unsupported Frosty version, the Mod Manager might stop working.",
+      "notice": "NOTICE",
+      "notice_text": "Please select your Frosty folder where the FrostyModManager.exe is located. This is necessary for that mod detection and the mod downloading.",
+      "important": "IMPORTANT",
+      "important_text": "Please make sure, that Frosty has already detected Star Wars Battlefront II otherwise the Mod Manager will not work properly.",
+      "supported_versions": "Supported Frosty versions:",
+      "error_messages": {
+        "invalid_dir": "Invalid directory.",
+        "bf2_not_found": "Frosty has not detected Star Wars Battlefront II."
+      }
+    }
+  },
+  "nexus_mods_login": {
+    "title": "NexusMods Login",
+    "notifications": {
+      "invalid_code": "Invalid two factor code. Please try again.",
+      "invalid_credentials": "Invalid credentials. Please try again.",
+      "login_success": "Login successful!"
+    },
+    "buttons": {
+      "waiting": "Waiting...",
+      "skip": "Skip",
+      "loading": "Loading Nexusmods.com..."
+    },
+    "text_0": "To continue, you will need to log in with your NexusMods account in the browser that is about to open.",
+    "text_1": "Please note that if you want to have automatic mod downloading you have to log in with your Nexusmods account.",
+    "text_2": "The data is processed locally and will only be sent to Nexusmods.\nYou can also enable/disable this feature later in the settings menu.",
+    "waiting_for_login": "Waiting for login..."
+  },
+  "server_browser": {
+    "title": "Server Browser",
+    "next_page": "Next Page",
+    "prev_page": "Previous Page",
+    "current_page": "Page {0} of {1}",
+    "refresh": "Refresh",
+    "search_server": "Search Server",
+    "search_dialog": {
+      "title": "Search server",
+      "placeholder": "Server-Link or ID",
+      "not_found": "No server found!"
+    },
+    "table": {
+      "info": "Info",
+      "players": "Players",
+      "location": "Location",
+      "started": "Started"
+    },
+    "join_dialog": {
+      "frosty_profile_disabled": "Frosty Profile is disabled.",
+      "required_mods": {
+        "not_in_database": "Some mods are not in the Moddatabase!",
+        "click_on_download": "Click on the download button below.",
+        "required_mods": "You haven't installed the required mods to join this server.",
+        "none": "No required mods."
+      },
+      "download_page": {
+        "unsupported_mods_1": "Unsupported mods detected.",
+        "unsupported_mods_2": "You can submit mods in the Discord channel #mod-submissions.",
+        "unsupported_mods_3": "Currently only a selected list of mods can be downloaded automatically.",
+        "downloading": "Downloading {0}... {1}%",
+        "loading_states": {
+          "checking_mods": "Checking mods availability...",
+          "0": "Starting browser...",
+          "1": "Starting download...",
+          "3": "Extracting..."
+        },
+        "file": "File: {0}"
+      },
+      "failed_injection": {
+        "notification": "Error - Failed to inject Kyber",
+        "title": "Failed to inject Kyber",
+        "text": "To fix this you can do the following:",
+        "text_1": "Restart Kyber Mod Manager with administrator rights.",
+        "text_2": "Add '%appdata%/Kyber Mod Manager/Kyber.dll' as a exception to your antivirus."
+      },
+      "cosmetic_mods": {
+        "apply_cosmetic_mods": "Apply cosmetic mods",
+        "warning": "If the server is using many mods (especially ones that change appearances), applying this option may cause your game to not work properly."
+      },
+      "team_selector": {
+        "auto_balancing": "Auto balancing is enabled.",
+        "select_team": "Select your preferred team:",
+        "light_side": "Light side",
+        "dark_side": "Dark side"
+      },
+      "options": {
+        "title": "Options",
+        "import_mods": "Import mod list"
+      },
+      "buttons": {
+        "open_mods": "Open mods in browser",
+        "view_mods": "View mods",
+        "downloading": "Downloading...",
+        "download": "Download"
+      },
+      "joining_states": {
+        "searching": "Searching for saved profiles...",
+        "joining": "Joining server...",
+        "creating": "Creating Frosty profile...",
+        "frosty": "Waiting for Frosty...",
+        "battlefront": "Waiting for Battlefront II to start...",
+        "battlefront_2": "If Battlefront II doesn't start automatically, start it manually."
+      }
+    }
+  },
+  "host_server": {
+    "title": "Host Server",
+    "starting": "Starting...",
+    "server_updated": "Updated! To apply the changes, press ESC in Battlefront 2 and then hit restart.",
+    "buttons": {
+      "server_info": "Show server info",
+      "server_is_starting": "Server is starting",
+      "update_server": "Update server",
+      "host": "Host"
+    },
+    "hosting_dialog": {
+      "title": "Hosting",
+      "server_link": "Server link:",
+      "wait_for_bf2": "Waiting for Battlefront II to start...",
+      "wait_for_server": "Waiting for the server to start..."
+    },
+    "forms": {
+      "name": {
+        "header": "Server Name",
+        "placeholder": "1vs1 - IOI",
+        "error": "The server name can't be empty."
+      },
+      "password": {
+        "header": "Server Password",
+        "placeholder": "Server Password",
+        "error": "Please enter a valid password."
+      },
+      "game_mode": {
+        "header": "Game mode",
+        "placeholder": "Select a game mode..."
+      },
+      "map": {
+        "header": "Map",
+        "placeholder": "Select a map...",
+        "map_not_found": "Map not found."
+      },
+      "mod_profile": {
+        "header": "Mod Profile",
+        "placeholder": "Select a mod profile...",
+        "no_mods_profile": "No mods",
+        "no_profile_found": "The select mod profile was not found.",
+        "tooltip": "Choose the mod profile you want to use for this server.\nIf you do not choose anything, your last used profile will be applied.\nTo host Kyber server without any mods, please select No Mods."
+      },
+      "proxy": {
+        "header": "Proxy"
+      },
+      "max_players": {
+        "header": "max players ({0})",
+        "tooltip": "Choose the desired number of players your server will be for.\nRemember: Fast internet connection is required to allow many players to join your server and play on it without lags."
+      },
+      "cosmetic_mods": {
+        "header": "Cosmetic Mods"
+      },
+      "auto_balance": {
+        "header": "Auto Balance",
+        "tooltip": "When turned on, players will not be able to choose the team they prefer - they will be put into a random team depending on a number of players currently in-game."
+      }
+    }
+  },
+  "mod_profiles": {
+    "title": "Mod Profiles",
+    "create_profile": "Create Profile"
+  },
+  "select_frosty_profile": {
+    "title": "Load Frosty profile",
+    "label": "Select a Frosty profile to import:"
+  },
+  "installed_mods": {
+    "title": "Installed Mods",
+    "open_directory": "Open directory"
+  },
+  "export_profile_dialog": {
+    "title": "Export Profile",
+    "export": "Export",
+    "export_type": "Export Type",
+    "profile_name": "Profile Name",
+    "include_cosmetics": "Include Cosmetic Mods"
+  },
+  "edit_mod_profile": {
+    "title": "Mod Profile",
+    "installed_mods": "Installed mods",
+    "active_mods": "Active mods",
+    "load_frosty_profile": {
+      "title": "Import Frosty profile",
+      "tooltip": "If you already have mod profiles made in the Frosty Mod Manager, you can import them to KMM with this button."
+    },
+    "forms": {
+      "name": {
+        "header": "Name",
+        "placeholder": "My Profile",
+        "error": "The profile name can't be empty."
+      },
+      "description": {
+        "header": "Description",
+        "placeholder": "My Profile Description"
+      },
+      "mods": {
+        "header": "Mods",
+        "no_mods_selected": "No mods selected"
+      }
+    }
+  },
+  "run_battlefront": {
+    "title": "Run Battlefront II",
+    "starting": "Starting...",
+    "copying_profile": "Copying profile data ({copied}/{total} Files) ...",
+    "cosmetic_mods": "Cosmetic Mods",
+    "notifications": {
+      "no_profile_selected": "Please select a profile.",
+      "battlefront_already_running": "Battlefront II is already running."
+    },
+    "buttons": {
+      "run": "Run"
+    }
+  },
+  "cosmetic_mods": {
+    "title": "Cosmetic Mods"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "description": "If you have any suggestions or issues, please contact us on Discord or on the GitHub page.",
+    "kyber_related": "Kyber related",
+    "not_affiliated": "not affiliated"
+  },
+  "settings": {
+    "title": "Settings",
+    "export_log_file": "Export log file",
+    "check_for_updates": {
+      "title": "Check for updates",
+      "no_updates_available": "No updates available."
+    },
+    "language": {
+      "title": "Language",
+      "subtitle": "Select your language."
+    },
+    "platform_selector": {
+      "title": "Select your platform",
+      "subtitle": "Platform",
+      "enable": "Enable"
+    },
+    "frosty_profile": {
+      "title": "Frosty Profile",
+      "subtitle": "Enables the Frosty Profile globally for Battlefront II. (Overwrites FrostyFix & restarts your selected platform)",
+      "tooltip": "This option is an integrated FrostyFix counterpart, essential doing the same task as it. It enables mods for all platforms you have access to. \nWarning! Until you disable it, it will work even after PC restart or closing KMM app."
+    },
+    "saved_profiles": {
+      "title": "Saved Profiles",
+      "subtitle": "Saves your applied frost profiles and restores them when needed."
+    },
+    "nexus_mods": {
+      "title": "Nexus Mods",
+      "subtitle": "Login into your NexusMods account to enable automatic mod downloading.",
+      "logout": "Logout"
+    },
+    "discord_activity": {
+      "title": "Discord Activity",
+      "subtitle": "Shows your current server activity on Discord."
+    },
+    "change_frosty_directory": {
+      "title": "Relocate Frosty Path",
+      "subtitle": "Change Frosty path to a different location.",
+      "change": "Change"
+    },
+    "reset": {
+      "title": "Reset",
+      "subtitle": "Resets all settings to default. (KyberModManager)"
+    }
+  },
+  "languages": {
+    "en": "English",
+    "de": "German",
+    "pl": "Polish",
+    "ru": "Russian"
+  }
 }

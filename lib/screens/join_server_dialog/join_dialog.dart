@@ -206,7 +206,7 @@ class _ServerDialogState extends State<ServerDialog> {
     }
 
     if (DllInjector.getBattlefrontPID() != -1 && !DllInjector.isInjected()) {
-      NotificationService.showNotification(message: "Failed to inject Kyber", color: Colors.red);
+      NotificationService.showNotification(message: translate('$prefix.failed_injection.notification'), color: Colors.red);
       Process.killPid(DllInjector.getBattlefrontPID());
       setState(() {
         failedInjection = true;
@@ -315,21 +315,21 @@ class _ServerDialogState extends State<ServerDialog> {
 
     if (failedInjection) {
       return Column(
-        children: const [
+        children: [
           Text(
-            'Failed to inject Kyber.',
-            style: TextStyle(fontSize: 17),
+            translate('$prefix.failed_injection.title'),
+            style: const TextStyle(fontSize: 17),
           ),
           Text(
-            'To fix this you can do the following:',
-            style: TextStyle(fontSize: 17),
+            translate('$prefix.failed_injection.text'),
+            style: const TextStyle(fontSize: 17),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           SizedBox(
             child: UnorderedList(
               [
-                "Restart Kyber Mod Manager with administrator rights.",
-                "Add '%appdata%/Kyber Mod Manager/Kyber.dll' as a exception to your antivirus.",
+                translate('$prefix.failed_injection.text_1'),
+                translate('$prefix.failed_injection.text_2'),
               ],
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
