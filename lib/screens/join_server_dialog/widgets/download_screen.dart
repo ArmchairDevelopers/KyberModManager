@@ -249,7 +249,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
           padding: const EdgeInsets.only(left: 2),
           child: SizedBox(
             width: 500,
-            child: ProgressBar(value: progress),
+            child: ProgressBar(value: progress >= 0 && progress <= 100 ? progress : 0),
           ),
         ),
         const SizedBox(height: 5),
