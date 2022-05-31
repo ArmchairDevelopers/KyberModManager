@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -27,6 +28,7 @@ import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
+import 'package:kyber_mod_manager/widgets/unordered_list.dart';
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
@@ -54,6 +56,7 @@ class _ServerDialogState extends State<ServerDialog> {
   bool downloading = false;
   bool cosmetics = false;
   bool disabled = false;
+  bool failedInjection = false;
   bool unsupportedMods = false;
   bool loading = false;
   int startingState = 0;
@@ -159,22 +162,7 @@ class _ServerDialogState extends State<ServerDialog> {
 
       if (!mounted) return;
       setState(() => startingState = 4);
-      timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (!mounted) {
-          timer.cancel();
-          return;
-        }
-        if (DllInjector.isInjected()) {
-          timer.cancel();
-          Navigator.of(context).pop();
-          return;
-        }
-        bool injected = DllInjector.inject();
-        if (injected) {
-          Navigator.of(context).pop();
-          timer.cancel();
-        }
-      });
+      startTimer();
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
     } else if (!downloading) {
       if (!box.get('nexusmods_login', defaultValue: false)) {
@@ -192,6 +180,42 @@ class _ServerDialogState extends State<ServerDialog> {
         disabled = true;
       });
     }
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      if (DllInjector.isInjected()) {
+        timer.cancel();
+        checkInjection();
+        return;
+      }
+
+      DllInjector.inject();
+    });
+  }
+
+  void checkInjection() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+    if (DllInjector.getBattlefrontPID() == -1) {
+      return startTimer();
+    }
+
+    if (DllInjector.getBattlefrontPID() != -1 && !DllInjector.isInjected()) {
+      NotificationService.showNotification(message: "Failed to inject Kyber", color: Colors.red);
+      Process.killPid(DllInjector.getBattlefrontPID());
+      setState(() {
+        failedInjection = true;
+        loading = false;
+      });
+      return;
+    }
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -289,6 +313,32 @@ class _ServerDialogState extends State<ServerDialog> {
       );
     }
 
+    if (failedInjection) {
+      return Column(
+        children: const [
+          Text(
+            'Failed to inject Kyber.',
+            style: TextStyle(fontSize: 17),
+          ),
+          Text(
+            'To fix this you can do the following:',
+            style: TextStyle(fontSize: 17),
+          ),
+          SizedBox(height: 10),
+          SizedBox(
+            child: UnorderedList(
+              [
+                "Restart Kyber Mod Manager with administrator rights.",
+                "Add '%appdata%/Kyber Mod Manager/Kyber.dll' as a exception to your antivirus.",
+              ],
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            ),
+          )
+        ],
+      );
+    }
+
     if (!correctPassword) {
       return PasswordInput(
         onChanged: (value) => password = value,
@@ -314,7 +364,7 @@ class _ServerDialogState extends State<ServerDialog> {
               ),
               const SizedBox(width: 15),
               Text(
-                content != null ? content! : translate('$prefix.joining_states.' + startingText()),
+                content != null ? content! : translate('$prefix.joining_states.${startingText()}'),
                 style: const TextStyle(fontSize: 16),
               ),
             ],
