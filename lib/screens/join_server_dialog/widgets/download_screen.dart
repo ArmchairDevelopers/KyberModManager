@@ -5,11 +5,14 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
 import 'package:kyber_mod_manager/screens/errors/no_executable.dart';
+import 'package:kyber_mod_manager/screens/join_server_dialog/join_dialog.dart';
+import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/helpers/unzip_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/download_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
+import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/mod_info.dart';
 import 'package:logging/logging.dart';
@@ -53,13 +56,17 @@ class _DownloadScreenState extends State<DownloadScreen> {
   @override
   void dispose() {
     try {
-      downloadService.close();
-      downloadSpeedTimer?.cancel();
-      WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
+      close();
     } catch (_e) {
       Logger.root.severe(_e.toString());
     }
     super.dispose();
+  }
+
+  void close() {
+    downloadService.close();
+    downloadSpeedTimer?.cancel();
+    WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
   }
 
   void init() async {
@@ -71,6 +78,9 @@ class _DownloadScreenState extends State<DownloadScreen> {
   }
 
   void onDownloadsFinished() {
+    if (!mounted) {
+      return;
+    }
     Logger.root.info('Downloads complete');
     downloadSpeedTimer?.cancel();
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
@@ -131,7 +141,8 @@ class _DownloadScreenState extends State<DownloadScreen> {
       lastChunk += lastTotal;
       setState(() => speed = lastTotal);
     });
-    await downloadService.startDownload(
+    await downloadService
+        .startDownload(
       onWebsiteOpened: () {
         WindowsTaskbar.setProgressMode(TaskbarProgressMode.normal);
         setState(() => loadingState = 3);
@@ -154,7 +165,16 @@ class _DownloadScreenState extends State<DownloadScreen> {
           loadingState = 2;
         });
       },
-    );
+    )
+        .catchError((e) async {
+      if (e.toString() == 'LoginError') {
+        Navigator.of(context).pop();
+        close();
+        NotificationService.showNotification(message: 'Login expired. Please login again!', color: Colors.red);
+        await showDialog(context: context, builder: (c) => const NexusmodsLogin());
+        showDialog(context: navigatorKey.currentContext!, builder: (context) => ServerDialog(server: widget.server));
+      }
+    });
     onDownloadsFinished();
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
   }

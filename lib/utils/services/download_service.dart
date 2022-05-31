@@ -23,6 +23,7 @@ class DownloadService {
   late BuildContext context;
   late String _downloadFolder;
   bool _done = false;
+  bool _checkedLogin = false;
   bool _initializedPage = false;
   Timer? _timer;
   StreamController<_DownloadInfo>? _progressController;
@@ -50,8 +51,9 @@ class DownloadService {
       _progressController?.close();
       _progressSubscription?.cancel();
     }
-    _browser.close().then(
-        (value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
+    _browser
+        .close()
+        .then((value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
   }
 
   Future<void> startDownload({
@@ -87,12 +89,26 @@ class DownloadService {
     await _browser.close();
   }
 
+  Future<bool> _isLoggedIn() async {
+    return !(await _page.evaluate(r'''document.querySelectorAll('.replaced-login-link').length > 0'''));
+  }
+
   Future<String> _download(String url, DownloadInfo info, Function onClose, Function? onDone) async {
     await _page.goto(url, wait: Until.networkAlmostIdle);
     if (!_initializedPage) {
       await PuppeteerHelper.initializePage(_page);
       _initializedPage = true;
     }
+
+    if (!_checkedLogin) {
+      _checkedLogin = await _isLoggedIn();
+      if (!_checkedLogin) {
+        await box.delete('cookies');
+        await box.put('nexusmods_login', false);
+        throw FlutterError('LoginError');
+      }
+    }
+
     bool isPremium = await _page.evaluate(r'''document.querySelectorAll('#startDownloadButton').length > 0''');
     String filename = await _page.evaluate(r'''document.querySelectorAll('.page-layout .header')[0].innerHTML.split('<')[0]''');
     String name = filename.substring(0, filename.lastIndexOf('.'));
