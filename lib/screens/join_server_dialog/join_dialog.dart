@@ -198,7 +198,7 @@ class _ServerDialogState extends State<ServerDialog> {
     });
   }
 
-  void checkInjection() async {
+  void checkInjection([x = false]) async {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
     if (DllInjector.getBattlefrontPID() == -1) {
@@ -206,6 +206,10 @@ class _ServerDialogState extends State<ServerDialog> {
     }
 
     if (DllInjector.getBattlefrontPID() != -1 && !DllInjector.isInjected()) {
+      if (!x) {
+        return checkInjection(true);
+      }
+
       NotificationService.showNotification(message: translate('$prefix.failed_injection.notification'), color: Colors.red);
       Process.killPid(DllInjector.getBattlefrontPID());
       setState(() {
