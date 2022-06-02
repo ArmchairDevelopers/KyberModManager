@@ -117,7 +117,7 @@ class _SettingsState extends State<Settings> {
                               height: 20,
                             ),
                             const SizedBox(width: 8),
-                            Text(translate('languages.' + e.languageCode)),
+                            Text(translate('languages.${e.languageCode}')),
                           ],
                         ),
                       ),
@@ -134,10 +134,6 @@ class _SettingsState extends State<Settings> {
               subtitle: Text(translate('$prefix.nexus_mods.subtitle')),
               leading: const Icon(FluentIcons.download),
               trailing: CustomFilledButton(
-                child: ButtonText(
-                  text: Text(translate(box.get('nexusmods_login', defaultValue: false) ? '$prefix.nexus_mods.logout' : 'Login')),
-                  icon: Icon(box.get('nexusmods_login', defaultValue: false) ? FluentIcons.user_remove : FluentIcons.user_sync),
-                ),
                 color: box.get('nexusmods_login', defaultValue: false) ? Colors.red : SystemTheme.accentColor.accent,
                 onPressed: () async {
                   if (box.get('nexusmods_login', defaultValue: false)) {
@@ -152,6 +148,10 @@ class _SettingsState extends State<Settings> {
                   }
                   setState(() => null);
                 },
+                child: ButtonText(
+                  text: Text(translate(box.get('nexusmods_login', defaultValue: false) ? '$prefix.nexus_mods.logout' : 'Login')),
+                  icon: Icon(box.get('nexusmods_login', defaultValue: false) ? FluentIcons.user_remove : FluentIcons.user_sync),
+                ),
               ),
             ),
           ),
@@ -186,14 +186,14 @@ class _SettingsState extends State<Settings> {
                 children: [
                   Text(translate('$prefix.saved_profiles.title')),
                   Tooltip(
-                    child: const Icon(
-                      FluentIcons.status_circle_question_mark,
-                      size: 22,
-                    ),
                     style: const TooltipThemeData(
                       padding: EdgeInsets.all(8),
                     ),
                     message: translate('saved_profiles.tooltip'),
+                    child: const Icon(
+                      FluentIcons.status_circle_question_mark,
+                      size: 22,
+                    ),
                   )
                 ],
               ),
@@ -215,14 +215,14 @@ class _SettingsState extends State<Settings> {
                 children: [
                   Text(translate('$prefix.frosty_profile.title')),
                   Tooltip(
-                    child: const Icon(
-                      FluentIcons.status_circle_question_mark,
-                      size: 22,
-                    ),
                     style: const TooltipThemeData(
                       padding: EdgeInsets.all(8),
                     ),
                     message: translate('$prefix.frosty_profile.tooltip'),
+                    child: const Icon(
+                      FluentIcons.status_circle_question_mark,
+                      size: 22,
+                    ),
                   )
                 ],
               ),
@@ -293,10 +293,6 @@ class _SettingsState extends State<Settings> {
               subtitle: Text(translate('$prefix.reset.subtitle')),
               leading: const Icon(FluentIcons.reset),
               trailing: CustomFilledButton(
-                child: ButtonText(
-                  text: Text(translate('$prefix.reset.title')),
-                  icon: const Icon(FluentIcons.reset),
-                ),
                 color: Colors.red,
                 onPressed: () => box.deleteFromDisk().then((value) async {
                   await StorageHelper.initialiseHive();
@@ -306,6 +302,10 @@ class _SettingsState extends State<Settings> {
                   }
                   Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
                 }),
+                child: ButtonText(
+                  text: Text(translate('$prefix.reset.title')),
+                  icon: const Icon(FluentIcons.reset),
+                ),
               ),
             ),
           ),

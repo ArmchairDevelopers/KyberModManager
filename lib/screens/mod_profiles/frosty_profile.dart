@@ -54,8 +54,8 @@ class _FrostyProfileSelectorState extends State<FrostyProfileSelector> {
           isExpanded: true,
           items: profiles?.map((e) {
             return ComboboxItem(
-              child: Text(e.name),
               value: e.name,
+              child: Text(e.name),
             );
           }).toList(),
         ),

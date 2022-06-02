@@ -38,6 +38,7 @@ class _InstalledModsState extends State<InstalledMods> {
           ),
         ),
         Expanded(
+          flex: 5,
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
               List<Widget> children = [];
@@ -89,7 +90,6 @@ class _InstalledModsState extends State<InstalledMods> {
             },
             itemCount: ModService.getModsByCategory(widget.kyber).length,
           ),
-          flex: 5,
         ),
       ],
     );

@@ -10,7 +10,6 @@ class CustomFilledButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FilledButton(
-      child: child,
       onPressed: disabled ? null : onPressed,
       style: ButtonStyle(
         backgroundColor: ButtonState.resolveWith((states) {
@@ -25,6 +24,7 @@ class CustomFilledButton extends StatelessWidget {
           return color;
         }),
       ),
+      child: child,
     );
   }
 }

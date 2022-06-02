@@ -133,12 +133,12 @@ class _EditProfileState extends State<EditProfile> {
                     child: Row(
                       children: [
                         Expanded(
+                          flex: 6,
                           child: InstalledMods(
                             kyber: true,
                             activeMods: _profile.mods,
                             onAdd: (mod) => setState(() => _profile = _profile.copyWith(mods: _profile.mods + [mod])),
                           ),
-                          flex: 6,
                         ),
                         Expanded(
                           flex: 6,

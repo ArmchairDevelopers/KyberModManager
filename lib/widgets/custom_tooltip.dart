@@ -8,14 +8,14 @@ class CustomTooltip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      child: const Icon(
-        FluentIcons.status_circle_question_mark,
-        size: 22,
-      ),
       style: const TooltipThemeData(
         padding: EdgeInsets.all(8),
       ),
       message: message,
+      child: const Icon(
+        FluentIcons.status_circle_question_mark,
+        size: 22,
+      ),
     );
   }
 }

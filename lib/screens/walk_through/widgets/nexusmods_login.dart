@@ -60,7 +60,6 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
           },
         ),
         FilledButton(
-          child: Text(translate(!browserOpen ? 'continue' : '$prefix.buttons.waiting')),
           onPressed: browserOpen
               ? null
               : () async {
@@ -73,6 +72,7 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
                     (value) => setState(() => _browser = value),
                   );
                 },
+          child: Text(translate(!browserOpen ? 'continue' : '$prefix.buttons.waiting')),
         ),
       ],
       content: SizedBox(

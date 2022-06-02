@@ -241,21 +241,26 @@ class _ServerHostState extends State<ServerHost> {
                 Padding(
                   padding: const EdgeInsets.only(right: 25),
                   child: FilledButton(
-                    child: Text(
-                      translate('$prefix.buttons.server_info'),
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
                     onPressed: server == null
                         ? null
                         : () => showDialog(
                               context: context,
                               builder: (context) => HostingDialog(kyberServer: server, name: formattedServerName),
                             ),
+                    child: Text(
+                      translate('$prefix.buttons.server_info'),
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
                 ),
               FilledButton(
+                onPressed: server == null && isHosting
+                    ? null
+                    : !disabled || isHosting && server != null
+                        ? () => host(isHosting)
+                        : null,
                 child: Text(
                   isHosting
                       ? server != null
@@ -266,11 +271,6 @@ class _ServerHostState extends State<ServerHost> {
                     fontSize: 14,
                   ),
                 ),
-                onPressed: server == null && isHosting
-                    ? null
-                    : !disabled || isHosting && server != null
-                        ? () => host(isHosting)
-                        : null,
               )
             ],
           ),
