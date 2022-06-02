@@ -39,6 +39,8 @@ class _RunBattlefrontState extends State<RunBattlefront> {
         if (lastProfile != null) {
           if (lastProfile == 'no_mods') {
             _controller.text = translate('host_server.forms.mod_profile.no_mods_profile');
+          } else if (lastProfile == 'cosmetic_mods') {
+            _controller.text = translate('host_server.forms.cosmetic_mods.header');
           } else {
             _controller.text = lastProfile;
           }
@@ -127,6 +129,8 @@ class _RunBattlefrontState extends State<RunBattlefront> {
                 onSelected: (text) {
                   if (text == translate('host_server.forms.mod_profile.no_mods_profile')) {
                     text = 'no_mods';
+                  } else if (text == translate('host_server.forms.cosmetic_mods.header')) {
+                    text = 'cosmetic_mods';
                   }
                   box.put('runBf2lastProfile', text);
                   FocusScope.of(context).unfocus();
