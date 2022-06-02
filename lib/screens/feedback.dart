@@ -18,17 +18,22 @@ class _FeedbackState extends State<Feedback> {
         title: Text(translate('feedback.title')),
       ),
       content: Container(
-        alignment: Alignment.topCenter,
+        alignment: Alignment.topLeft,
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: MediaQuery.of(context).size.height / 8),
-            Text(
-              translate('feedback.description'),
-              style: const TextStyle(fontSize: 18),
+            const Center(
+              child: Text(
+                'Kyber Mod Manager: ',
+                style: TextStyle(fontSize: 18),
+              ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(
+              height: 8,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -51,22 +56,48 @@ class _FeedbackState extends State<Feedback> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 32,
-            ),
+            const SizedBox(height: 32),
             const Divider(),
+            const SizedBox(height: 32),
+            const Center(
+              child: Text(
+                'Frosty Mod Manager: ',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
             const SizedBox(
-              height: 32,
+              height: 8,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  'Kyber related: ',
-                  style: TextStyle(fontSize: 18),
+              children: [
+                CustomFilledButton(
+                  onPressed: () => launchUrlString('https://discord.gg/DSW2cU6Ywq'),
+                  color: const Color.fromRGBO(88, 101, 242, 1),
+                  child: const Text(
+                    'Discord',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-                Text(' (not affiliated)', style: TextStyle(fontSize: 12)),
+                const SizedBox(width: 16),
+                CustomFilledButton(
+                  onPressed: () => launchUrlString('https://github.com/CadeEvs/FrostyToolsuite'),
+                  color: Colors.grey,
+                  child: const Text(
+                    'GitHub',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ],
+            ),
+            const SizedBox(height: 32),
+            const Divider(),
+            const SizedBox(height: 32),
+            const Center(
+              child: Text(
+                'Kyber: ',
+                style: TextStyle(fontSize: 18),
+              ),
             ),
             const SizedBox(
               height: 8,
