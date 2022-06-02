@@ -23,7 +23,7 @@ class _FeedbackState extends State<Feedback> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: MediaQuery.of(context).size.height / 4),
+            SizedBox(height: MediaQuery.of(context).size.height / 8),
             Text(
               translate('feedback.description'),
               style: const TextStyle(fontSize: 18),
