@@ -391,23 +391,27 @@ class _WalkThroughState extends State<WalkThrough> {
       ]),
       actions: [
         Button(
-          onPressed: (index < 2 || disabled) && !widget.changeFrostyPath || downloading
+          onPressed: (index < 2 || disabled) && !widget.changeFrostyPath || downloading && index != 0
               ? null
               : () {
+                  if (index == 0) {
+                    return onPressed();
+                  }
                   if (widget.changeFrostyPath && index != 3) {
-                    Navigator.of(context).pop();
-                    return;
+                    return Navigator.of(context).pop();
                   }
                   if (index == 3) {
                     PathHelper.cancelDownload();
                   }
                   setState(() => index == 3 ? index = 1 : index--);
                 },
-          child: widget.changeFrostyPath && index != 3
-              ? Text(translate('close'))
-              : index == 3
-                  ? const Text('Cancel')
-                  : Text(translate('server_browser.prev_page')),
+          child: index == 0
+              ? const Text('Skip')
+              : widget.changeFrostyPath && index != 3
+                  ? Text(translate('close'))
+                  : index == 3
+                      ? const Text('Cancel')
+                      : Text(translate('server_browser.prev_page')),
         ),
         if (index == 1)
           Button(
