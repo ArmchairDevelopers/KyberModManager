@@ -130,7 +130,6 @@ class _InstalledModsState extends State<InstalledMods> {
                                 Container(
                                   alignment: Alignment.centerRight,
                                   child: SizedBox(
-                                    width: 85,
                                     child: CustomFilledButton(
                                       color: Colors.red,
                                       child: ButtonText(

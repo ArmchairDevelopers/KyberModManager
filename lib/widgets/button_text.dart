@@ -9,6 +9,7 @@ class ButtonText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         icon,
         const SizedBox(width: 8),
