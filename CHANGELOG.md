@@ -1,7 +1,11 @@
 ## [1.0.7] - [-/-/-]
 
+- If the Kyber injection fails, KMM will show an error message and close Battlefront II.
 - Added warnings for using cosmetic mods with large mod packs.
 - Added validation for selecting a mod profile on the host page.
+- Added Kyber related links to feedback page.
+- Added a new error page for when Battlefront II isn't installed.
+- KMM now shows an error if you got logged out of your Nexusmods account.
 - Fixed that if a mod is already installed, the new mod gets a different name so that you can use both versions.
 - Fixed a bug where extracting mods after downloading could cause lags.
 - Fixed a window border issue on Windows 10.
@@ -10,7 +14,9 @@
 - Fixed WinRAR extraction.
 - Fixed links in the update changelog
 - Fixed that opening the cosmetics page too early could cause crashes.
+- Fixed that sometimes the progress bar during downloads would disappear.
 - Added missing translations.
+- Added a minimum window size.
 - Download speed is now being shown.
 - Not installed mods are now being handled correctly.
 - Several UI fixes
