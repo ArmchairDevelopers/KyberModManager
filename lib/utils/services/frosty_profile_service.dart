@@ -121,7 +121,6 @@ class FrostyProfileService {
     String content = await file.readAsString();
     return content.split('\n').where((element) => element.contains(':') && element.contains("' '")).map((element) {
       String filename = element.split(':')[0];
-      print(filename);
       return ModService.getFrostyMod(filename);
     }).toList();
   }
