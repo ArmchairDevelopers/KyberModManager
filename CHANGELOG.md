@@ -3,8 +3,11 @@
 - If the Kyber injection fails, KMM will show an error message and close Battlefront II.
 - Added warnings for using cosmetic mods with large mod packs.
 - Added validation for selecting a mod profile on the host page.
-- Added Kyber related links to feedback page.
+- Added Kyber & Frosty related links to feedback page.
 - Added a new error page for when Battlefront II isn't installed.
+- Added skip button for the Kyber Dll download.
+- Added support for new Frosty mod that contains the download link.
+- Added support for Frosty collections.
 - KMM now shows an error if you got logged out of your Nexusmods account.
 - Fixed that if a mod is already installed, the new mod gets a different name so that you can use both versions.
 - Fixed a bug where extracting mods after downloading could cause lags.

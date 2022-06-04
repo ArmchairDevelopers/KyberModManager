@@ -75,7 +75,7 @@ class ModService {
     }
   }
 
-  static Future<List<Mod>> getModsFromModPack(String name) async {
+  static Future<List<dynamic>> getModsFromModPack(String name) async {
     PackType packType = getPackType(name);
     if (packType == PackType.FROSTY_PACK || packType == PackType.MOD_PROFILE) {
       name = name.replaceAll(' ${packType.name}', '');
@@ -148,8 +148,10 @@ class ModService {
     return mods.any((mod) => mod.name == modName && mod.version == version) || collections.any((element) => element.title == modName && element.version == version);
   }
 
-  static Map<String, List<Mod>> getModsByCategory([bool kyberCategories = false]) {
-    Map<String, List<Mod>> categories = {};
+  static Map<String, List<dynamic>> getModsByCategory([bool kyberCategories = false]) {
+    Map<String, List<dynamic>> categories = {
+      'Frosty Collections': ModService.collections,
+    };
     for (Mod mod in mods) {
       if (kyberCategories && !_kyberCategories.contains(mod.category.toLowerCase())) continue;
       if (categories.containsKey(mod.category)) {

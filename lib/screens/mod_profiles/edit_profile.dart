@@ -7,7 +7,6 @@ import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/frosty_profile.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/active_mods.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/installed_mods.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
 import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
@@ -152,7 +151,7 @@ class _EditProfileState extends State<EditProfile> {
                                 }
 
                                 var mods = [..._profile.mods];
-                                final Mod mod = mods.removeAt(oldIndex);
+                                final dynamic mod = mods.removeAt(oldIndex);
                                 _profile = _profile.copyWith(mods: mods..insert(newIndex, mod));
                               });
                             },

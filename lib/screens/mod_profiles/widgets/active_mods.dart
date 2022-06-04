@@ -10,7 +10,7 @@ final Random _rnd = Random();
 class ActiveMods extends StatelessWidget {
   const ActiveMods({Key? key, required this.mods, required this.onReorder, required this.onRemove}) : super(key: key);
 
-  final List<Mod> mods;
+  final List<dynamic> mods;
   final Function(int oldIndex, int newIndex) onReorder;
   final Function(Mod mod) onRemove;
 

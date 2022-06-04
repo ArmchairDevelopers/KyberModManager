@@ -1,15 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 
 class InstalledMods extends StatefulWidget {
   const InstalledMods({Key? key, required this.activeMods, required this.onAdd, this.excludedCategories, this.kyber = false}) : super(key: key);
 
-  final List<Mod> activeMods;
+  final List<dynamic> activeMods;
   final bool kyber;
   final List<String>? excludedCategories;
-  final Function(Mod) onAdd;
+  final Function(dynamic) onAdd;
 
   @override
   _InstalledModsState createState() => _InstalledModsState();
@@ -71,7 +70,7 @@ class _InstalledModsState extends State<InstalledMods> {
                     shrinkWrap: true,
                     children: value
                         .where((element) => filterMods(element.filename) && (search.isEmpty || element.name.toLowerCase().contains(search.toLowerCase())))
-                        .map((Mod mod) {
+                        .map((dynamic mod) {
                       return ListTile(
                         title: Text(
                           mod.name,

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 
@@ -14,6 +15,7 @@ abstract class FrostyMod {
   String get filename;
 }
 
+@HiveType(typeId: 6)
 @freezed
 class FrostyCollection with _$FrostyCollection {
   const FrostyCollection._();
@@ -24,16 +26,16 @@ class FrostyCollection with _$FrostyCollection {
 
   @Implements<FrostyMod>()
   const factory FrostyCollection({
-    required String link,
-    required String title,
-    required String version,
-    required String description,
-    required String category,
-    required String name,
-    required String filename,
-    required List<String> fileNames,
-    required List<String> modVersions,
-    List<Mod>? mods,
+    @HiveField(0) required String link,
+    @HiveField(1) required String title,
+    @HiveField(2) required String version,
+    @HiveField(3) required String description,
+    @HiveField(4) required String category,
+    @HiveField(5) required String name,
+    @HiveField(6) required String filename,
+    @HiveField(7) required List<String> fileNames,
+    @HiveField(8) required List<String> modVersions,
+    @HiveField(9) List<Mod>? mods,
   }) = _FrostyCollection;
 
   @Implements<FrostyMod>()
