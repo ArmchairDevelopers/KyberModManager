@@ -25,8 +25,8 @@ class ProfileService {
     String battlefrontPath = OriginHelper.getBattlefrontPath();
     FrostyConfig config = await FrostyService.getFrostyConfig();
     Directory dir = Directory('$battlefrontPath\\ModData\\KyberModManager');
-    List<Mod> convertedMods = mods.map((mod) => ModService.convertToMod(mod)).toList();
-    List<Mod> current = await FrostyProfileService.getModsFromProfile('KyberModManager');
+    List<dynamic> convertedMods = mods.map((mod) => ModService.convertToFrostyMod(mod)).toList();
+    List<dynamic> current = await FrostyProfileService.getModsFromProfile('KyberModManager');
 
     if (listEquals(current, convertedMods)) {
       Logger.root.info('Profile is already up to date');
@@ -58,7 +58,7 @@ class ProfileService {
 
   static containsMod(List<Mod> mods, Mod mod) => mods.where((element) => element.filename == mod.filename).isNotEmpty;
 
-  static Future<void> _saveProfile(Directory dir, List<Mod> mods, [Function? onProgress]) async {
+  static Future<void> _saveProfile(Directory dir, List<dynamic> mods, [Function? onProgress]) async {
     String id = const Uuid().v4();
     String battlefrontPath = OriginHelper.getBattlefrontPath();
     String profilePath = '$battlefrontPath\\ModData\\SavedProfiles\\$id';
@@ -119,12 +119,12 @@ class ProfileService {
         onProgress(files.indexOf(file), files.length - 1);
       }
       WindowsTaskbar.setProgress(files.indexOf(file), files.length - 1);
-      String dirPath = to.path + '/' + file.parent.path.substring(from.path.length);
+      String dirPath = '${to.path}/${file.parent.path.substring(from.path.length)}';
       Directory dir = Directory(dirPath);
       if (!dir.existsSync()) {
         dir.createSync(recursive: true);
       }
-      await file.copy(to.path + '/' + file.path.substring(from.path.length));
+      await file.copy('${to.path}/${file.path.substring(from.path.length)}');
     }
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
   }

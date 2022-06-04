@@ -144,7 +144,7 @@ class _ServerDialogState extends State<ServerDialog> {
       setState(() => startingState = 3);
 
       var appliedMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
-      var serverMods = mods.map((e) => ModService.convertToMod(e)).toList();
+      var serverMods = mods.map((e) => ModService.convertToFrostyMod(e)).toList();
       if (!listEquals(appliedMods, serverMods)) {
         Logger.root.info("Applying Frosty mods...");
         await FrostyService.startFrosty().catchError((error) {

@@ -23,7 +23,7 @@ class FrostyProfileService {
 
   static Future<void> createProfile(List<String> list, [String profile = 'KyberModManager']) async {
     try {
-      List<Mod> mods = list.map((e) => ModService.convertToMod(e)).toList();
+      List mods = list.map((e) => ModService.convertToFrostyMod(e)).toList();
       FrostyConfig config = await FrostyService.getFrostyConfig();
       if (config.games['starwarsbattlefrontii'] == null) {
         return;
@@ -106,7 +106,7 @@ class FrostyProfileService {
     return modList.map((e) => ModService.fromFilename(e)).toList();
   }
 
-  static Future<List<Mod>> getModsFromProfile(String profile) async {
+  static Future<List<dynamic>> getModsFromProfile(String profile) async {
     FrostyConfig config = await FrostyService.getFrostyConfig();
     String path = OriginHelper.getBattlefrontPath();
     if (config.games['starwarsbattlefrontii']?.packs![profile] == null) {
@@ -121,7 +121,8 @@ class FrostyProfileService {
     String content = await file.readAsString();
     return content.split('\n').where((element) => element.contains(':') && element.contains("' '")).map((element) {
       String filename = element.split(':')[0];
-      return ModService.mods.firstWhere((element) => element.filename == filename, orElse: () => Mod.fromString(filename));
+      print(filename);
+      return ModService.getFrostyMod(filename);
     }).toList();
   }
 

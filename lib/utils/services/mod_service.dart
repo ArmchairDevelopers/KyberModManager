@@ -117,6 +117,25 @@ class ModService {
     return mods.firstWhere((element) => element.name == info.name && element.version == info.version, orElse: () => Mod.fromString(mod));
   }
 
+  static dynamic convertToFrostyMod(String mod) {
+    ModInfo info = convertToModInfo(mod);
+    dynamic frostyMod = mods.firstWhere((element) => element.name == info.name && element.version == info.version, orElse: () => Mod.fromString(''));
+    if (frostyMod.name == 'Invalid' && collections.any((element) => element.name == info.name && element.version == info.version)) {
+      frostyMod = collections.firstWhere((element) => element.name == info.name && element.version == info.version);
+    }
+
+    return frostyMod;
+  }
+
+  static dynamic getFrostyMod(String filename) {
+    dynamic frostyMod = mods.firstWhere((element) => element.filename == filename, orElse: () => Mod.fromString(''));
+    if (frostyMod.name == 'Invalid' && collections.any((element) => element.filename == filename)) {
+      frostyMod = collections.firstWhere((element) => element.filename == filename);
+    }
+
+    return frostyMod;
+  }
+
   static ModInfo convertToModInfo(String name) {
     String modName = name.substring(0, name.lastIndexOf(' ('));
     String version = name.substring(name.lastIndexOf('(') + 1, name.length - 1);
@@ -126,7 +145,7 @@ class ModService {
   static bool isInstalled(String name) {
     String modName = name.substring(0, name.lastIndexOf(' ('));
     String version = name.substring(name.lastIndexOf('(') + 1, name.length - 1);
-    return mods.any((mod) => mod.name == modName && mod.version == version);
+    return mods.any((mod) => mod.name == modName && mod.version == version) || collections.any((element) => element.title == modName && element.version == version);
   }
 
   static Map<String, List<Mod>> getModsByCategory([bool kyberCategories = false]) {
@@ -213,7 +232,7 @@ Future<List<FrostyCollection>> _loadCollections(List<dynamic> files) async {
       return;
     }
 
-    // TODO: fix this
+    // TODO: fix this mess
     List<int> data = [];
     await file.openRead(0, 6000).toList().then((value) => value.forEach((element) => element.forEach((element1) => data.add(element1))));
     String decoded = utf8.decode(
@@ -221,7 +240,7 @@ Future<List<FrostyCollection>> _loadCollections(List<dynamic> files) async {
       allowMalformed: true,
     );
     decoded = Uri.decodeComponent(Uri.encodeComponent(decoded).split('%00').first);
-    loadedCollections.add(FrostyCollection.fromFile(jsonDecode(decoded.substring(0, decoded.lastIndexOf('}') + 1))));
+    loadedCollections.add(FrostyCollection.fromFile(element, jsonDecode(decoded.substring(0, decoded.lastIndexOf('}') + 1))));
   });
   return loadedCollections;
 }

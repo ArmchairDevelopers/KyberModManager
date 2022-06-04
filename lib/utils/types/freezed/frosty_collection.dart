@@ -6,20 +6,38 @@ part 'frosty_collection.freezed.dart';
 
 part 'frosty_collection.g.dart';
 
+abstract class FrostyMod {
+  String get name;
+
+  String get version;
+
+  String get filename;
+}
+
 @freezed
 class FrostyCollection with _$FrostyCollection {
+  const FrostyCollection._();
+
+  String toKyberString() {
+    return '$name ($version)';
+  }
+
+  @Implements<FrostyMod>()
   const factory FrostyCollection({
     required String link,
     required String title,
     required String version,
     required String description,
     required String category,
+    required String name,
+    required String filename,
     required List<String> fileNames,
     required List<String> modVersions,
     List<Mod>? mods,
   }) = _FrostyCollection;
 
-  factory FrostyCollection.fromFile(dynamic json) {
+  @Implements<FrostyMod>()
+  factory FrostyCollection.fromFile(String filename, dynamic json) {
     return FrostyCollection(
       link: json['link'],
       title: json['title'],
@@ -27,6 +45,8 @@ class FrostyCollection with _$FrostyCollection {
       description: json['description'],
       category: json['category'],
       fileNames: List<String>.from(json['mods']),
+      filename: filename.split(r'\').last,
+      name: json['title'],
       modVersions: List<String>.from(json['modVersions']),
       mods: List<Mod>.from(
         json['mods'].map(
@@ -39,5 +59,6 @@ class FrostyCollection with _$FrostyCollection {
     );
   }
 
+  @Implements<FrostyMod>()
   factory FrostyCollection.fromJson(Map<String, dynamic> json) => _$FrostyCollectionFromJson(json);
 }

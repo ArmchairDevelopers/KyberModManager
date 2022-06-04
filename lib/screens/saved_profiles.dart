@@ -169,7 +169,7 @@ class _SavedProfilesState extends State<SavedProfiles> {
                                   content: SizedBox(
                                     height: 200,
                                     child: SingleChildScrollView(
-                                      child: UnorderedList(e.mods.map((e) => e.toKyberString()).toList()),
+                                      child: UnorderedList(List<String>.of(e.mods.map((e) => e.toKyberString()))),
                                     ),
                                   ),
                                   actions: [

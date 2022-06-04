@@ -1,7 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/frosty_collection.dart';
 
 part 'mod.freezed.dart';
+
 part 'mod.g.dart';
 
 @HiveType(typeId: 2)
@@ -13,6 +15,7 @@ class Mod with _$Mod {
     return '$name ($version)';
   }
 
+  @Implements<FrostyMod>()
   factory Mod({
     @HiveField(0) required String name,
     @HiveField(1) required String filename,
@@ -21,8 +24,10 @@ class Mod with _$Mod {
     @HiveField(4) String? author,
   }) = _Mod;
 
+  @Implements<FrostyMod>()
   factory Mod.fromJson(Map<String, dynamic> json) => _$ModFromJson(json);
 
+  @Implements<FrostyMod>()
   factory Mod.fromString(String filename, [String? data]) {
     List<String> formatted = data != null ? Uri.encodeComponent(data).split('%00') : ['Invalid', 'Unknown', 'Unknown', 'Unknown'];
     return Mod(
