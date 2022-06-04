@@ -62,10 +62,10 @@
 
 | <p style="width: 30vw;">Pages</p> |                         <p></p>                     |
 |:---------------------------------:|:--------------------------------------------:|
-|          Server Browser           | <img src="https://img.reax.at/kyber_mod_Manager_YlDm5MeQFR.png"> |
-|           Hosting Page            | <img src="https://img.reax.at/kyber_mod_Manager_OIUg00qc27.png"> |
-|       Mod Profile Edit Page       | <img src="https://img.reax.at/kyber_mod_Manager_E0ZrACAMgF.png"> |
-|       Settings                    | <img src="https://img.reax.at/kyber_mod_Manager_GHGDS85hL9.png"> |
+|          Server Browser           | <img src="https://img.reax.at/VSzJ07QzwUSn/direct"> |
+|           Hosting Page            | <img src="https://img.reax.at/ZHiyAxskfVdq/direct"> |
+|       Mod Profile Edit Page       | <img src="https://img.reax.at/yYrXdNUyVKK9/direct"> |
+|       Settings                    | <img src="https://img.reax.at/Y16h0N2Y8LDc/direct"> |
 
 ## Questions
 
