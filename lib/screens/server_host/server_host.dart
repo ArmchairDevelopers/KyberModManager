@@ -41,7 +41,7 @@ class _ServerHostState extends State<ServerHost> {
   late StreamSubscription _subscription;
   KyberServer? server;
   List<KyberProxy>? proxies;
-  List<String>? frostyProfiles;
+  late List<String> profiles;
   String mode = modes[0].mode;
   String? formattedServerName;
   String? proxy;
@@ -83,7 +83,12 @@ class _ServerHostState extends State<ServerHost> {
     var profiles = FrostyProfileService.getProfiles();
     String noMods = translate('$prefix.forms.mod_profile.no_mods_profile');
     String? lastProfile = box.get('lastProfile');
-    frostyProfiles = profiles;
+    this.profiles = [
+      translate('$prefix.forms.mod_profile.no_mods_profile'),
+      ...profiles.where((e) => e != 'KyberModManager').map((e) => '$e (Frosty Pack)'),
+      ..._profiles.map((e) => '${e.name} (Mod Profile)'),
+    ];
+
     if (lastProfile != null) {
       if (lastProfile == 'no_mods') {
         _profileController.text = noMods;
@@ -93,11 +98,13 @@ class _ServerHostState extends State<ServerHost> {
       checkWarnings();
       return;
     }
-    if (frostyProfiles == null || frostyProfiles!.isEmpty) {
+
+    if (profiles.isEmpty) {
       _profileController.text = noMods;
       return;
     }
-    setState(() => _profileController.text = '${frostyProfiles!.first} (Frosty Pack)');
+
+    setState(() => _profileController.text = '${profiles.first} (Frosty Pack)');
     checkWarnings();
   }
 
@@ -354,17 +361,13 @@ class _ServerHostState extends State<ServerHost> {
                   controller: _profileController,
                   placeholder: translate('$prefix.forms.mod_profile.placeholder'),
                   validator: (String? value) {
-                    if (value == null || value.isEmpty) {
+                    if (value == null || value.isEmpty || !profiles.contains(value)) {
                       return translate('$prefix.forms.mod_profile.error');
                     }
                     return null;
                   },
                   onChanged: (String? value, TextChangedReason _) => _formKey.currentState?.validate(),
-                  items: [
-                    translate('$prefix.forms.mod_profile.no_mods_profile'),
-                    ...frostyProfiles?.where((e) => e != 'KyberModManager').map((e) => '$e (Frosty Pack)') ?? [],
-                    ..._profiles.map((e) => '${e.name} (Mod Profile)'),
-                  ],
+                  items: profiles,
                   onSelected: (text) {
                     box.put('lastProfile', text == translate('$prefix.forms.mod_profile.no_mods_profile') ? 'no_mods' : text);
                     Timer.run(() => checkWarnings());
