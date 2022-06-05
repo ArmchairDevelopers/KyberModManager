@@ -60,10 +60,15 @@ class ModService {
       }
 
       if (!listEquals(currentMods, mods)) {
+        var packMods = FrostyProfileService.getModsFromConfigProfile(profileName);
         setContent(translate('$prefix.creating'));
         await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-        onProgress(0, 0);
-        await FrostyProfileService.loadFrostyPack(profileName.replaceAll(' (Frosty Pack)', ''), onProgress);
+        if (listEquals(packMods, mods)) {
+          onProgress(0, 0);
+          await FrostyProfileService.loadFrostyPack(profileName.replaceAll(' (Frosty Pack)', ''), onProgress);
+        }
+      } else {
+        await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
       }
     } else if (packType == PackType.COSMETICS) {
       List<Mod> mods = List<Mod>.from(box.get('cosmetics'));
