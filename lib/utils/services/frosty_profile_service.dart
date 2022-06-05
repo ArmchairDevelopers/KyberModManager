@@ -136,7 +136,7 @@ class FrostyProfileService {
       (key, value) => profiles.add(
         FrostyProfile(
           name: key,
-          mods: value.isNotEmpty ? value.split('|').map((element) => element.split(':')[0]).toList().map((e) => ModService.fromFilename(e)).toList() : [],
+          mods: value.isNotEmpty ? value.split('|').map((element) => element.split(':')[0]).toList().map((e) => ModService.getFrostyMod(e)).toList() : [],
         ),
       ),
     );

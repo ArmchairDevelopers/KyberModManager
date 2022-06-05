@@ -61,7 +61,9 @@ class _RunBattlefrontState extends State<RunBattlefront> {
     }
 
     if (_controller.text.endsWith('(Frosty Pack)')) {
-      return frostyProfiles?.firstWhere((profile) => profile.name == _controller.text.replaceAll(' (Frosty Pack)', '')).mods.map((e) => e.name).toList() ?? [];
+      return List<String>.from(
+        frostyProfiles?.firstWhere((profile) => profile.name == _controller.text.replaceAll(' (Frosty Pack)', '')).mods.map((e) => e.name).toList() ?? [],
+      );
     }
 
     return [];

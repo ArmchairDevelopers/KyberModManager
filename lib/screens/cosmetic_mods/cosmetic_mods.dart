@@ -20,7 +20,7 @@ class CosmeticMods extends StatefulWidget {
 
 class _CosmeticModsState extends State<CosmeticMods> {
   final String prefix = 'cosmetic_mods';
-  late List<Mod> activeMods;
+  late List<dynamic> activeMods;
 
   @override
   void initState() {

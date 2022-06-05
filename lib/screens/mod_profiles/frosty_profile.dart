@@ -2,12 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 
 class FrostyProfileSelector extends StatefulWidget {
   const FrostyProfileSelector({Key? key, required this.onSelected}) : super(key: key);
 
-  final Function(List<Mod> mods) onSelected;
+  final Function(List<dynamic> mods) onSelected;
 
   @override
   _FrostyProfileSelectorState createState() => _FrostyProfileSelectorState();

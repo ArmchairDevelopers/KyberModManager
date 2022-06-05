@@ -9,6 +9,7 @@
 - Added support for new Frosty mod that contains the download link.
 - Added support for Frosty collections.
 - KMM now shows an error if you got logged out of your Nexusmods account.
+- Fixed Frosty Pack generation with cosmetic mods.
 - Fixed that if a mod is already installed, the new mod gets a different name so that you can use both versions.
 - Fixed a bug where extracting mods after downloading could cause lags.
 - Fixed a window border issue on Windows 10.

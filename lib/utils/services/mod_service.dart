@@ -69,12 +69,14 @@ class ModService {
         }
       } else {
         await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+        await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
       }
     } else if (packType == PackType.COSMETICS) {
       List<Mod> mods = List<Mod>.from(box.get('cosmetics'));
       await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
       setContent(translate('$prefix.creating'));
       await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+      await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
     } else {
       return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'));
     }
