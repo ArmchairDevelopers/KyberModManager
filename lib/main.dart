@@ -57,12 +57,6 @@ void main() async {
     runApp(LocalizedApp(delegate, const App()));
     Logger.root.info('Started in ${DateTime.now().difference(started).inMilliseconds}ms');
   }, (exception, stackTrace) async {
-    // await FlutterPlatformAlert.showAlert(
-    //   windowTitle: 'Error',
-    //   text: 'An unknown error occurred:\n$exception\n$stackTrace',
-    //   alertStyle: AlertButtonStyle.ok,
-    //   iconStyle: IconStyle.error,
-    // );
     Logger.root.severe('$exception\n$stackTrace');
     await Sentry.captureException(exception, stackTrace: stackTrace);
   });
