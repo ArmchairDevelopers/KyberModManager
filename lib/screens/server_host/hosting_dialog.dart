@@ -102,8 +102,12 @@ class _HostingDialogState extends State<HostingDialog> {
     ).catchError((error) {
       NotificationService.showNotification(message: error.toString(), color: Colors.red);
     });
+    if (!mounted) return;
     setState(() => content = translate('$dialog_prefix.joining_states.frosty'));
+
     await FrostyService.startFrosty();
+    if (!mounted) return;
+
     setState(() => state = 1);
   }
 
