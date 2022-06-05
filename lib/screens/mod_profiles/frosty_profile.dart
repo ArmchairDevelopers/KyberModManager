@@ -13,14 +13,14 @@ class FrostyProfileSelector extends StatefulWidget {
 }
 
 class _FrostyProfileSelectorState extends State<FrostyProfileSelector> {
-  List<FrostyProfile>? profiles;
+  late List<FrostyProfile> profiles;
   String? value;
 
   @override
   void initState() {
-    var profiles = FrostyProfileService.getProfilesWithMods();
-    profiles = profiles;
+    profiles = FrostyProfileService.getProfilesWithMods();
     value = profiles.first.name;
+
     super.initState();
   }
 
@@ -37,7 +37,7 @@ class _FrostyProfileSelectorState extends State<FrostyProfileSelector> {
         FilledButton(
           child: Text(translate('load')),
           onPressed: () {
-            widget.onSelected(profiles!.firstWhere((p) => p.name == value).mods);
+            widget.onSelected(profiles.firstWhere((p) => p.name == value).mods);
             Navigator.of(context).pop();
           },
         ),
@@ -48,7 +48,7 @@ class _FrostyProfileSelectorState extends State<FrostyProfileSelector> {
           value: value,
           onChanged: (v) => setState(() => value = v),
           isExpanded: true,
-          items: profiles?.map((e) {
+          items: profiles.map((e) {
             return ComboboxItem(
               value: e.name,
               child: Text(e.name),
