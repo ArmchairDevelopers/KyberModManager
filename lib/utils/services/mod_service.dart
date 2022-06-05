@@ -54,7 +54,7 @@ class ModService {
       await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
     } else if (packType == PackType.FROSTY_PACK) {
       var currentMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
-      List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(profileName);
+      List<Mod> mods = FrostyProfileService.getModsFromConfigProfile(profileName);
       if (enableCosmetics) {
         mods = [...mods, ...cosmeticMods];
       }
@@ -75,7 +75,7 @@ class ModService {
     }
   }
 
-  static Future<List<dynamic>> getModsFromModPack(String name) async {
+  static List<dynamic> getModsFromModPack(String name) {
     PackType packType = getPackType(name);
     if (packType == PackType.FROSTY_PACK || packType == PackType.MOD_PROFILE) {
       name = name.replaceAll(' ${packType.name}', '');
@@ -86,7 +86,7 @@ class ModService {
       case PackType.MOD_PROFILE:
         return List<ModProfile>.from(box.get('profiles')).where((p) => p.name == name).first.mods;
       case PackType.FROSTY_PACK:
-        return await FrostyProfileService.getModsFromConfigProfile(name);
+        return FrostyProfileService.getModsFromConfigProfile(name);
       case PackType.COSMETICS:
         return List<Mod>.from(box.get('cosmetics'));
       default:
@@ -145,7 +145,8 @@ class ModService {
   static bool isInstalled(String name) {
     String modName = name.substring(0, name.lastIndexOf(' ('));
     String version = name.substring(name.lastIndexOf('(') + 1, name.length - 1);
-    return mods.any((mod) => mod.name == modName && mod.version == version) || collections.any((element) => element.title == modName && element.version == version);
+    return mods.any((mod) => mod.name == modName && mod.version == version) ||
+        collections.any((element) => element.title == modName && element.version == version);
   }
 
   static Map<String, List<dynamic>> getModsByCategory([bool kyberCategories = false]) {

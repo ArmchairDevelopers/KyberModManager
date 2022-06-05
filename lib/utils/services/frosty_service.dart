@@ -36,7 +36,7 @@ class FrostyService {
   }
 
   static Future<void> saveFrostyConfig(FrostyConfig config, [String? path]) async {
-    String? filePath = path ?? await getFrostyConfigPath();
+    String? filePath = path ?? getFrostyConfigPath();
     if (filePath == null) {
       return;
     }

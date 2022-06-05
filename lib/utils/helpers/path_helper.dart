@@ -52,7 +52,7 @@ class PathHelper {
     archive.clear();
   }
 
-  static Future<String?> isValidFrostyDir(String path) async {
+  static String? isValidFrostyDir(String path) {
     Directory directory = Directory(path);
     if (!directory.existsSync()) {
       return 'invalid_dir';
@@ -68,7 +68,7 @@ class PathHelper {
       return 'bf2_not_found';
     }
 
-    FrostyConfig config = await FrostyService.getFrostyConfig();
+    FrostyConfig config = FrostyService.getFrostyConfig();
     if (!config.games.keys.contains('starwarsbattlefrontii')) {
       return 'bf2_not_found';
     }

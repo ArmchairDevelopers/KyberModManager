@@ -23,7 +23,7 @@ class ProfileService {
       return;
     }
     String battlefrontPath = OriginHelper.getBattlefrontPath();
-    FrostyConfig config = await FrostyService.getFrostyConfig();
+    FrostyConfig config = FrostyService.getFrostyConfig();
     Directory dir = Directory('$battlefrontPath\\ModData\\KyberModManager');
     List<dynamic> convertedMods = mods.map((mod) => ModService.convertToFrostyMod(mod)).toList();
     List<dynamic> current = await FrostyProfileService.getModsFromProfile('KyberModManager');

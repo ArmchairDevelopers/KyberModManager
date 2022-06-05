@@ -24,7 +24,7 @@ class FrostyProfileService {
   static Future<void> createProfile(List<String> list, [String profile = 'KyberModManager']) async {
     try {
       List mods = list.map((e) => ModService.convertToFrostyMod(e)).toList();
-      FrostyConfig config = await FrostyService.getFrostyConfig();
+      FrostyConfig config = FrostyService.getFrostyConfig();
       if (config.games['starwarsbattlefrontii'] == null) {
         return;
       }
@@ -39,8 +39,8 @@ class FrostyProfileService {
     }
   }
 
-  static Future<bool> checkConfig(String path) async {
-    FrostyConfig config = await FrostyService.getFrostyConfig(path);
+  static bool checkConfig(String path) {
+    FrostyConfig config = FrostyService.getFrostyConfig(path);
     if (config.games['starwarsbattlefrontii'] == null) {
       return false;
     }
@@ -49,7 +49,7 @@ class FrostyProfileService {
   }
 
   static Future<void> loadBattlefront(String configPath) async {
-    FrostyConfig config = await FrostyService.getFrostyConfig(configPath);
+    FrostyConfig config = FrostyService.getFrostyConfig(configPath);
     if (config.games['starwarsbattlefrontii'] == null) {
       config.games['starwarsbattlefrontii'] = _battlefront;
       config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
@@ -82,7 +82,7 @@ class FrostyProfileService {
   static loadFrostyPack(String name, [Function? onProgress]) async {
     Logger.root.info('Loading Frosty pack: $name');
     String bf2path = OriginHelper.getBattlefrontPath();
-    List<Mod> mods = await FrostyProfileService.getModsFromConfigProfile(name);
+    List<Mod> mods = FrostyProfileService.getModsFromConfigProfile(name);
     await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
     Directory d = Directory('$bf2path\\ModData\\' + name);
     if (d.existsSync()) {
@@ -97,8 +97,8 @@ class FrostyProfileService {
     }
   }
 
-  static Future<List<Mod>> getModsFromConfigProfile(String profile) async {
-    FrostyConfig config = await FrostyService.getFrostyConfig();
+  static List<Mod> getModsFromConfigProfile(String profile) {
+    FrostyConfig config = FrostyService.getFrostyConfig();
     if (config.games['starwarsbattlefrontii']?.packs?[profile] == null) {
       return [];
     }
@@ -107,7 +107,7 @@ class FrostyProfileService {
   }
 
   static Future<List<dynamic>> getModsFromProfile(String profile) async {
-    FrostyConfig config = await FrostyService.getFrostyConfig();
+    FrostyConfig config = FrostyService.getFrostyConfig();
     String path = OriginHelper.getBattlefrontPath();
     if (config.games['starwarsbattlefrontii']?.packs![profile] == null) {
       return [];

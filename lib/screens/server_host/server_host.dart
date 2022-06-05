@@ -102,7 +102,7 @@ class _ServerHostState extends State<ServerHost> {
   }
 
   void checkWarnings() async {
-    var mods = await ModService.getModsFromModPack(_profileController.text);
+    var mods = ModService.getModsFromModPack(_profileController.text);
 
     if (mods.length > 20 || mods.where((element) => element.name.contains('BF2022')).isNotEmpty) {
       setState(() => warning = true);
@@ -209,7 +209,7 @@ class _ServerHostState extends State<ServerHost> {
       return;
     }
 
-    List<String> profiles = await FrostyProfileService.getProfiles();
+    List<String> profiles = FrostyProfileService.getProfiles();
     if (!profiles.contains('KyberModManager')) {
       await FrostyProfileService.createProfile([]);
     }

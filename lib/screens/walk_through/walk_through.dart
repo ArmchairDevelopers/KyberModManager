@@ -236,14 +236,14 @@ class _WalkThroughState extends State<WalkThrough> {
       }
       if (selectedDirectory != null) {
         box.put('frostyPath', selectedDirectory);
-        String? configPath = await FrostyService.getFrostyConfigPath();
+        String? configPath = FrostyService.getFrostyConfigPath();
         if (configPath == null) {
           Logger.root.severe('No config found.');
           NotificationService.showNotification(message: 'No config found.', color: Colors.red);
           return;
         }
         box.put('frostyConfigPath', configPath);
-        String? valid = await PathHelper.isValidFrostyDir(selectedDirectory);
+        String? valid = PathHelper.isValidFrostyDir(selectedDirectory);
         if (valid != null) {
           NotificationService.showNotification(
             message: translate('$prefix.select_frosty_path.error_messages.$valid'),
@@ -291,21 +291,21 @@ class _WalkThroughState extends State<WalkThrough> {
       });
 
       box.put('frostyPath', _directory!.path);
-      String? configPath = await FrostyService.getFrostyConfigPath();
+      String? configPath = FrostyService.getFrostyConfigPath();
       var config;
       if (configPath != null && File(configPath).existsSync()) {
-        bool validConfig = await FrostyProfileService.checkConfig(configPath);
+        bool validConfig =  FrostyProfileService.checkConfig(configPath);
         if (!validConfig) {
           await FrostyProfileService.loadBattlefront(configPath);
         }
 
         box.put('frostyConfigPath', configPath);
-        config = await FrostyService.getFrostyConfig();
+        config = FrostyService.getFrostyConfig();
       } else {
         await FrostyProfileService.createFrostyConfig();
       }
 
-      String? valid = await PathHelper.isValidFrostyDir(_directory!.path);
+      String? valid = PathHelper.isValidFrostyDir(_directory!.path);
       if (valid == null) {
         setState(() {
           downloading = false;
