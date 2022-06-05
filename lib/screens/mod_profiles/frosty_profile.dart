@@ -19,12 +19,9 @@ class _FrostyProfileSelectorState extends State<FrostyProfileSelector> {
 
   @override
   void initState() {
-    FrostyProfileService.getProfilesWithMods().then(
-      (p) => setState(() {
-        profiles = p;
-        value = p.first.name;
-      }),
-    );
+    var profiles = FrostyProfileService.getProfilesWithMods();
+    profiles = profiles;
+    value = profiles.first.name;
     super.initState();
   }
 

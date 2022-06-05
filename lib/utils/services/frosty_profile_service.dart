@@ -125,31 +125,31 @@ class FrostyProfileService {
     }).toList();
   }
 
-  static Future<List<FrostyProfile>> getProfilesWithMods() async {
+  static List<FrostyProfile> getProfilesWithMods() {
     List<FrostyProfile> profiles = [];
-    await FrostyService.getFrostyConfig().then((config) {
-      if (config.games['starwarsbattlefrontii'] == null) {
-        return [];
-      }
+    var config = FrostyService.getFrostyConfig();
+    if (config.games['starwarsbattlefrontii'] == null) {
+      return [];
+    }
 
-      config.games['starwarsbattlefrontii']?.packs?.forEach(
-        (key, value) => profiles.add(
-          FrostyProfile(
-            name: key,
-            mods: value.isNotEmpty ? value.split('|').map((element) => element.split(':')[0]).toList().map((e) => ModService.fromFilename(e)).toList() : [],
-          ),
+    config.games['starwarsbattlefrontii']?.packs?.forEach(
+      (key, value) => profiles.add(
+        FrostyProfile(
+          name: key,
+          mods: value.isNotEmpty ? value.split('|').map((element) => element.split(':')[0]).toList().map((e) => ModService.fromFilename(e)).toList() : [],
         ),
-      );
-    });
+      ),
+    );
 
     return profiles;
   }
 
-  static Future<List<String>> getProfiles() async {
-    FrostyConfig config = await FrostyService.getFrostyConfig();
+  static List<String> getProfiles() {
+    FrostyConfig config = FrostyService.getFrostyConfig();
     if (config.games['starwarsbattlefrontii'] == null) {
       return [];
     }
+
     return config.games['starwarsbattlefrontii']?.packs?.keys.toList() ?? [];
   }
 }

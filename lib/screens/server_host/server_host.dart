@@ -75,29 +75,30 @@ class _ServerHostState extends State<ServerHost> {
         proxy = box.get('proxy') ?? proxies.first.ip;
       }),
     );
-    FrostyProfileService.getProfiles().then(
-      (value) async {
-        String noMods = translate('$prefix.forms.mod_profile.no_mods_profile');
-        String? lastProfile = box.get('lastProfile');
-        frostyProfiles = value;
-        if (lastProfile != null) {
-          if (lastProfile == 'no_mods') {
-            setState(() => _profileController.text = noMods);
-            return;
-          }
-          setState(() => _profileController.text = lastProfile);
-          checkWarnings();
-          return;
-        }
-        if (frostyProfiles == null || frostyProfiles!.isEmpty) {
-          setState(() => _profileController.text = noMods);
-          return;
-        }
-        setState(() => _profileController.text = '${frostyProfiles!.first} (Frosty Pack)');
-        checkWarnings();
-      },
-    );
+    loadProfiles();
     super.initState();
+  }
+
+  void loadProfiles() {
+    var profiles = FrostyProfileService.getProfiles();
+    String noMods = translate('$prefix.forms.mod_profile.no_mods_profile');
+    String? lastProfile = box.get('lastProfile');
+    frostyProfiles = profiles;
+    if (lastProfile != null) {
+      if (lastProfile == 'no_mods') {
+        _profileController.text = noMods;
+        return;
+      }
+      _profileController.text = lastProfile;
+      checkWarnings();
+      return;
+    }
+    if (frostyProfiles == null || frostyProfiles!.isEmpty) {
+      _profileController.text = noMods;
+      return;
+    }
+    setState(() => _profileController.text = '${frostyProfiles!.first} (Frosty Pack)');
+    checkWarnings();
   }
 
   void checkWarnings() async {

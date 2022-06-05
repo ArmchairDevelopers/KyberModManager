@@ -27,27 +27,28 @@ class _RunBattlefrontState extends State<RunBattlefront> {
 
   @override
   void initState() {
-    FrostyProfileService.getProfilesWithMods().then(
-      (value) => setState(() {
-        String? lastProfile = box.get('runBf2lastProfile');
-        frostyProfiles = value;
-        profiles = [
-          translate('host_server.forms.mod_profile.no_mods_profile'),
-          translate('host_server.forms.cosmetic_mods.header'),
-          ...frostyProfiles?.where((e) => !e.name.toLowerCase().startsWith("kybermodmanager")).map((e) => '${e.name} (Frosty Pack)') ?? [],
-        ];
-        if (lastProfile != null) {
-          if (lastProfile == 'no_mods') {
-            _controller.text = translate('host_server.forms.mod_profile.no_mods_profile');
-          } else if (lastProfile == 'cosmetic_mods') {
-            _controller.text = translate('host_server.forms.cosmetic_mods.header');
-          } else {
-            _controller.text = lastProfile;
-          }
-        }
-      }),
-    );
+    loadProfiles();
     super.initState();
+  }
+
+  void loadProfiles() {
+    var loadedProfiles = FrostyProfileService.getProfilesWithMods();
+    String? lastProfile = box.get('runBf2lastProfile');
+    frostyProfiles = loadedProfiles;
+    profiles = [
+      translate('host_server.forms.mod_profile.no_mods_profile'),
+      translate('host_server.forms.cosmetic_mods.header'),
+      ...frostyProfiles?.where((e) => !e.name.toLowerCase().startsWith("kybermodmanager")).map((e) => '${e.name} (Frosty Pack)') ?? [],
+    ];
+    if (lastProfile != null) {
+      if (lastProfile == 'no_mods') {
+        _controller.text = translate('host_server.forms.mod_profile.no_mods_profile');
+      } else if (lastProfile == 'cosmetic_mods') {
+        _controller.text = translate('host_server.forms.cosmetic_mods.header');
+      } else {
+        _controller.text = lastProfile;
+      }
+    }
   }
 
   List<String> getMods() {

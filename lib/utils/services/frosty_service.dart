@@ -23,14 +23,14 @@ class FrostyService {
     return r;
   }
 
-  static Future<FrostyConfig> getFrostyConfig([String? path]) async {
-    String? filePath = path ?? await getFrostyConfigPath();
+  static FrostyConfig getFrostyConfig([String? path]) {
+    String? filePath = path ?? getFrostyConfigPath();
     if (filePath == null) {
       return FrostyConfig.fromJson({'Games': [], 'GlobalOptions': Map<String, dynamic>.from({})});
     }
     File file = File(filePath);
     FrostyConfig config = FrostyConfig.fromJson(
-      jsonDecode(await file.readAsString()),
+      jsonDecode(file.readAsStringSync()),
     );
     return config;
   }
@@ -45,7 +45,7 @@ class FrostyService {
     await file.writeAsString(encoder.convert(config.toJson()));
   }
 
-  static Future<String?> getFrostyConfigPath() async {
+  static String? getFrostyConfigPath() {
     if (box.containsKey('frostyConfigPath')) {
       return box.get('frostyConfigPath');
     }
@@ -54,9 +54,9 @@ class FrostyService {
     File v4path = File('${box.get('frostyPath')}\\config.json');
     Logger.root.info('Checking for Frosty configs at "${v5path.path}" and "${v4path.path}"');
 
-    if (await v5path.exists()) {
+    if (v5path.existsSync()) {
       return v5path.path;
-    } else if (await v4path.exists()) {
+    } else if (v4path.existsSync()) {
       return v4path.path;
     }
 
