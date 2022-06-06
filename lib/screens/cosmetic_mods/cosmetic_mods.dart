@@ -88,7 +88,7 @@ class _CosmeticModsState extends State<CosmeticMods> {
                 flex: 6,
                 child: InstalledMods(
                   activeMods: activeMods,
-                  excludedCategories: const ['Gameplay', 'Server Host'],
+                  excludedCategories: kyber_mod_categories,
                   onAdd: (m) => setState(() => activeMods.add(m)),
                 ),
               ),

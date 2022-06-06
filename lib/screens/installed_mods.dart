@@ -5,7 +5,6 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -19,7 +18,7 @@ class InstalledMods extends StatefulWidget {
 
 class _InstalledModsState extends State<InstalledMods> {
   final String prefix = 'installed_mods';
-  List<Mod> _installedMods = [];
+  List<dynamic> _installedMods = [];
   bool loaded = false;
   String search = '';
 
@@ -30,10 +29,14 @@ class _InstalledModsState extends State<InstalledMods> {
   }
 
   void loadMods() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    loaded = true;
-    setState(() => _installedMods = ModService.mods.where((element) => element.toString().toLowerCase().contains(search.toLowerCase())).toList()
-      ..sort((a, b) => a.name.compareTo(b.name)));
+    if (!loaded) {
+      await Future.delayed(const Duration(milliseconds: 200));
+      loaded = true;
+    }
+    setState(() => _installedMods = [...ModService.mods, ...ModService.collections]
+        .where((element) => element.toString().toLowerCase().contains(search.toLowerCase()))
+        .toList()
+      ..sort((dynamic a, dynamic b) => a.name.compareTo(b.name)));
   }
 
   @override
@@ -121,7 +124,7 @@ class _InstalledModsState extends State<InstalledMods> {
                                 Text(e.name),
                               ),
                               material.DataCell(
-                                Text(e.author ?? 'Unknown'),
+                                Text(e.author),
                               ),
                               material.DataCell(
                                 Text(e.version, textAlign: TextAlign.center),

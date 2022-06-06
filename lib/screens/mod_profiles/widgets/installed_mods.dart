@@ -73,7 +73,7 @@ class _InstalledModsState extends State<InstalledMods> {
                         .map((dynamic mod) {
                       return ListTile(
                         title: Text(
-                          mod.name,
+                          '${mod.name} (${mod.version})',
                           style: textStyle,
                           overflow: TextOverflow.ellipsis,
                         ),

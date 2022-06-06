@@ -362,7 +362,7 @@ class _ServerHostState extends State<ServerHost> {
                   placeholder: translate('$prefix.forms.mod_profile.placeholder'),
                   validator: (String? value) {
                     if (value == null || value.isEmpty || !profiles.contains(value)) {
-                      return translate('$prefix.forms.mod_profile.error');
+                      return translate('$prefix.forms.mod_profile.no_profile_found');
                     }
                     return null;
                   },

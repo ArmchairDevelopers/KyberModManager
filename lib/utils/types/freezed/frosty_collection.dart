@@ -35,7 +35,8 @@ class FrostyCollection with _$FrostyCollection {
     @HiveField(6) required String filename,
     @HiveField(7) required List<String> fileNames,
     @HiveField(8) required List<String> modVersions,
-    @HiveField(9) List<Mod>? mods,
+    @HiveField(9) required String author,
+    @HiveField(10) List<Mod>? mods,
   }) = _FrostyCollection;
 
   @Implements<FrostyMod>()
@@ -49,6 +50,7 @@ class FrostyCollection with _$FrostyCollection {
       fileNames: List<String>.from(json['mods']),
       filename: filename.split(r'\').last,
       name: json['title'],
+      author: json['author'],
       modVersions: List<String>.from(json['modVersions']),
       mods: List<Mod>.from(
         json['mods'].map(

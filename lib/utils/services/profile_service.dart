@@ -34,26 +34,52 @@ class ProfileService {
     }
 
     List<SavedProfile> profiles = getSavedProfiles();
-    if (profiles.where((element) => listEquals(element.mods, convertedMods)).isEmpty) {
-      if (current.isEmpty || profiles.where((element) => listEquals(element.mods, current)).isNotEmpty) {
+    if (profiles.where((element) => equalModlist(element.mods, convertedMods)).isEmpty) {
+      if (current.isEmpty || profiles.where((element) => equalModlist(element.mods, current)).isNotEmpty) {
         return;
       }
       await _saveProfile(dir, current, onProgress);
       return;
     }
 
-    if (current.isNotEmpty && profiles.where((element) => listEquals(current, element.mods)).isEmpty) {
+    if (current.isNotEmpty && profiles.where((element) => equalModlist(current, element.mods)).isEmpty) {
       await _saveProfile(dir, current, onProgress);
     }
 
-    SavedProfile profile = profiles.firstWhere((element) => listEquals(element.mods, convertedMods));
+    SavedProfile profile = profiles.firstWhere((element) => equalModlist(element.mods, convertedMods));
     profile.lastUsed = DateTime.now();
     _editProfile(profile);
     await copyProfileData(Directory(profile.path), dir, onProgress);
     config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
         profile.mods.where((element) => element.filename.isNotEmpty).map((element) => '${element.filename}:True').join('|');
     await FrostyService.saveFrostyConfig(config);
+
+    File file = File('${dir.path}\\patch\\mods.txt');
+    if (!file.existsSync()) {
+      return;
+    }
+
+    String content = await file.readAsString();
+    String newContent = '';
+    content.split('\n').where((element) => element.contains(':') && element.contains("' '")).map((element) {
+      String filename = element.split(':')[0];
+      String line = element.trim().replaceAll(RegExp(r'(\n){3,}'), "");
+      var mod = ModService.getFrostyMod(filename);
+      if (line.endsWith("'${mod.category}'")) {
+        newContent += "$line ''\n";
+      } else {
+        newContent += '$line\n';
+      }
+    }).toList();
+    if (newContent != content) {
+      await file.writeAsString(newContent);
+    }
+
     Logger.root.info('Found profile ${profile.id}');
+  }
+
+  static bool equalModlist(List<dynamic> a, List<dynamic> b) {
+    return listEquals(List<String>.from(a.map((e) => e.toKyberString())), List<String>.from(b.map((e) => e.toKyberString())));
   }
 
   static containsMod(List<Mod> mods, Mod mod) => mods.where((element) => element.filename == mod.filename).isNotEmpty;

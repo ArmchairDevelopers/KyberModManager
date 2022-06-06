@@ -12,7 +12,6 @@ import 'package:kyber_mod_manager/utils/helpers/unzip_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:logging/logging.dart';
 import 'package:puppeteer/puppeteer.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -51,9 +50,8 @@ class DownloadService {
       _progressController?.close();
       _progressSubscription?.cancel();
     }
-    _browser
-        .close()
-        .then((value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
+    _browser.close().then(
+        (value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
   }
 
   Future<void> startDownload({
@@ -160,27 +158,10 @@ Future<void> _unpackFile(List<dynamic> args) async {
     final inputStream = InputFileStream('$downloadFolder$filename');
     final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
     for (var archiveFile in archive.files) {
-      String path = '$downloadFolder${getRandomString(8)}';
+      String path = '$downloadFolder${archiveFile.name}';
       final outputStream = OutputFileStream(path);
       archiveFile.writeContent(outputStream);
       outputStream.close();
-
-      String finalPath = '$downloadFolder${archiveFile.name}';
-      File file = File(path);
-      File destFile = File(finalPath);
-      if (destFile.existsSync() && destFile.path.endsWith('.fbmod')) {
-        Mod mod = await ModService.getDataFromFile(destFile);
-        Mod installedMod = await ModService.getDataFromFile(file);
-        if (mod.version != installedMod.version) {
-          String extension = archiveFile.name.split('.').last;
-          finalPath = '$downloadFolder${archiveFile.name.replaceAll('.$extension', '')}_${installedMod.version}.$extension';
-        } else {
-          file.deleteSync();
-          continue;
-        }
-      }
-      await Future.delayed(const Duration(milliseconds: 100));
-      file.rename(finalPath);
     }
     archive.clear();
   } else {

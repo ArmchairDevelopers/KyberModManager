@@ -39,47 +39,49 @@ class ModService {
 
     if (packType == PackType.NO_MODS) {
       if (enableCosmetics) {
-        await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
-      } else {
-        await FrostyProfileService.createProfile([]);
+        return await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
       }
+      return await FrostyProfileService.createProfile([]);
     } else if (packType == PackType.MOD_PROFILE) {
       ModProfile profile = List<ModProfile>.from(box.get('profiles')).where((p) => p.name == profileName).first;
-      List<Mod> mods = List.from(profile.mods);
+      List<dynamic> mods = List.from(profile.mods);
+      List<String> formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
       if (enableCosmetics) {
         mods = [...mods, ...cosmeticMods];
+        formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
       }
 
-      await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-      await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
+      await FrostyProfileService.createProfile(formattedMods);
+      return await ProfileService.searchProfile(formattedMods, onProgress);
     } else if (packType == PackType.FROSTY_PACK) {
       var currentMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
-      List<Mod> mods = FrostyProfileService.getModsFromConfigProfile(profileName);
+      List<dynamic> mods = FrostyProfileService.getModsFromConfigProfile(profileName);
+      List<String> formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
       if (enableCosmetics) {
         mods = [...mods, ...cosmeticMods];
+        formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
       }
 
       if (!listEquals(currentMods, mods)) {
         var packMods = FrostyProfileService.getModsFromConfigProfile(profileName);
         setContent(translate('$prefix.creating'));
-        await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
+        await FrostyProfileService.createProfile(formattedMods);
         if (listEquals(packMods, mods)) {
           onProgress(0, 0);
-          await FrostyProfileService.loadFrostyPack(profileName.replaceAll(' (Frosty Pack)', ''), onProgress);
+          return await FrostyProfileService.loadFrostyPack(profileName.replaceAll(' (Frosty Pack)', ''), onProgress);
         }
-      } else {
-        await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-        await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
+        return await ProfileService.searchProfile(formattedMods, onProgress);
       }
+      await FrostyProfileService.createProfile(formattedMods);
+      await ProfileService.searchProfile(formattedMods, onProgress);
     } else if (packType == PackType.COSMETICS) {
       List<Mod> mods = List<Mod>.from(box.get('cosmetics'));
       await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
       setContent(translate('$prefix.creating'));
       await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-      await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
-    } else {
-      return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'));
+      return await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
     }
+    return NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'));
   }
 
   static List<dynamic> getModsFromModPack(String name) {

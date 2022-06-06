@@ -30,6 +30,9 @@ class _ModProfilesState extends State<ModProfiles> {
   deleteProfile(ModProfile profile) async {
     profiles.removeWhere((p) => p.name == profile.name);
     await box.put('profiles', profiles);
+    if (box.get('lastProfile', defaultValue: '') == profile.name) {
+      box.put('lastProfile', '');
+    }
     setState(() => null);
   }
 
