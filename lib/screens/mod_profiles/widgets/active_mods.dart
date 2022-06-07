@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 final Random _rnd = Random();
@@ -12,7 +11,7 @@ class ActiveMods extends StatelessWidget {
 
   final List<dynamic> mods;
   final Function(int oldIndex, int newIndex) onReorder;
-  final Function(Mod mod) onRemove;
+  final Function(dynamic mod) onRemove;
 
   @override
   Widget build(BuildContext context) {
