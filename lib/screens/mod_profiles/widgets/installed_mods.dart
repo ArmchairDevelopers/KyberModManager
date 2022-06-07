@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/frosty_collection.dart';
 
 class InstalledMods extends StatefulWidget {
   const InstalledMods({Key? key, required this.activeMods, required this.onAdd, this.excludedCategories, this.kyber = false}) : super(key: key);
@@ -73,7 +74,7 @@ class _InstalledModsState extends State<InstalledMods> {
                         .map((dynamic mod) {
                       return ListTile(
                         title: Text(
-                          '${mod.name} (${mod.version})',
+                          '${mod.name} (${mod.version})${mod is FrostyCollection ? ' (Frosty Collection)' : ''}',
                           style: textStyle,
                           overflow: TextOverflow.ellipsis,
                         ),

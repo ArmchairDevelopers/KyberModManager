@@ -159,10 +159,8 @@ class ModService {
   }
 
   static Map<String, List<dynamic>> getModsByCategory([bool kyberCategories = false]) {
-    Map<String, List<dynamic>> categories = {
-      'Frosty Collections': ModService.collections,
-    };
-    for (Mod mod in mods) {
+    Map<String, List<dynamic>> categories = {"Frosty Colelctions": []};
+    for (dynamic mod in [...mods, ...collections]) {
       if (kyberCategories && !_kyberCategories.contains(mod.category.toLowerCase())) continue;
       if (categories.containsKey(mod.category)) {
         categories[mod.category]?.add(mod);
