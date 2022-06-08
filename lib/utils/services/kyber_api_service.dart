@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:kyber_mod_manager/api/kyber/proxy.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/constants/api_constants.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
+import 'package:logging/logging.dart';
 
 class KyberApiService {
   static Future<ServerResponse> getServers([int page = 1]) async {
@@ -65,7 +67,21 @@ class KyberApiService {
   static Future<List<KyberProxy>> getProxies() async {
     final resp = await get(Uri.parse('$KYBER_API_BASE_URL/proxies'));
     dynamic data = jsonDecode(resp.body).toList();
-    return List<KyberProxy>.from(data.map((proxy) => KyberProxy.fromJson(proxy)));
+    var proxies = List<KyberProxy>.from(data.map((proxy) => KyberProxy.fromJson(proxy)));
+    proxies = await Future.wait(proxies.map((proxy) async {
+      final start = DateTime.now();
+      DateTime? end;
+      await Socket.connect(proxy.ip, 25200, timeout: const Duration(seconds: 2)).then((socket) {
+        socket.destroy();
+        end = DateTime.now();
+      }).catchError((error) {
+        Logger.root.severe('Proxy ${proxy.ip} is not reachable');
+      });
+      proxy.ping = end?.difference(start).inMilliseconds;
+      return proxy;
+    }))
+      ..sort((a, b) => (a.ping ?? 999).compareTo(b.ping ?? 999));
+    return proxies;
   }
 
   static getCurrentConfig() {

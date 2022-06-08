@@ -364,9 +364,8 @@ class _ServerHostState extends State<ServerHost> {
                     if (value == null || value.isEmpty || !profiles.contains(value)) {
                       return translate('$prefix.forms.mod_profile.no_profile_found');
                     }
-                    return null;
                   },
-                  onChanged: (String? value, TextChangedReason _) => _formKey.currentState?.validate(),
+                  onChanged: (String? value, TextChangedReason _) => value != null && value.isNotEmpty && _formKey.currentState!.validate(),
                   items: profiles,
                   onSelected: (text) {
                     box.put('lastProfile', text == translate('$prefix.forms.mod_profile.no_mods_profile') ? 'no_mods' : text);
@@ -382,7 +381,7 @@ class _ServerHostState extends State<ServerHost> {
                     items: proxies?.map((e) {
                           return ComboboxItem<String>(
                             value: e.ip,
-                            child: Text(e.name),
+                            child: Text('${e.name} (${e.ping ?? '-1'} ms)'),
                           );
                         }).toList() ??
                         [],
