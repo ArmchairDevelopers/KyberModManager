@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
@@ -8,6 +9,9 @@ import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:logging/logging.dart';
 
 class FrostyService {
+  // TODO: load from api
+  static Map<String, String> collectionHashes = {'v1.0.6-alpha4': '3e1babb9f7bdf4f2603925d1d72045289d18787dd4fd54bd8ca14eea7dbeacb3'};
+
   static Future<ProcessResult> startFrosty({bool launch = true, String? frostyPath}) async {
     String path = frostyPath ?? box.get('frostyPath');
     var r = await Process.run(
@@ -21,6 +25,17 @@ class FrostyService {
     });
 
     return r;
+  }
+
+  static Future<bool> isOutdated() async {
+    File file = File('${box.get('frostyPath')}\\FrostyModManager.exe');
+    var content = await file.readAsBytes();
+    if (content.isEmpty) {
+      return true;
+    }
+
+    var digest = sha256.convert(content.toList()).toString();
+    return !(collectionHashes.values.contains(digest));
   }
 
   static FrostyConfig getFrostyConfig([String? path]) {

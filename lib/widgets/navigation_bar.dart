@@ -14,6 +14,7 @@ import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
+import 'package:kyber_mod_manager/screens/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
 import 'package:kyber_mod_manager/screens/saved_profiles.dart';
 import 'package:kyber_mod_manager/screens/server_browser/server_browser.dart';
@@ -26,6 +27,7 @@ import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
+import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
@@ -51,7 +53,7 @@ class _NavigationBarState extends State<NavigationBar> {
   @override
   void initState() {
     Jiffy.locale(supportedLocales.contains(AppLocale().getLocale().languageCode) ? AppLocale().getLocale().languageCode : 'en');
-    Timer.run(() {
+    Timer.run(() async {
       try {
         ProfileService.generateFiles();
       } catch (e) {
@@ -68,16 +70,21 @@ class _NavigationBarState extends State<NavigationBar> {
       DllInjector.downloadDll();
     }
 
-    AutoUpdater().updateAvailable().then((value) {
+    RPCService.initialize();
+    Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
+
+    AutoUpdater().updateAvailable().then((value) async {
       if (value == null) {
         return;
       }
 
-      showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
+      await showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
+    }).then((value) async {
+      bool isOutdated = await FrostyService.isOutdated();
+      if (isOutdated) {
+        await showDialog(context: context, builder: (context) => OutdatedFrostyDialog());
+      }
     });
-
-    RPCService.initialize();
-    Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
 
     super.initState();
   }
