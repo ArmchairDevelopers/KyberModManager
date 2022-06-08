@@ -8,6 +8,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   flutter_acrylic
   flutter_platform_alert
+  screen_retriever
   sentry_flutter
   system_theme
   system_tray
