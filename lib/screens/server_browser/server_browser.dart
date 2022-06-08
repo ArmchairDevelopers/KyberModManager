@@ -54,13 +54,13 @@ class _ServerBrowserState extends State<ServerBrowser> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Button(
-              child: Text(translate('$prefix.prev_page')),
               onPressed: page == 1 ? null : () => loadPage(page - 1),
+              child: Text(translate('$prefix.prev_page')),
             ),
             Text(translate('$prefix.current_page', args: {'0': page, '1': response?.pageCount})),
             Button(
-              child: Text(translate('$prefix.next_page')),
               onPressed: page == response?.pageCount || response?.pageCount == 0 ? null : () => loadPage(page + 1),
+              child: Text(translate('$prefix.next_page')),
             ),
           ],
         ),
@@ -87,7 +87,7 @@ class _ServerBrowserState extends State<ServerBrowser> {
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: loading ? MediaQuery.of(context).size.height - 130 : null,
-          child: loading ? const Center(child: ProgressRing()) : FadeIn(child: buildTable(), duration: const Duration(milliseconds: 100)),
+          child: loading ? const Center(child: ProgressRing()) : FadeIn(duration: const Duration(milliseconds: 100), child: buildTable()),
         ),
       ),
     );
