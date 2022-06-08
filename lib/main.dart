@@ -13,6 +13,7 @@ import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/puppeteer_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
+import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
@@ -41,7 +42,7 @@ void main() async {
         options.autoSessionTrackingInterval = const Duration(minutes: 1);
         options.dsn = 'https://1d0ce9262dcb416e8404c51e396297e4@o1117951.ingest.sentry.io/6233409';
         options.tracesSampleRate = 1.0;
-        options.release = "kyber-mod-manager@1.0.6";
+        options.release = "kyber-mod-manager@1.0.7";
       },
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
@@ -93,6 +94,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     final botToastBuilder = BotToastInit();
     var localizationDelegate = LocalizedApp.of(context).delegate;
+
     return FluentApp(
       title: 'Kyber Mod Manager',
       color: SystemTheme.accentColor.accent.toAccentColor(),
