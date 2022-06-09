@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
 import 'package:kyber_mod_manager/constants/api_constants.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/frosty_version.dart';
 
 class ApiService {
   static Future<bool> isAvailable(String name) async {
@@ -18,6 +19,18 @@ class ApiService {
       return response.statusCode == 200 && json.decode(response.body)['found'];
     } catch (e) {
       return false;
+    }
+  }
+
+  static Future<List<FrostyVersion>> versionHashes() async {
+    try {
+      final response = await get(
+        Uri.parse('$BACKEND_API_BASE_URL/frosty/hashes'),
+        headers: {'Accept': 'application/json'},
+      );
+      return (json.decode(response.body) as List<dynamic>).map((e) => FrostyVersion.fromJson(e)).toList();
+    } catch (e) {
+      return [];
     }
   }
 
