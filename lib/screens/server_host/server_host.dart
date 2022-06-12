@@ -46,6 +46,7 @@ class _ServerHostState extends State<ServerHost> {
   String? formattedServerName;
   String? proxy;
   int maxPlayers = 40;
+  int faction = 0;
   bool warning = false;
   bool disabled = false;
   bool cosmetics = false;
@@ -198,6 +199,7 @@ class _ServerHostState extends State<ServerHost> {
       proxy: proxy ?? '',
       password: _passwordController.text,
       mode: mode,
+      faction: faction,
       map: foundMaps.first.map,
       maxPlayers: maxPlayers,
       autoBalance: autoBalance,
@@ -374,6 +376,24 @@ class _ServerHostState extends State<ServerHost> {
                   },
                 ),
                 const SizedBox(height: 21),
+                InfoLabel(
+                  label: 'Server Host Faction',
+                  child: Combobox<int>(
+                    isExpanded: true,
+                    items: [0, 1].map((e) {
+                      return ComboboxItem<int>(
+                        value: e,
+                        child: Text(e == 0 ? 'Light Side' : 'Dark Side'),
+                      );
+                    }).toList(),
+                    value: faction,
+                    comboboxColor: Colors.white,
+                    onChanged: (value) {
+                      setState(() => faction = value ?? 0);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
                 InfoLabel(
                   label: translate('$prefix.forms.proxy.header'),
                   child: Combobox<String>(

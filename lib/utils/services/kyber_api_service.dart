@@ -36,6 +36,7 @@ class KyberApiService {
       required String mode,
       required String map,
       required int maxPlayers,
+      required int faction,
       required bool autoBalance}) {
     return post(
       Uri.parse('$KYBER_API_BASE_URL/config/host'),
@@ -43,7 +44,7 @@ class KyberApiService {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'faction': 0,
+        'faction': faction,
         'kyberProxy': proxy,
         'name': name,
         'password': password,
