@@ -48,9 +48,7 @@ class FrostyService {
       return false;
     }
 
-    return true;
-
-    return Version.parse(version.version.replaceAll('v', '')) == Version.parse('1.0.6-beta4');
+    return Version.parse(version.version.replaceAll('v', '')) < Version.parse('1.0.6-beta4');
   }
 
   static FrostyConfig getFrostyConfig([String? path]) {

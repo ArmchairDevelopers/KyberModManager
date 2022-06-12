@@ -30,6 +30,7 @@ import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
+import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:window_manager/window_manager.dart';
@@ -82,7 +83,15 @@ class _NavigationBarState extends State<NavigationBar> {
     }).then((value) async {
       bool isOutdated = await FrostyService.isOutdated();
       if (isOutdated) {
+        if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
+          await Future.delayed(const Duration(seconds: 2));
+          return NotificationService.showNotification(message: 'Your FrostyModManager is outdated!', color: Colors.orange);
+        }
         await showDialog(context: context, builder: (context) => OutdatedFrostyDialog());
+      } else {
+        if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
+          box.put('skipFrostyVersionCheck', false);
+        }
       }
     });
 
@@ -113,11 +122,7 @@ class _NavigationBarState extends State<NavigationBar> {
       return RawKeyboardListener(
         autofocus: true,
         onKey: (event) {
-          if (event.runtimeType == RawKeyDownEvent &&
-              event.isAltPressed &&
-              event.isControlPressed &&
-              event.logicalKey == LogicalKeyboardKey.keyC &&
-              micaSupported) {
+          if (event.runtimeType == RawKeyDownEvent && event.isAltPressed && event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyC && micaSupported) {
             if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
               box.put('micaEnabled', false);
               WindowHelper.changeWindowEffect(false);
