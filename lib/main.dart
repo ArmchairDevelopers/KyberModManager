@@ -13,7 +13,6 @@ import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/puppeteer_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
-import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
@@ -73,7 +72,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   void initState() {
-    Timer.run(() {
+    Timer.run(() async {
       ModService.watchDirectory();
       PuppeteerHelper.checkFiles();
       ModService.loadMods(context).then((value) {

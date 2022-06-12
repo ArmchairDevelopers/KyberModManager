@@ -27,6 +27,20 @@ class FrostyService {
     return r;
   }
 
+  static Future<bool> checkDirectory() async {
+    if (!box.containsKey('frostyPath')) {
+      return true;
+    }
+
+    Directory dir = Directory(box.get('frostyPath'));
+    File file = File('${dir.path}\\FrostyModManager.exe');
+    if (!dir.existsSync()) {
+      return false;
+    }
+
+    return file.existsSync();
+  }
+
   static Future<FrostyVersion> getFrostyVersion() async {
     List<FrostyVersion> hashes = await ApiService.versionHashes();
     var content = await File('${box.get('frostyPath')}\\FrostyModManager.exe').readAsBytes();
@@ -35,6 +49,10 @@ class FrostyService {
   }
 
   static Future<bool> isOutdated() async {
+    if (!box.containsKey('frostyPath')) {
+      return false;
+    }
+
     List<FrostyVersion> hashes = await ApiService.versionHashes();
     File file = File('${box.get('frostyPath')}\\FrostyModManager.exe');
     var content = await file.readAsBytes();

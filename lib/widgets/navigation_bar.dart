@@ -62,6 +62,7 @@ class _NavigationBarState extends State<NavigationBar> {
         return;
       }
     });
+
     if (!box.containsKey('setup')) {
       Timer.run(() => openDialog());
     } else if (!box.containsKey('nexusmods_login')) {
@@ -73,26 +74,34 @@ class _NavigationBarState extends State<NavigationBar> {
 
     RPCService.initialize();
     Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
-
-    AutoUpdater().updateAvailable().then((value) async {
-      if (value == null) {
-        return;
+    Timer.run(() async {
+      bool exists = await FrostyService.checkDirectory();
+      if (!exists) {
+        box.delete('setup');
+        NotificationService.showNotification(message: 'FrostyModManager not found!');
+        await openDialog();
       }
 
-      await showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
-    }).then((value) async {
-      bool isOutdated = await FrostyService.isOutdated();
-      if (isOutdated) {
-        if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
-          await Future.delayed(const Duration(seconds: 2));
-          return NotificationService.showNotification(message: 'Your FrostyModManager is outdated!', color: Colors.orange);
+      AutoUpdater().updateAvailable().then((value) async {
+        if (value == null) {
+          return;
         }
-        await showDialog(context: context, builder: (context) => OutdatedFrostyDialog());
-      } else {
-        if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
-          box.put('skipFrostyVersionCheck', false);
+
+        await showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
+      }).then((value) async {
+        bool isOutdated = await FrostyService.isOutdated();
+        if (isOutdated) {
+          if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
+            await Future.delayed(const Duration(seconds: 2));
+            return NotificationService.showNotification(message: 'Your FrostyModManager is outdated!', color: Colors.orange);
+          }
+          await showDialog(context: context, builder: (context) => OutdatedFrostyDialog());
+        } else {
+          if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
+            box.put('skipFrostyVersionCheck', false);
+          }
         }
-      }
+      });
     });
 
     super.initState();
@@ -104,7 +113,7 @@ class _NavigationBarState extends State<NavigationBar> {
       builder: (context) => const WalkThrough(),
     );
     if (!box.containsKey('setup')) {
-      openDialog();
+      return openDialog();
     }
   }
 

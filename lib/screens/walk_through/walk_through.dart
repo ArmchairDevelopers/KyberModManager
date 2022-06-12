@@ -294,7 +294,7 @@ class _WalkThroughState extends State<WalkThrough> {
       String? configPath = FrostyService.getFrostyConfigPath();
       var config;
       if (configPath != null && File(configPath).existsSync()) {
-        bool validConfig =  FrostyProfileService.checkConfig(configPath);
+        bool validConfig = FrostyProfileService.checkConfig(configPath);
         if (!validConfig) {
           await FrostyProfileService.loadBattlefront(configPath);
         }
@@ -350,7 +350,7 @@ class _WalkThroughState extends State<WalkThrough> {
         ModInstallerService.initialise();
         ModService.watchDirectory();
         Navigator.of(context).pop();
-        if (!widget.changeFrostyPath) {
+        if (!widget.changeFrostyPath && !box.containsKey('cookies')) {
           showDialog(context: context, builder: (context) => const NexusmodsLogin());
         }
       }
