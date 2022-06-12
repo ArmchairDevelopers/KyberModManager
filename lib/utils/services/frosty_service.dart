@@ -27,12 +27,19 @@ class FrostyService {
     return r;
   }
 
+  static Future<FrostyVersion> getFrostyVersion() async {
+    List<FrostyVersion> hashes = await ApiService.versionHashes();
+    var content = await File('${box.get('frostyPath')}\\FrostyModManager.exe').readAsBytes();
+    var digest = sha256.convert(content.toList()).toString();
+    return hashes.firstWhere((element) => element.hash == digest, orElse: () => const FrostyVersion(version: '', hash: ''));
+  }
+
   static Future<bool> isOutdated() async {
     List<FrostyVersion> hashes = await ApiService.versionHashes();
     File file = File('${box.get('frostyPath')}\\FrostyModManager.exe');
     var content = await file.readAsBytes();
     if (content.isEmpty) {
-      return true;
+      return false;
     }
 
     var digest = sha256.convert(content.toList()).toString();
@@ -41,7 +48,9 @@ class FrostyService {
       return false;
     }
 
-    return Version.parse(version.version.replaceAll('v', '')) < Version.parse('1.0.6-beta4');
+    return true;
+
+    return Version.parse(version.version.replaceAll('v', '')) == Version.parse('1.0.6-beta4');
   }
 
   static FrostyConfig getFrostyConfig([String? path]) {
