@@ -357,14 +357,14 @@ class _ServerHostState extends State<ServerHost> {
                     )
                   ],
                 ),
-                AutoSuggestBox.form(
+                AutoSuggestBox /*.form*/ (
                   controller: _profileController,
                   placeholder: translate('$prefix.forms.mod_profile.placeholder'),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty || !profiles.contains(value)) {
-                      return translate('$prefix.forms.mod_profile.no_profile_found');
-                    }
-                  },
+                  // validator: (String? value) {
+                  //   if (value == null || value.isEmpty || !profiles.contains(value)) {
+                  //     return translate('$prefix.forms.mod_profile.no_profile_found');
+                  //   }
+                  // },
                   onChanged: (String? value, TextChangedReason _) => value != null && value.isNotEmpty && _formKey.currentState!.validate(),
                   items: profiles,
                   onSelected: (text) {

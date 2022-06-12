@@ -279,11 +279,9 @@ packages:
   fluent_ui:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: b37b2d610b5327149b85179812728e50e44f53f2
-      url: "https://github.com/bdlukaa/fluent_ui.git"
-    source: git
+      name: fluent_ui
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "3.12.0"
   flutter:
     dependency: "direct main"
