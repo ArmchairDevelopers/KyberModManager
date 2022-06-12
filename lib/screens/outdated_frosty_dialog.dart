@@ -34,7 +34,19 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    if (index != 0) {
+      box.put('skipFrostyVersionCheck', false);
+    }
+    super.dispose();
+  }
+
   void initDownload() async {
+    if (index == 3) {
+      return Navigator.of(context).pop();
+    }
+
     setState(() => index = 1);
     String path = box.get('frostyPath');
     if (!Directory('$path/Backups').existsSync()) {
@@ -42,7 +54,7 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
     }
 
     Logger.root.info('Generating backup of FrostyModManager...');
-    await compute(_createZip, [path, installedVersion]);
+    await compute(_createZip, [path, installedVersion, box.get('frostyConfigPath', defaultValue: '')]);
     Logger.root.info('Generated backup.');
     Logger.root.info('Starting download...');
     setState(() => index = 2);
@@ -68,14 +80,25 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
           onPressed: index == 1
               ? null
               : () {
+                  if (index == 3) {
+                    return Navigator.of(context).pop();
+                  }
+                  if (index > 1) {
+                    PathHelper.cancelDownload();
+                  }
+
                   box.put('skipFrostyVersionCheck', true);
                   Navigator.of(context).pop();
                 },
           child: const Text('Cancel'),
         ),
         FilledButton(
-          onPressed: index == 1 ? null : () => initDownload(),
-          child: const Text('Update Frosty'),
+          onPressed: index != 0 && index != 3 ? null : () => initDownload(),
+          child: Text(index == 3
+              ? 'Finish'
+              : index == 0
+                  ? 'Update Frosty'
+                  : 'Updating...'),
         ),
       ],
       content: IndexedStack(
@@ -87,14 +110,17 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
             children: [
               Text.rich(
                 TextSpan(children: [
-                  const TextSpan(text: 'You currently have installed FrostyModManager version '),
-                  TextSpan(text: installedVersion?.version, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                  const TextSpan(text: '. The latest version is '),
-                  TextSpan(text: "${latestVersion?.version}.", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  const TextSpan(text: 'You currently have FrostyModManager version '),
+                  TextSpan(text: installedVersion?.version, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const TextSpan(text: ' installed. The latest version is '),
+                  TextSpan(text: "${latestVersion?.version}.", style: const TextStyle(fontWeight: FontWeight.bold)),
                 ]),
+                style: const TextStyle(fontSize: 16),
               ),
               const Text(
-                  'If you click on update, KMM will make a backup of your FrostyModManager installation and overwrite your current Frosty installation.'),
+                'If you click on update, KMM will make a backup of your FrostyModManager installation and overwrite your current Frosty installation.',
+                style: TextStyle(fontSize: 16),
+              ),
             ],
           ),
           Center(
@@ -179,6 +205,11 @@ void _createZip(List<dynamic> args) async {
     } else if (entity is Directory) {
       encoder.addDirectory(entity);
     }
+  }
+  String configPath = args[2];
+  if (configPath.isNotEmpty) {
+    File configFile = File(configPath);
+    encoder.addFile(configFile, configFile.uri.pathSegments.last);
   }
   encoder.close();
 }
