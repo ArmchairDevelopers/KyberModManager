@@ -118,7 +118,7 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
                 style: const TextStyle(fontSize: 16),
               ),
               const Text(
-                'If you click on update, KMM will make a backup of your FrostyModManager installation and overwrite your current Frosty installation.',
+                '\nIf you click on update, KMM will make a backup of your FrostyModManager installation and overwrite your current Frosty installation.\n\nThe backup will be saved in your FrostyModManager directory.',
                 style: TextStyle(fontSize: 16),
               ),
             ],
