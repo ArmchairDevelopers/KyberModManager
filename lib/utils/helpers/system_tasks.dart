@@ -54,16 +54,16 @@ class Task {
 
   Future<ProcessResult> kill() {
     String command = _isWindows ? "taskkill /PID $pid /TF" : "kill -s 9 $pid";
-    return run(command, []);
+    return runExecutableArguments(command, []);
   }
 
   Future<ProcessResult> killLikes() {
     String command = _isWindows ? "TASKKILL /F /IM $pname /T" : "pkill -9 $pname";
-    return run(command, []);
+    return runExecutableArguments(command, []);
   }
 
   Future<ProcessResult> start() {
-    return run(pname.replaceAll(RegExp(r"\.exe$"), ""), []);
+    return runExecutableArguments(pname.replaceAll(RegExp(r"\.exe$"), ""), []);
   }
 
   Future<void> reStart() async {
