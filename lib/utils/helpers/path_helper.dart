@@ -29,15 +29,15 @@ class PathHelper {
     _cancelToken = CancelToken();
     await Dio().download(
       gitHubAsset.browser_download_url,
-      path.path + '.zip',
+      '${path.path}.zip',
       cancelToken: _cancelToken,
       onReceiveProgress: (received, total) => onProgress(received, total),
     );
     await Future.delayed(const Duration(seconds: 1));
-    final inputStream = InputFileStream(path.path + '.zip');
+    final inputStream = InputFileStream('${path.path}.zip');
     final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
     for (var file in archive.files) {
-      String filepath = path.path + '/' + file.name;
+      String filepath = '${path.path}/${file.name}';
       if (!file.isFile) {
         continue;
       }
