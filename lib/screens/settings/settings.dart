@@ -8,6 +8,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/screens/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/settings/platform_selector.dart';
 import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/walk_through/walk_through.dart';
@@ -17,6 +18,7 @@ import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
+import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
@@ -82,6 +84,21 @@ class _SettingsState extends State<Settings> {
                 text: Text(translate('$prefix.check_for_updates.title')),
               ),
             ),
+            const SizedBox(width: 10),
+            Button(
+              onPressed: () async {
+                var outdated = await FrostyService.isOutdated();
+                if (!outdated) {
+                  NotificationService.showNotification(message: "You already have the latest version of Frosty Mod Manager installed.");
+                  return;
+                }
+                showDialog(context: context, builder: (c) => OutdatedFrostyDialog());
+              },
+              child: const ButtonText(
+                icon: Icon(FluentIcons.refresh),
+                text: Text('Update FMM'),
+              ),
+            ),
           ],
         ),
       ),
@@ -89,6 +106,7 @@ class _SettingsState extends State<Settings> {
         padding: const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
         children: [
           Card(
+            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.language.title')),
               subtitle: Text(translate('$prefix.language.subtitle')),
@@ -129,6 +147,7 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
+            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.nexus_mods.title')),
               subtitle: Text(translate('$prefix.nexus_mods.subtitle')),
@@ -157,6 +176,7 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
+            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -181,6 +201,7 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
+            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -210,6 +231,7 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
+            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -268,6 +290,7 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
+            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.change_frosty_directory.title')),
               subtitle: Text(translate('$prefix.change_frosty_directory.subtitle')),
@@ -288,6 +311,7 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
+            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.reset.title')),
               subtitle: Text(translate('$prefix.reset.subtitle')),
