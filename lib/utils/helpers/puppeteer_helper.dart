@@ -33,12 +33,14 @@ class PuppeteerHelper {
       executablePath: kDebugMode ? null : _chromiumPath,
       defaultViewport: null,
       args: [
-        '--no-sandbox',
         '--ignore-certifcate-errors',
         '--ignore-certifcate-errors-spki-list',
         '--lang=en-EN,en',
         '--start-maximized',
+        '--suppress-message-center-popups',
+        '--app=https://nexusmods.com',
       ],
+      ignoreDefaultArgs: ['--enable-automation'],
       headless: headless,
       plugins: [
         StealthPlugin(),
