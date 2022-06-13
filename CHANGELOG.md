@@ -1,4 +1,8 @@
-## [1.0.7] - [-/-/-]
+## [1.0.8] - [-/-/-]
+
+- Added the faction selector on the host page.
+
+## [1.0.7] - [13/06/22]
 
 - If the Kyber injection fails, KMM will show an error message and close Battlefront II.
 - Added warnings for using cosmetic mods with large mod packs.
