@@ -411,7 +411,7 @@ packages:
       name: hive
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.2"
   hive_flutter:
     dependency: "direct main"
     description:
@@ -892,7 +892,7 @@ packages:
       name: system_tray
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.1"
   term_glyph:
     dependency: transitive
     description:
