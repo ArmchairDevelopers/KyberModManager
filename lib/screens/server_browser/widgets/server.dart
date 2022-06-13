@@ -11,6 +11,8 @@ import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/mode.dart';
 
 material.DataRow Server(BuildContext context, KyberServer server) {
+  final double width = MediaQuery.of(context).size.width;
+  final bool showColumn = !(width > 700 && width < 1270);
   final Mode mode = modes.where((element) => element.mode == server.mode).first;
   final dynamic map = maps.singleWhere((element) => element['map'] == server.map);
 
@@ -25,7 +27,7 @@ material.DataRow Server(BuildContext context, KyberServer server) {
               children: [
                 Container(
                   constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.22,
+                    maxWidth: width * (showColumn ? 0.22 : 0.3),
                   ),
                   child: Text(
                     server.name.trimRight(),
@@ -41,9 +43,12 @@ material.DataRow Server(BuildContext context, KyberServer server) {
               ],
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.22,
+              width: MediaQuery.of(context).size.width * (showColumn ? 0.22 : 0.3),
               height: 20,
-              child: AutoSizeText('${mode.name} - ${map['name']} - ${server.host.isNotEmpty ? server.host : 'Unknown'}'),
+              child: AutoSizeText(
+                '${mode.name} - ${map['name']} - ${server.host.isNotEmpty ? server.host : 'Unknown'}',
+                minFontSize: 10,
+              ),
             )
           ],
         ),
@@ -54,29 +59,33 @@ material.DataRow Server(BuildContext context, KyberServer server) {
           textAlign: TextAlign.center,
         ),
       ),
-      material.DataCell(SizedBox(
-        width: MediaQuery.of(context).size.width * .07,
-        child: AutoSizeText(
-          Jiffy.unixFromMillisecondsSinceEpoch(server.startedAt).fromNow(),
-          maxLines: 1,
-        ),
-      )),
+      if (showColumn)
+        material.DataCell(SizedBox(
+          width: MediaQuery.of(context).size.width * .07,
+          child: AutoSizeText(
+            Jiffy.unixFromMillisecondsSinceEpoch(server.startedAt).fromNow(),
+            maxLines: 1,
+          ),
+        )),
       material.DataCell(
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SvgPicture.network(server.proxy.flag, width: 20),
-            const SizedBox(width: 10),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * .065,
-              height: 20,
+        Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          SvgPicture.network(server.proxy.flag, width: 20),
+          const SizedBox(
+            width: 5,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * (showColumn ? .095 : 0.12),
+            height: 20,
+            child: Align(
+              alignment: Alignment.centerLeft,
               child: AutoSizeText(
                 server.proxy.name,
+                minFontSize: 9,
                 maxLines: 1,
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ]),
       ),
       material.DataCell(
         Row(

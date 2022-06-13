@@ -94,6 +94,7 @@ class _ServerBrowserState extends State<ServerBrowser> {
   }
 
   Widget buildTable() {
+    final width = MediaQuery.of(context).size.width;
     final color = FluentTheme.of(context).typography.body!.color!;
     return material.DataTable(
       dataRowHeight: 80,
@@ -118,16 +119,17 @@ class _ServerBrowserState extends State<ServerBrowser> {
             ),
           ),
         ),
-        material.DataColumn(
-          label: SizedBox(
-            child: Text(
-              translate('$prefix.table.started'),
-              style: TextStyle(
-                color: color.withOpacity(.5),
+        if (!(width > 700 && width < 1270))
+          material.DataColumn(
+            label: SizedBox(
+              child: Text(
+                translate('$prefix.table.started'),
+                style: TextStyle(
+                  color: color.withOpacity(.5),
+                ),
               ),
             ),
           ),
-        ),
         material.DataColumn(
           label: SizedBox(
             child: Text(
