@@ -13,6 +13,7 @@ import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
 import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
+import 'package:kyber_mod_manager/screens/mod_browser.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
 import 'package:kyber_mod_manager/screens/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
@@ -124,7 +125,7 @@ class _NavigationBarState extends State<NavigationBar> {
     return BlocConsumer<WidgetCubit, dynamic>(listener: (context, state) {
       bool isFake = state.runtimeType != int && state.containsKey(state.keys.first);
       setState(() {
-        index = !isFake ? state : 9;
+        index = !isFake ? state : 10;
         fakeIndex = !isFake ? state : state.keys.toList().first;
       });
     }, builder: (context, widget) {
@@ -204,16 +205,22 @@ class _NavigationBarState extends State<NavigationBar> {
                 title: Text(translate('$prefix.items.mod_profiles')),
               ),
               PaneItem(
+                icon: const Icon(FluentIcons.save_all),
+                title: Text(translate('$prefix.items.saved_profiles')),
+              ),
+              PaneItemSeparator(),
+              PaneItemHeader(header: const Text('Mods')),
+              PaneItem(
                 icon: const Icon(FluentIcons.custom_list),
                 title: Text(translate('$prefix.items.cosmetic_mods')),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.installation),
-                title: Text(translate('$prefix.items.installed_mods')),
+                icon: const Icon(FluentIcons.view_dashboard),
+                title: const Text('Mod Browser'),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.save_all),
-                title: Text(translate('$prefix.items.saved_profiles')),
+                icon: const Icon(FluentIcons.installation),
+                title: Text(translate('$prefix.items.installed_mods')),
               ),
               PaneItemSeparator(),
               PaneItemHeader(header: const Text('Battlefront 2')),
@@ -269,9 +276,10 @@ class _NavigationBarState extends State<NavigationBar> {
                 const ServerBrowser(),
                 const ServerHost(),
                 const ModProfiles(),
-                const CosmeticMods(),
-                const InstalledMods(),
                 const SavedProfiles(),
+                const CosmeticMods(),
+                const ModBrowser(),
+                const InstalledMods(),
                 const RunBattlefront(),
                 const feedback.Feedback(),
                 const Settings(),

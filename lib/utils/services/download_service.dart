@@ -50,8 +50,9 @@ class DownloadService {
       _progressController?.close();
       _progressSubscription?.cancel();
     }
-    _browser.close().then(
-        (value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
+    _browser
+        .close()
+        .then((value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
   }
 
   Future<void> startDownload({
@@ -80,7 +81,7 @@ class DownloadService {
       onFileInfo(info);
       String filename = await _download('${info.fileUrl}?tab=files&file_id=${info.fileId}', info, onClose, onWebsiteOpened);
       onExtracting();
-      await compute(_unpackFile, [_downloadFolder, filename]);
+      await compute(DownloadService.unpackFile, [_downloadFolder, filename]);
       await ModService.loadMods();
     });
     _done = true;
@@ -148,30 +149,30 @@ class DownloadService {
     _timer?.cancel();
     return filename;
   }
-}
 
-Future<void> _unpackFile(List<dynamic> args) async {
-  String downloadFolder = args[0];
-  String filename = args[1];
+  static Future<void> unpackFile(List<dynamic> args) async {
+    String downloadFolder = args[0];
+    String filename = args[1];
 
-  if (!filename.endsWith('.rar')) {
-    final inputStream = InputFileStream('$downloadFolder$filename');
-    final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
-    for (var archiveFile in archive.files) {
-      String path = '$downloadFolder${archiveFile.name}';
-      final outputStream = OutputFileStream(path);
-      archiveFile.writeContent(outputStream);
-      outputStream.close();
+    if (!filename.endsWith('.rar')) {
+      final inputStream = InputFileStream('$downloadFolder$filename');
+      final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
+      for (var archiveFile in archive.files) {
+        String path = '$downloadFolder${archiveFile.name}';
+        final outputStream = OutputFileStream(path);
+        archiveFile.writeContent(outputStream);
+        outputStream.close();
+      }
+      archive.clear();
+    } else {
+      await Future.delayed(const Duration(seconds: 1));
+      await UnzipHelper.unrar(File('$downloadFolder$filename'), Directory(downloadFolder)).catchError((error) {
+        NotificationService.showNotification(message: error.toString(), color: Colors.red);
+        Logger.root.severe('Could not unrar $filename. $error');
+      });
     }
-    archive.clear();
-  } else {
-    await Future.delayed(const Duration(seconds: 1));
-    await UnzipHelper.unrar(File('$downloadFolder$filename'), Directory(downloadFolder)).catchError((error) {
-      NotificationService.showNotification(message: error.toString(), color: Colors.red);
-      Logger.root.severe('Could not unrar $filename. $error');
-    });
+    await File('$downloadFolder\\$filename').delete();
   }
-  await File('$downloadFolder\\$filename').delete();
 }
 
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
