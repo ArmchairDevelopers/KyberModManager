@@ -99,7 +99,7 @@ class _EditProfileState extends State<EditProfile> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height - 110,
+            height: MediaQuery.of(context).size.height - 80,
             child: Form(
               key: _formKey,
               child: Column(
