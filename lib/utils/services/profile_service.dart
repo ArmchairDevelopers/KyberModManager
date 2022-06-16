@@ -49,7 +49,7 @@ class ProfileService {
     SavedProfile profile = profiles.firstWhere((element) => equalModlist(element.mods, convertedMods));
     profile.lastUsed = DateTime.now();
     _editProfile(profile);
-    await copyProfileData(Directory(profile.path), dir, onProgress);
+    await copyProfileData(Directory(profile.path), dir, onProgress, box.get('useSymlinks', defaultValue: false));
     config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
         profile.mods.where((element) => element.filename.isNotEmpty).map((element) => '${element.filename}:True').join('|');
     await FrostyService.saveFrostyConfig(config);
@@ -137,9 +137,19 @@ class ProfileService {
     Isolate.exit(s[1], size);
   }
 
-  static Future<void> copyProfileData(Directory from, Directory to, [Function? onProgress]) async {
+  static Future<void> copyProfileData(Directory from, Directory to, [Function? onProgress, bool symlink = false]) async {
     List<File> files = await _getAllFiles(from);
+    String bf2Path = OriginHelper.getBattlefrontPath();
+    List<File> bf2BaseFiles = await _getAllFiles(Directory('$bf2Path\\Patch'));
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.normal);
+    if (symlink) {
+      await to.delete(recursive: true);
+      await to.create();
+      for (File file in bf2BaseFiles) {
+        await Link('${to.path}/${file.path.replaceAll(bf2Path, '')}').create(file.path, recursive: true);
+      }
+    }
+
     for (File file in files) {
       if (onProgress != null) {
         onProgress(files.indexOf(file), files.length - 1);
@@ -150,7 +160,18 @@ class ProfileService {
       if (!dir.existsSync()) {
         dir.createSync(recursive: true);
       }
-      await file.copy('${to.path}/${file.path.substring(from.path.length)}');
+      String path = '${to.path}/${file.path.substring(from.path.length)}';
+      if (!symlink) {
+        await file.copy(path);
+      } else {
+        if (File(path).existsSync()) {
+          await File(path).delete();
+        }
+        await Link(path).create(file.path);
+      }
+    }
+    if (symlink) {
+      await Link('${to.path}\\Data\\Win32').create('$bf2Path\\Data\\Win32');
     }
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
   }
