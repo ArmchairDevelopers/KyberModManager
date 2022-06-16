@@ -19,9 +19,10 @@ class DllInjector {
       Dio().get<String>('$KYBER_API_BASE_URL/version/launcher').then((value) => Version.parse(value.data!.replaceAll('\n', '')));
 
   static Future downloadDll() async {
-    // var version = await getLatestKyberVersion();
-    // Logger.root.info('Downloading Kyber V$version');
-    // box.put('kyberVersion', version.toString());
+    if (DllInjector.isInjected()) {
+      return;
+    }
+
     await Dio().download(KYBER_DLL_LINK, _file.path).catchError((e) {
       Logger.root.severe('Error while downloading Kyber.dll: $e');
     });
