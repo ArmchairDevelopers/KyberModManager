@@ -9,7 +9,8 @@ import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/outdated_frosty_dialog.dart';
-import 'package:kyber_mod_manager/screens/settings/platform_selector.dart';
+import 'package:kyber_mod_manager/screens/settings/widgets/platform_selector.dart';
+import 'package:kyber_mod_manager/screens/settings/widgets/symlinks_dialog.dart';
 import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/walk_through/walk_through.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
@@ -224,6 +225,33 @@ class _SettingsState extends State<Settings> {
                 checked: box.get('saveProfiles', defaultValue: true),
                 onChanged: (enabled) async {
                   await box.put('saveProfiles', enabled);
+                  setState(() => null);
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: Row(
+                children: const [
+                  Text("Faster Saved Profile Generation"),
+                ],
+              ),
+              subtitle: const Text(
+                "This setting speeds up the loading process of saved profiles. In order to run this setting, you must always run KyberModManager as admin.",
+              ),
+              leading: const Icon(FluentIcons.file_symlink),
+              trailing: ToggleSwitch(
+                checked: box.get('useSymlinks', defaultValue: true),
+                onChanged: (enabled) async {
+                  setState(() => null);
+                  if (enabled) {
+                    enabled = (await showDialog(context: context, builder: (_) => SymlinksDialog())) ?? false;
+                  }
+
+                  await box.put('useSymlinks', enabled);
                   setState(() => null);
                 },
               ),
