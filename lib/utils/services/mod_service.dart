@@ -112,7 +112,7 @@ class ModService {
     return Mod.fromString('');
   }
 
-  static void deleteMod(Mod mod) {
+  static void deleteMod(dynamic mod) {
     Directory dir = Directory(p.join(box.get('frostyPath'), 'Mods', 'starwarsbattlefrontii'));
     File file = File(p.join(dir.path, mod.filename));
     if (file.existsSync()) {
@@ -154,7 +154,8 @@ class ModService {
   static bool isInstalled(String name) {
     String modName = name.substring(0, name.lastIndexOf(' ('));
     String version = name.substring(name.lastIndexOf('(') + 1, name.length - 1);
-    return mods.any((mod) => mod.name == modName && mod.version == version) || collections.any((element) => element.title == modName && element.version == version);
+    return mods.any((mod) => mod.name == modName && mod.version == version) ||
+        collections.any((element) => element.title == modName && element.version == version);
   }
 
   static Map<String, List<dynamic>> getModsByCategory([bool kyberCategories = false]) {
