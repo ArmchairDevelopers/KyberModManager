@@ -10,7 +10,6 @@ import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/settings/widgets/platform_selector.dart';
-import 'package:kyber_mod_manager/screens/settings/widgets/symlinks_dialog.dart';
 import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/walk_through/walk_through.dart';
 import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
@@ -181,88 +180,6 @@ class _SettingsState extends State<Settings> {
             child: ListTile(
               title: Row(
                 children: [
-                  Text(translate('$prefix.discord_activity.title')),
-                ],
-              ),
-              subtitle: Text(translate('$prefix.discord_activity.subtitle')),
-              leading: const Icon(FluentIcons.activity_feed),
-              trailing: ToggleSwitch(
-                checked: box.get('discordRPC', defaultValue: true),
-                onChanged: (enabled) async {
-                  await box.put('discordRPC', enabled);
-                  if (enabled) {
-                    RPCService.start();
-                  } else {
-                    RPCService.dispose();
-                  }
-                  setState(() => null);
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 0,
-            child: ListTile(
-              title: Row(
-                children: [
-                  Text(translate('$prefix.saved_profiles.title')),
-                  Tooltip(
-                    style: const TooltipThemeData(
-                      padding: EdgeInsets.all(8),
-                    ),
-                    message: translate('saved_profiles.tooltip'),
-                    child: const Icon(
-                      FluentIcons.status_circle_question_mark,
-                      size: 22,
-                    ),
-                  )
-                ],
-              ),
-              subtitle: Text(translate('$prefix.saved_profiles.subtitle')),
-              leading: const Icon(FluentIcons.save),
-              trailing: ToggleSwitch(
-                checked: box.get('saveProfiles', defaultValue: true),
-                onChanged: (enabled) async {
-                  await box.put('saveProfiles', enabled);
-                  setState(() => null);
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 0,
-            child: ListTile(
-              title: Row(
-                children: const [
-                  Text("Faster Saved Profile Generation"),
-                ],
-              ),
-              subtitle: const Text(
-                "This setting speeds up the loading process of saved profiles. In order to run this setting, you must always run KyberModManager as admin.",
-              ),
-              leading: const Icon(FluentIcons.file_symlink),
-              trailing: ToggleSwitch(
-                checked: box.get('useSymlinks', defaultValue: true),
-                onChanged: (enabled) async {
-                  setState(() => null);
-                  if (enabled) {
-                    enabled = (await showDialog(context: context, builder: (_) => SymlinksDialog())) ?? false;
-                  }
-
-                  await box.put('useSymlinks', enabled);
-                  setState(() => null);
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 0,
-            child: ListTile(
-              title: Row(
-                children: [
                   Text(translate('$prefix.frosty_profile.title')),
                   Tooltip(
                     style: const TooltipThemeData(
@@ -313,6 +230,61 @@ class _SettingsState extends State<Settings> {
                         setState(() => disabled = false);
                       }
                     : null,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: Row(
+                children: [
+                  Text(translate('$prefix.discord_activity.title')),
+                ],
+              ),
+              subtitle: Text(translate('$prefix.discord_activity.subtitle')),
+              leading: const Icon(FluentIcons.activity_feed),
+              trailing: ToggleSwitch(
+                checked: box.get('discordRPC', defaultValue: true),
+                onChanged: (enabled) async {
+                  await box.put('discordRPC', enabled);
+                  if (enabled) {
+                    RPCService.start();
+                  } else {
+                    RPCService.dispose();
+                  }
+                  setState(() => null);
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            elevation: 0,
+            child: ListTile(
+              title: Row(
+                children: [
+                  Text(translate('$prefix.saved_profiles.title')),
+                  Tooltip(
+                    style: const TooltipThemeData(
+                      padding: EdgeInsets.all(8),
+                    ),
+                    message: translate('saved_profiles.tooltip'),
+                    child: const Icon(
+                      FluentIcons.status_circle_question_mark,
+                      size: 22,
+                    ),
+                  )
+                ],
+              ),
+              subtitle: Text(translate('$prefix.saved_profiles.subtitle')),
+              leading: const Icon(FluentIcons.save),
+              trailing: ToggleSwitch(
+                checked: box.get('saveProfiles', defaultValue: true),
+                onChanged: (enabled) async {
+                  await box.put('saveProfiles', enabled);
+                  setState(() => null);
+                },
               ),
             ),
           ),
