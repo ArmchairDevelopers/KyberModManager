@@ -141,6 +141,15 @@ class ProfileService {
     List<File> files = await _getAllFiles(from);
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.normal);
 
+    File file = files.firstWhere((element) => element.path.endsWith('layout.toc'));
+    File backupFile = File(file.path.replaceAll('layout.toc', 'layout_backup.toc'));
+    if (!backupFile.existsSync()) {
+      await file.copy(backupFile.path);
+    } else {
+      files.removeWhere((element) => element.path.endsWith('layout_backup.toc'));
+      await backupFile.copy(file.path);
+    }
+
     for (File file in files) {
       if (onProgress != null) {
         onProgress(files.indexOf(file), files.length - 1);
@@ -162,8 +171,9 @@ class ProfileService {
             await File(path).delete();
           }
         }
+
         try {
-          await Link(path).create(file.path);
+          await Link(path).create(file.path, recursive: true);
         } catch (e) {
           await file.copy(path);
           symlink = false;
