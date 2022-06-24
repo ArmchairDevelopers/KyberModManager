@@ -13,7 +13,7 @@ class ModInstallerService {
   static final _allowedExtensions = ['zip', 'rar', '7z', 'fbmod'];
   static Directory? _installDir;
 
-  static void initialise() {
+  static void initialize() {
     if (!box.containsKey('frostyPath')) {
       return;
     }

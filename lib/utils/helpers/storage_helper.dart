@@ -17,7 +17,7 @@ class StorageHelper {
     'beta': false,
   };
 
-  static Future<void> initialiseHive() async {
+  static Future<void> initializeHive() async {
     await Hive.initFlutter(applicationDocumentsDirectory);
     Hive.registerAdapter(ModProfileAdapter(), override: true);
     Hive.registerAdapter(ModAdapter(), override: true);

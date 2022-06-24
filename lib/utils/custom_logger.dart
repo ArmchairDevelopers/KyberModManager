@@ -8,7 +8,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 class CustomLogger {
   static late File _logFile;
 
-  static void initialise() {
+  static void initialize() {
     _logFile = File('$applicationDocumentsDirectory/log.txt');
     _createLogFile();
     Logger.root.level = Level.INFO;

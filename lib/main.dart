@@ -45,9 +45,9 @@ void main() async {
       },
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
-    CustomLogger.initialise();
-    await StorageHelper.initialiseHive();
-    await WindowHelper.initialiseWindow();
+    CustomLogger.initialize();
+    await StorageHelper.initializeHive();
+    await WindowHelper.initializeWindow();
     await SystemTheme.accentColor.load();
     var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'en',

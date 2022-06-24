@@ -17,7 +17,7 @@ class WindowHelper {
     }
   }
 
-  static Future<void> initialiseWindow() async {
+  static Future<void> initializeWindow() async {
     bool micaEnabled = false;
     await Window.initialize();
     if (micaSupported && (!box.containsKey('micaEnabled') || box.get('micaEnabled'))) {
