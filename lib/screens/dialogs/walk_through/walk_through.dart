@@ -6,9 +6,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/screens/dialogs/walk_through/widgets/frosty_selector.dart';
+import 'package:kyber_mod_manager/screens/dialogs/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/screens/errors/battlefront_not_installed.dart';
-import 'package:kyber_mod_manager/screens/walk_through/widgets/frosty_selector.dart';
-import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
@@ -347,7 +347,7 @@ class _WalkThroughState extends State<WalkThrough> {
       } else {
         await box.put('setup', true);
         await ModService.loadMods(context);
-        ModInstallerService.initialise();
+        ModInstallerService.initialize();
         ModService.watchDirectory();
         Navigator.of(context).pop();
         if (!widget.changeFrostyPath && !box.containsKey('cookies')) {

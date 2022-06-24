@@ -4,10 +4,12 @@ import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
+import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:kyber_mod_manager/utils/types/saved_profile.dart';
@@ -107,14 +109,18 @@ class ProfileService {
   }
 
   static void generateFiles() {
-    String path = OriginHelper.getBattlefrontPath();
-    if (path.isEmpty) {
-      return;
-    }
+    try {
+      String path = OriginHelper.getBattlefrontPath();
+      if (path.isEmpty) {
+        return;
+      }
 
-    if (!_profileFile.existsSync()) {
-      _profileFile.createSync(recursive: true);
-      _profileFile.writeAsStringSync('[]');
+      if (!_profileFile.existsSync()) {
+        _profileFile.createSync(recursive: true);
+        _profileFile.writeAsStringSync('[]');
+      }
+    } catch (e) {
+      NavigatorService.pushErrorPage(const MissingPermissions());
     }
   }
 
@@ -141,13 +147,15 @@ class ProfileService {
     List<File> files = await _getAllFiles(from);
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.normal);
 
-    File file = files.firstWhere((element) => element.path.endsWith('layout.toc'));
-    File backupFile = File(file.path.replaceAll('layout.toc', 'layout_backup.toc'));
-    if (!backupFile.existsSync()) {
-      await file.copy(backupFile.path);
-    } else {
-      files.removeWhere((element) => element.path.endsWith('layout_backup.toc'));
-      await backupFile.copy(file.path);
+    if (to.path.contains('ModData\\KyberModManager') && files.where((element) => element.path.endsWith('layout.toc')).isNotEmpty) {
+      File file = files.firstWhere((element) => element.path.endsWith('layout.toc'));
+      File backupFile = File(file.path.replaceAll('layout.toc', 'layout_backup.toc'));
+      if (!backupFile.existsSync()) {
+        await file.copy(backupFile.path);
+      } else {
+        files.removeWhere((element) => element.path.endsWith('layout_backup.toc'));
+        await backupFile.copy(file.path);
+      }
     }
 
     for (File file in files) {

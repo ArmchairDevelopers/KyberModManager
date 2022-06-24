@@ -40,8 +40,8 @@ class _PlatformSelectorState extends State<PlatformSelector> {
           isExpanded: true,
           items: ['Origin', 'EA Desktop', 'Epic Games'].map((e) {
             return ComboboxItem(
-              child: Text(e),
               value: e.toLowerCase(),
+              child: Text(e),
             );
           }).toList(),
         ),

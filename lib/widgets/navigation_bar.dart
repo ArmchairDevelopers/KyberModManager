@@ -10,22 +10,24 @@ import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
+import 'package:kyber_mod_manager/screens/dialogs/battlefront_options_dialog.dart';
+import 'package:kyber_mod_manager/screens/dialogs/outdated_frosty_dialog.dart';
+import 'package:kyber_mod_manager/screens/dialogs/update_dialog/update_dialog.dart';
+import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart';
+import 'package:kyber_mod_manager/screens/dialogs/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
 import 'package:kyber_mod_manager/screens/mod_browser.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
-import 'package:kyber_mod_manager/screens/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
 import 'package:kyber_mod_manager/screens/saved_profiles.dart';
 import 'package:kyber_mod_manager/screens/server_browser/server_browser.dart';
 import 'package:kyber_mod_manager/screens/server_host/server_host.dart';
 import 'package:kyber_mod_manager/screens/settings/settings.dart';
-import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
-import 'package:kyber_mod_manager/screens/walk_through/walk_through.dart';
-import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
+import 'package:kyber_mod_manager/utils/battlefront_options.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
@@ -56,55 +58,50 @@ class _NavigationBarState extends State<NavigationBar> {
   void initState() {
     Jiffy.locale(supportedLocales.contains(AppLocale().getLocale().languageCode) ? AppLocale().getLocale().languageCode : 'en');
     Timer.run(() async {
-      try {
-        ProfileService.generateFiles();
-      } catch (e) {
-        NavigatorService.pushErrorPage(const MissingPermissions());
-        return;
+      ProfileService.generateFiles();
+      if (!box.containsKey('setup')) {
+        await openDialog();
+      } else if (!box.containsKey('nexusmods_login')) {
+        await showDialog(context: context, builder: (_) => const NexusmodsLogin());
       }
-    });
 
-    if (!box.containsKey('setup')) {
-      Timer.run(() => openDialog());
-    } else if (!box.containsKey('nexusmods_login')) {
-      Timer.run(() => showDialog(context: context, builder: (context) => const NexusmodsLogin()));
-    } else {
-      ModInstallerService.initialise();
+      ModInstallerService.initialize();
       DllInjector.downloadDll();
-    }
+      RPCService.initialize();
+      Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
 
-    RPCService.initialize();
-    Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
-    Timer.run(() async {
       bool exists = await FrostyService.checkDirectory();
       if (!exists) {
-        box.delete('setup');
-        NotificationService.showNotification(message: 'FrostyModManager not found!');
+        await box.delete('setup');
+        NotificationService.showNotification(message: 'FrostyModManager not found!', color: Colors.red);
         await openDialog();
       }
 
-      AutoUpdater().updateAvailable().then((value) async {
-        if (value == null) {
-          return;
-        }
+      VersionInfo? versionInfo = await AutoUpdater().updateAvailable();
+      if (versionInfo != null) {
+        await showDialog(context: context, builder: (_) => UpdateDialog(versionInfo: versionInfo));
+      }
 
-        await showDialog(context: context, builder: (context) => UpdateDialog(versionInfo: value));
-      }).then((value) async {
-        bool isOutdated = await FrostyService.isOutdated();
-        if (isOutdated) {
-          if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
-            await Future.delayed(const Duration(seconds: 2));
-            return NotificationService.showNotification(message: 'Your FrostyModManager is outdated!', color: Colors.orange);
-          }
-          await showDialog(context: context, builder: (context) => OutdatedFrostyDialog());
-        } else {
-          if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
-            box.put('skipFrostyVersionCheck', false);
-          }
+      bool outdatedFrosty = await FrostyService.isOutdated();
+      if (outdatedFrosty) {
+        if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
+          await Future.delayed(const Duration(seconds: 2));
+          return NotificationService.showNotification(message: 'Your FrostyModManager is outdated!', color: Colors.orange);
         }
-      });
+        await showDialog(context: context, builder: (context) => OutdatedFrostyDialog());
+      } else {
+        if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
+          box.put('skipFrostyVersionCheck', false);
+        }
+      }
+
+      if (DllInjector.getBattlefrontPID() == -1) {
+        var options = await BattlefrontOptions.getOptions();
+        if (options != null && (options.fullscreenEnabled || options.enableDx12)) {
+          await showDialog(context: context, builder: (_) => const BattlefrontOptionsDialog());
+        }
+      }
     });
-
     super.initState();
   }
 
@@ -132,7 +129,11 @@ class _NavigationBarState extends State<NavigationBar> {
       return RawKeyboardListener(
         autofocus: true,
         onKey: (event) {
-          if (event.runtimeType == RawKeyDownEvent && event.isAltPressed && event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyC && micaSupported) {
+          if (event.runtimeType == RawKeyDownEvent &&
+              event.isAltPressed &&
+              event.isControlPressed &&
+              event.logicalKey == LogicalKeyboardKey.keyC &&
+              micaSupported) {
             if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
               box.put('micaEnabled', false);
               WindowHelper.changeWindowEffect(false);

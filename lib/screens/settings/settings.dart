@@ -8,11 +8,11 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
-import 'package:kyber_mod_manager/screens/outdated_frosty_dialog.dart';
+import 'package:kyber_mod_manager/screens/dialogs/outdated_frosty_dialog.dart';
+import 'package:kyber_mod_manager/screens/dialogs/update_dialog/update_dialog.dart';
+import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart';
+import 'package:kyber_mod_manager/screens/dialogs/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/screens/settings/widgets/platform_selector.dart';
-import 'package:kyber_mod_manager/screens/update_dialog/update_dialog.dart';
-import 'package:kyber_mod_manager/screens/walk_through/walk_through.dart';
-import 'package:kyber_mod_manager/screens/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
@@ -319,7 +319,7 @@ class _SettingsState extends State<Settings> {
               trailing: CustomFilledButton(
                 color: Colors.red,
                 onPressed: () => box.deleteFromDisk().then((value) async {
-                  await StorageHelper.initialiseHive();
+                  await StorageHelper.initializeHive();
                   var s = Directory('$applicationDocumentsDirectory\\puppeteer');
                   if (s.existsSync()) {
                     s.deleteSync(recursive: true);
