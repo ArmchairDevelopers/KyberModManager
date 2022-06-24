@@ -24,7 +24,7 @@ class _CosmeticModsState extends State<CosmeticMods> {
 
   @override
   void initState() {
-    activeMods = List<Mod>.from(box.get('cosmetics'));
+    activeMods = List<dynamic>.from(box.get('cosmetics'));
     super.initState();
   }
 
