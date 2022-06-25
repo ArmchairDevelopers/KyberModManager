@@ -18,9 +18,9 @@ class UnorderedList extends StatelessWidget {
     }
 
     return Column(
-      children: widgetList,
       mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.start,
       crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.start,
+      children: widgetList,
     );
   }
 }

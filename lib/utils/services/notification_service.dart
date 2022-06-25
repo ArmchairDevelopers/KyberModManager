@@ -17,6 +17,7 @@ class NotificationService {
           child: Text(
             message,
             style: TextStyle(color: color?.basedOnLuminance()),
+            textAlign: TextAlign.center,
           ),
         );
       },
