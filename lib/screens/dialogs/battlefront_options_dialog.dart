@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/battlefront_options.dart';
 
 class BattlefrontOptionsDialog extends StatefulWidget {
@@ -26,6 +27,7 @@ class _BattlefrontOptionsDialogState extends State<BattlefrontOptionsDialog> {
       actions: [
         Button(
           onPressed: () {
+            box.put('skipOptionsCheck', true);
             Navigator.of(context).pop();
           },
           child: const Text('Skip'),

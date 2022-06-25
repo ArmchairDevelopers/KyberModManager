@@ -15,7 +15,6 @@ import 'package:kyber_mod_manager/screens/dialogs/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart';
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/widgets/nexusmods_login.dart';
-import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
 import 'package:kyber_mod_manager/screens/mod_browser.dart';
@@ -32,7 +31,6 @@ import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
-import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
@@ -95,7 +93,7 @@ class _NavigationBarState extends State<NavigationBar> {
         }
       }
 
-      if (DllInjector.getBattlefrontPID() == -1) {
+      if (DllInjector.getBattlefrontPID() == -1 && !box.containsKey('skipOptionsCheck')) {
         var options = await BattlefrontOptions.getOptions();
         if (options != null && (options.fullscreenEnabled || options.enableDx12)) {
           await showDialog(context: context, builder: (_) => const BattlefrontOptionsDialog());
