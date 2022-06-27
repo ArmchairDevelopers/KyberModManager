@@ -14,13 +14,11 @@
   <a href="https://github.com/7reax/kyber-mod-manager">
       <img src="https://img.shields.io/badge/star_it_on-github-black?style=shield&logo=github">
   </a>
-  <img src="https://img.shields.io/github/downloads/7reax/kyber-mod-manager/total">
-  <a title="Made with Fluent Design" href="https://github.com/bdlukaa/fluent_ui">
-    <img
-      src="https://img.shields.io/badge/fluent-design-blue?style=flat-square&color=7A7574&labelColor=0078D7"
-    />
+  <a>
+    <img src="https://img.shields.io/github/v/release/7reax/kyber-mod-manager?label=Latest%20Release&color=2dad87">
   </a>
-  <a title="Crowdin" target="_blank" href="https://crowdin.com/project/kyber-mod-manager"><img src="https://badges.crowdin.net/kyber-mod-manager/localized.svg"></a>
+  <img src="https://img.shields.io/github/downloads/7reax/kyber-mod-manager/total?label=Downloads&color=2dad87">
+  <a title="Crowdin" target="_blank" href="https://crowdin.com/project/kyber-mod-manager"><img src="https://badges.crowdin.net/kyber-mod-manager/localized.svg" style="color:red"></a>
 </p>
 
 <p align="center">
@@ -66,13 +64,6 @@
 |           Hosting Page            | <img src="https://img.reax.at/ZHiyAxskfVdq/direct"> |
 |       Mod Profile Edit Page       | <img src="https://img.reax.at/yYrXdNUyVKK9/direct"> |
 |       Settings                    | <img src="https://img.reax.at/Y16h0N2Y8LDc/direct"> |
-
-## Questions
-
-### How does the automatic mod download work?
-
-The Mod Manager opens NexusMods in the background during the login process. If you successfully logged in, it saves the cookies. If you now want to download mods, it opens the browser again (with the saved cookies) and clicks on the "Download" button
-on the mod page.
 
 ## For developers: How to modify the Mod Manager
 
