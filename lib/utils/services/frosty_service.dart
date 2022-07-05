@@ -25,7 +25,7 @@ class FrostyService {
     ).catchError((error, stackTrace) {
       NotificationService.showNotification(message: error.toString(), color: Colors.red);
     });
-    if (r.stderr.toString().isNotEmpty) {
+    if (r.stderr.toString().isNotEmpty && !r.stderr.toString().contains('Qt')) {
       NavigatorService.pushErrorPage(const MissingPermissions());
     }
 

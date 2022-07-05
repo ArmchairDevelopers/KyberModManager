@@ -33,10 +33,9 @@ class _InstalledModsState extends State<InstalledMods> {
       await Future.delayed(const Duration(milliseconds: 200));
       loaded = true;
     }
-    setState(() => _installedMods = [...ModService.mods, ...ModService.collections]
-        .where((element) => element.toString().toLowerCase().contains(search.toLowerCase()))
-        .toList()
-      ..sort((dynamic a, dynamic b) => a.name.compareTo(b.name)));
+    setState(() =>
+        _installedMods = [...ModService.mods, ...ModService.collections].where((element) => element.toString().toLowerCase().contains(search.toLowerCase())).toList()
+          ..sort((dynamic a, dynamic b) => a.name.compareTo(b.name)));
   }
 
   @override

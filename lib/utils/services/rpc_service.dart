@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dart_discord_rpc/dart_discord_rpc.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kyber_mod_manager/constants/maps.dart';
 import 'package:kyber_mod_manager/constants/modes.dart';
