@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/main.dart';
@@ -14,6 +16,8 @@ import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:kyber_mod_manager/utils/types/saved_profile.dart';
 import 'package:logging/logging.dart';
+import 'package:quiver/iterables.dart';
+import 'package:system_info2/system_info2.dart';
 import 'package:uuid/uuid.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
@@ -158,37 +162,96 @@ class ProfileService {
       }
     }
 
-    for (File file in files) {
-      if (onProgress != null) {
-        onProgress(files.indexOf(file), files.length - 1);
+    if (symlink) {
+      for (File file in files) {
+        if (onProgress != null) {
+          onProgress(files.indexOf(file), files.length - 1);
+        }
+        WindowsTaskbar.setProgress(files.indexOf(file), files.length - 1);
+        String dirPath = '${to.path}/${file.parent.path.substring(from.path.length)}';
+        Directory dir = Directory(dirPath);
+        if (!dir.existsSync()) {
+          dir.createSync(recursive: true);
+        }
+        String path = '${to.path}${file.path.substring(from.path.length)}';
+        if (!symlink) {
+          await copyProfileData(from, to, onProgress, false);
+          return;
+        } else {
+          if (File(path).existsSync()) {
+            if (await FileSystemEntity.isLink(path)) {
+              await Link(path).delete();
+            } else {
+              await File(path).delete();
+            }
+          }
+
+          try {
+            await Link(path).create(file.path, recursive: true);
+          } catch (e) {
+            await copyProfileData(from, to, onProgress, false);
+            break;
+          }
+        }
       }
-      WindowsTaskbar.setProgress(files.indexOf(file), files.length - 1);
+    } else {
+      DateTime started = DateTime.now();
+      ReceivePort receivePort = ReceivePort();
+
+      int totalSize = files.fold(0, (a, b) => a + b.lengthSync());
+      int maxChunkSize = totalSize ~/ SysInfo.cores.length;
+
+      List<List<File>> chunks = [[]];
+      files.forEach((file) {
+        if (chunks.isEmpty || (chunks.last.fold(0, (dynamic a, dynamic b) => a + b.lengthSync())) < maxChunkSize) {
+          chunks.last.add(file);
+        } else {
+          chunks.add([file]);
+        }
+      });
+
+      StreamSubscription? subscription;
+      if (onProgress != null) {
+        int i = 0;
+        subscription = receivePort.listen((message) {
+          i++;
+          onProgress(i, files.length);
+        });
+      }
+
+      await Future.wait(chunks.map((e) async {
+        Map map = {
+          'chunk': List<File>.from(e),
+          'files': files,
+          'from': from,
+          'to': to,
+          'sendPort': receivePort.sendPort,
+        };
+
+        await compute(ProfileService.moveFiles, map);
+      }));
+      subscription?.cancel();
+      DateTime ended = DateTime.now();
+      Logger.root.info('Copying profile data took ${ended.difference(started).inMilliseconds}ms');
+    }
+    WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
+  }
+
+  static Future<void> moveFiles(Map map) async {
+    dynamic files = map['files'];
+    dynamic from = map['from'];
+    dynamic to = map['to'];
+    await Future.wait(List<File>.from(map['chunk']).map((file) async {
       String dirPath = '${to.path}/${file.parent.path.substring(from.path.length)}';
       Directory dir = Directory(dirPath);
       if (!dir.existsSync()) {
         dir.createSync(recursive: true);
       }
       String path = '${to.path}${file.path.substring(from.path.length)}';
-      if (!symlink) {
-        await file.copy(path);
-      } else {
-        if (File(path).existsSync()) {
-          if (await FileSystemEntity.isLink(path)) {
-            await Link(path).delete();
-          } else {
-            await File(path).delete();
-          }
-        }
+      await file.copy(path);
 
-        try {
-          await Link(path).create(file.path, recursive: true);
-        } catch (e) {
-          await file.copy(path);
-          symlink = false;
-        }
-      }
-    }
-    WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
+      (map['sendPort'] as SendPort).send([files.indexOf(file), files.length - 1]);
+    }));
   }
 
   static bool _isSymlink(String path) {
