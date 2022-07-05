@@ -10,7 +10,6 @@ import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
-import 'package:kyber_mod_manager/screens/dialogs/battlefront_options_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart';
@@ -26,7 +25,6 @@ import 'package:kyber_mod_manager/screens/server_host/server_host.dart';
 import 'package:kyber_mod_manager/screens/settings/settings.dart';
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
-import 'package:kyber_mod_manager/utils/battlefront_options.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
@@ -90,13 +88,6 @@ class _NavigationBarState extends State<NavigationBar> {
       } else {
         if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
           box.put('skipFrostyVersionCheck', false);
-        }
-      }
-
-      if (DllInjector.getBattlefrontPID() == -1 && !box.containsKey('skipOptionsCheck')) {
-        var options = await BattlefrontOptions.getOptions();
-        if (options != null && (options.fullscreenEnabled || options.enableDx12)) {
-          await showDialog(context: context, builder: (_) => const BattlefrontOptionsDialog());
         }
       }
     });
@@ -166,6 +157,11 @@ class _NavigationBarState extends State<NavigationBar> {
                 : null,
           ),
           pane: NavigationPane(
+            header: !micaSupported
+                ? null
+                : const SizedBox(
+                    height: 0,
+                  ),
             selected: fakeIndex,
             items: [
               // PaneItem(
@@ -230,6 +226,14 @@ class _NavigationBarState extends State<NavigationBar> {
             ],
             footerItems: [
               PaneItemSeparator(),
+              // PaneItem(
+              //   icon: const Icon(FluentIcons.linked_database),
+              //   title: const Text('Statistics'),
+              // ),
+              // PaneItem(
+              //   icon: const Icon(FluentIcons.help),
+              //   title: const Text('Troubleshooting'),
+              // ),
               PaneItem(
                 icon: const Icon(FluentIcons.feedback),
                 title: Text(translate('$prefix.items.feedback')),
@@ -280,6 +284,8 @@ class _NavigationBarState extends State<NavigationBar> {
                 const ModBrowser(),
                 const InstalledMods(),
                 const RunBattlefront(),
+                // Statistics(),
+                // Troubleshooting(),
                 const feedback.Feedback(),
                 const Settings(),
                 widget.runtimeType != int ? widget.values.first : const SizedBox(height: 0),
