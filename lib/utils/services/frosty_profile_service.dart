@@ -82,9 +82,9 @@ class FrostyProfileService {
   static loadFrostyPack(String name, [Function? onProgress]) async {
     Logger.root.info('Loading Frosty pack: $name');
     String bf2path = OriginHelper.getBattlefrontPath();
-    List<Mod> mods = FrostyProfileService.getModsFromConfigProfile(name);
-    await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-    Directory d = Directory('$bf2path\\ModData\\' + name);
+    List<dynamic> mods = FrostyProfileService.getModsFromConfigProfile(name);
+    await FrostyProfileService.createProfile(List<String>.from(mods.map((e) => e.toKyberString()).toList()));
+    Directory d = Directory('$bf2path\\ModData\\$name');
     if (d.existsSync()) {
       var appliedMods = await getModsFromProfile('KyberModManager');
       if (listEquals(mods, appliedMods)) {
@@ -97,7 +97,7 @@ class FrostyProfileService {
     }
   }
 
-  static List<Mod> getModsFromConfigProfile(String profile) {
+  static List<dynamic> getModsFromConfigProfile(String profile) {
     FrostyConfig config = FrostyService.getFrostyConfig();
     if (config.games['starwarsbattlefrontii']?.packs?[profile] == null) {
       return [];
