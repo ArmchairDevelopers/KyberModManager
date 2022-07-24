@@ -104,29 +104,37 @@ class DllInjector {
   static bool isInjected([int? pid]) {
     pid ??= getBattlefrontPID();
 
+    return processModules(pid).modules.contains('$applicationDocumentsDirectory\\Kyber.dll');
+  }
+
+  static ProcessModules processModules([int? pid]) {
+    pid ??= getBattlefrontPID();
+
     if (pid == -1) {
-      return false;
+      return ProcessModules(modulesLength: 0, modules: []);
     }
 
     final hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
     final hMods = calloc<HMODULE>(1024);
     final cbNeeded = calloc<DWORD>();
+    List<String> modules = [];
+    late int length;
 
     if (EnumProcessModules(hProcess, hMods, sizeOf<HMODULE>() * 1024, cbNeeded) == 1) {
-      for (var i = 0; i < (cbNeeded.value ~/ sizeOf<HMODULE>()); i++) {
+      length = (cbNeeded.value ~/ sizeOf<HMODULE>()).toInt();
+      for (var i = 0; i < length; i++) {
         final szModName = wsalloc(MAX_PATH);
         final hModule = hMods.elementAt(i).value;
 
-        if (GetModuleFileNameEx(hProcess, hModule, szModName, MAX_PATH) != 0 && szModName.toDartString().toLowerCase().contains('kyber')) {
-          _cleanup(hMods, cbNeeded, hProcess, szModName);
-          return true;
+        if (GetModuleFileNameEx(hProcess, hModule, szModName, MAX_PATH) != 0) {
+          modules.add(szModName.toDartString());
         }
         free(szModName);
       }
     }
 
     _cleanup(hMods, cbNeeded, hProcess);
-    return false;
+    return ProcessModules(modulesLength: length, modules: modules);
   }
 
   static int getBattlefrontPID() {
@@ -183,6 +191,36 @@ class DllInjector {
       CloseHandle(hProcess);
     }
     return name;
+  }
+
+  static int? hWnd;
+
+  static int? getKyberErrorWindow() {
+    hWnd = null;
+
+    final wndProc = Pointer.fromFunction<EnumWindowsProc>(enumWindowsProc, 0);
+
+    EnumWindows(wndProc, 0);
+    return hWnd;
+  }
+
+  static int enumWindowsProc(int x, int lParam) {
+    if (IsWindowVisible(x) == FALSE) return TRUE;
+
+    final length = GetWindowTextLength(x);
+    if (length == 0) {
+      return TRUE;
+    }
+
+    final buffer = wsalloc(length + 1);
+
+    GetWindowText(x, buffer, length + 1);
+    if (buffer.toDartString() == "Kyber") {
+      hWnd = x;
+    }
+    free(buffer);
+
+    return TRUE;
   }
 
   static R _withMemory<R, T extends NativeType>(int size, R Function(Pointer<T> memory) action) {

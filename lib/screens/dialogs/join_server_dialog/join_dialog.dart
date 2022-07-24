@@ -44,26 +44,25 @@ class ServerDialog extends StatefulWidget {
 
 class _ServerDialogState extends State<ServerDialog> {
   final String prefix = 'server_browser.join_dialog';
-
-  late bool correctPassword;
+  bool profileEnabled = PlatformHelper.isProfileActive();
 
   FocusNode passwordFocusNode = FocusNode();
   Timer? timer;
   String preferredTeam = '0';
   String password = '';
   String? content;
-  bool profileEnabled = PlatformHelper.isProfileActive();
   bool downloading = false;
   bool cosmetics = false;
   bool disabled = false;
   bool failedInjection = false;
   bool unsupportedMods = false;
+  bool modsInstalled = false;
   bool loading = false;
   int startingState = 0;
   int state = 0;
 
   late KyberServer server;
-  late bool modsInstalled = false;
+  late bool correctPassword;
 
   @override
   void initState() {
@@ -383,19 +382,22 @@ class _ServerDialogState extends State<ServerDialog> {
       children: [
         if (!profileEnabled)
           Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  FluentIcons.warning,
-                  color: Colors.yellow,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(translate('$prefix.frosty_profile_disabled')),
-              ],
+            padding: EdgeInsets.only(bottom: 15),
+            child: InfoBar(
+              title: Text(translate('$prefix.frosty_profile_disabled')),
+              content: const Text(
+                  "Frosty Profile enables use of the mods for the platform of your choice. If you do not use it, you can experience problems with mods not loading."),
+              isLong: true,
+              action: Button(
+                child: const Text('Open Settings'),
+                onPressed: () {
+                  BlocProvider.of<WidgetCubit>(context).toIndex(0);
+                  BlocProvider.of<WidgetCubit>(context).toIndex(9);
+                  Navigator.of(context).pop();
+                },
+              ),
+              onClose: () => setState(() => profileEnabled = true),
+              severity: InfoBarSeverity.warning,
             ),
           ),
         TeamSelector(

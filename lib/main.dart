@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -41,7 +40,8 @@ void main() async {
         options.autoSessionTrackingInterval = const Duration(minutes: 1);
         options.dsn = 'https://1d0ce9262dcb416e8404c51e396297e4@o1117951.ingest.sentry.io/6233409';
         options.tracesSampleRate = 1.0;
-        options.release = "kyber-mod-manager@1.0.7";
+        options.attachThreads = true;
+        options.release = "kyber-mod-manager@1.0.8";
       },
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
@@ -75,11 +75,10 @@ class _AppState extends State<App> {
     Timer.run(() async {
       ModService.watchDirectory();
       PuppeteerHelper.checkFiles();
-      ModService.loadMods(context).then((value) {
-        if (box.containsKey('setup')) {
-          ProfileService.migrateSavedProfiles();
-        }
-      });
+      await ModService.loadMods(context);
+      if (box.containsKey('setup')) {
+        ProfileService.migrateSavedProfiles();
+      }
     });
     super.initState();
   }
@@ -140,6 +139,7 @@ class _AppState extends State<App> {
       },
       navigatorObservers: [
         BotToastNavigatorObserver(),
+        SentryNavigatorObserver(),
       ],
       home: const NavigationBar(),
     );

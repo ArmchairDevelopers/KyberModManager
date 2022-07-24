@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -41,7 +42,7 @@ class PuppeteerHelper {
         '--app=https://nexusmods.com',
       ],
       ignoreDefaultArgs: ['--enable-automation'],
-      headless: headless,
+      headless: false,
       plugins: [
         StealthPlugin(),
       ],
@@ -54,17 +55,18 @@ class PuppeteerHelper {
       onClose != null ? onClose() : null;
       _browser = null;
     });
+
     if (box.containsKey('cookies') && box.containsKey('nexusmods_login')) {
       await page.setCookies(List<CookieParam>.from(box.get('cookies').map((cookie) => CookieParam.fromJson(Map<String, dynamic>.from(cookie))).toList()));
+    } else {
+      await page.setCookies([CookieParam(name: 'dummy', value: 'cookie_dummy', domain: '.nexusmods.com')]);
+      
     }
     return _browser!;
   }
 
   static Future<void> initializePage(Page page) async {
     String downloadPath = box.get('frostyPath') + '\\Mods\\starwarsbattlefrontii';
-    await page.setExtraHTTPHeaders({'Accept-Language': 'en'});
-
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36');
     page.browser.connection.send('Browser.setDownloadBehavior', {
       'behavior': 'allow',
       'downloadPath': downloadPath,

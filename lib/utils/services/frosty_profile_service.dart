@@ -9,7 +9,6 @@ import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:logging/logging.dart';
 
@@ -36,6 +35,7 @@ class FrostyProfileService {
       await FrostyService.saveFrostyConfig(config);
     } catch (e) {
       NotificationService.showNotification(message: e.toString(), color: Colors.red);
+      Logger.root.severe(e.toString());
     }
   }
 

@@ -29,10 +29,6 @@ class StorageHelper {
       Logger.root.severe('Error opening box: $e');
       exit(1);
     });
-    Future.forEach(_defaultValues.keys, (element) async {
-      if (!box.containsKey(element)) {
-        await box.put(element, _defaultValues[element]);
-      }
-    });
+    _defaultValues.keys.where((key) => !box.containsKey(key)).forEach((key) => box.put(key, _defaultValues[key]));
   }
 }

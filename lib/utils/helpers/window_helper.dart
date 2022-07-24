@@ -40,11 +40,7 @@ class WindowHelper {
         await windowManager.setSize(_size);
         await windowManager.setMinimumSize(_minimumSize);
         await windowManager.show();
-        if (micaEnabled) {
-          await windowManager.setBackgroundColor(Colors.transparent);
-        } else {
-          await windowManager.setBackgroundColor(ThemeData.dark().navigationPaneTheme.backgroundColor!);
-        }
+        await windowManager.setBackgroundColor(micaEnabled ? Colors.transparent : ThemeData.dark().navigationPaneTheme.backgroundColor!);
       });
     }
   }

@@ -13,6 +13,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   system_theme
   system_tray
   url_launcher_windows
+  webview_windows
   window_manager
   windows_taskbar
 )

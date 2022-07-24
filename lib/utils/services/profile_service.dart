@@ -174,24 +174,19 @@ class ProfileService {
           dir.createSync(recursive: true);
         }
         String path = '${to.path}${file.path.substring(from.path.length)}';
-        if (!symlink) {
-          await copyProfileData(from, to, onProgress, false);
-          return;
-        } else {
-          if (File(path).existsSync()) {
-            if (await FileSystemEntity.isLink(path)) {
-              await Link(path).delete();
-            } else {
-              await File(path).delete();
-            }
+        if (File(path).existsSync()) {
+          if (await FileSystemEntity.isLink(path)) {
+            await Link(path).delete();
+          } else {
+            await File(path).delete();
           }
+        }
 
-          try {
-            await Link(path).create(file.path, recursive: true);
-          } catch (e) {
-            await copyProfileData(from, to, onProgress, false);
-            break;
-          }
+        try {
+          await Link(path).create(file.path, recursive: true);
+        } catch (e) {
+          await copyProfileData(from, to, onProgress, false);
+          break;
         }
       }
     } else {

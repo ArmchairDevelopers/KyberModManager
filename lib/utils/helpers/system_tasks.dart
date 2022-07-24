@@ -13,18 +13,6 @@ Task _mapLine(String line) {
 }
 
 class SystemTasks {
-  static Future<bool> isProgramRunning(String name) async {
-    List<Task> tasks = await SystemTasks.tasks();
-    return tasks.where((element) => element.pname.toLowerCase().endsWith(name.toLowerCase())).isNotEmpty;
-  }
-
-  static Future<bool> isKyberRunning() async {
-    List<Task> tasks = await SystemTasks.tasks();
-    bool kyber = tasks.where((element) => element.pname.toLowerCase().contains("kyber")).isNotEmpty;
-    bool bf2 = tasks.where((element) => element.pname.toLowerCase().endsWith("starwarsbattlefrontii.exe")).isNotEmpty;
-    return kyber && bf2;
-  }
-
   static Future<List<Task>> tasks() async {
     try {
       var r = await Process.run(_isWindows ? "tasklist" : "ps aux", [], runInShell: false);

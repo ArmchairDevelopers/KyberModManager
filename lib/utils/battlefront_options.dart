@@ -16,6 +16,27 @@ class BattlefrontOptions {
     );
   }
 
+  static Future<bool> crashed() async {
+    Directory docs = await getApplicationDocumentsDirectory();
+    if (!Directory('${docs.path}\\STAR WARS Battlefront II\\CrashDumps').existsSync()) {
+      return false;
+    }
+
+    List<File> files = Directory('${docs.path}\\STAR WARS Battlefront II\\CrashDumps').listSync().whereType<File>().toList();
+    if (files.isEmpty) {
+      return false;
+    }
+
+    files.sort((a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()));
+
+    File lastCrash = files.first;
+    if (lastCrash.lastModifiedSync().difference(DateTime.now()).inMinutes < 2) {
+      return false;
+    }
+
+    return true;
+  }
+
   static Future<void> setConfig() async {
     String config = await _getConfig();
     String configPath = await _getConfigPath();

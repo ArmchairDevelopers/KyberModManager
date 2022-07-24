@@ -13,3 +13,10 @@ class ProcessDetails {
 
   int get memory => _memory;
 }
+
+class ProcessModules {
+  ProcessModules({required this.modulesLength, required this.modules});
+
+  final int modulesLength;
+  final List<String> modules;
+}

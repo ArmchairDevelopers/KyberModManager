@@ -44,9 +44,9 @@ dependencies:
   archive: ^3.2.1
   auto_size_text: ^3.0.0
   fluent_ui: ^3.12.0
-    # fluent_ui:
-    # git:
-  #  url: https://github.com/bdlukaa/fluent_ui.git
+    #fluent_ui:
+  #git:
+  #url: https://github.com/bdlukaa/fluent_ui.git
   system_tray: ^0.1.0
   tinycolor2: ^2.0.0
   http: ^0.13.4
@@ -58,12 +58,17 @@ dependencies:
   puppeteer: 2.7.0
   jiffy: ^5.0.0
   win32: ^2.4.1
+  quiver: ^3.1.0
   ffi: ^1.1.2
+  webview_windows:
+    path: ../../Other stuff/flutter-webview-windows-updated
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
   freezed_annotation:
+  syncfusion_flutter_charts: ^20.1.61
+  influxdb_client: ^2.5.0
 
 dev_dependencies:
   hive_generator: ^1.1.2
