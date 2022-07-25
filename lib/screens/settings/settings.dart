@@ -119,8 +119,8 @@ class _SettingsState extends State<Settings> {
                     await box.put('locale', value);
                     Jiffy.locale(AppLocale().getLocale().languageCode);
                     var cubit = BlocProvider.of<WidgetCubit>(context);
-                    cubit.toIndex(7);
                     cubit.toIndex(8);
+                    cubit.toIndex(9);
                   },
                   isExpanded: true,
                   value: LocalizedApp.of(context).delegate.currentLocale.languageCode,
@@ -227,6 +227,8 @@ class _SettingsState extends State<Settings> {
                           await box.put('previousProfile', null);
                         }
                         await box.put('frostyProfile', value);
+                        if (!mounted) return;
+
                         setState(() => disabled = false);
                       }
                     : null,
@@ -338,7 +340,7 @@ class _SettingsState extends State<Settings> {
           ),
           const Center(
             child: Text(
-              'V1.0.7',
+              'V1.0.8',
               style: TextStyle(fontSize: 12),
             ),
           ),
