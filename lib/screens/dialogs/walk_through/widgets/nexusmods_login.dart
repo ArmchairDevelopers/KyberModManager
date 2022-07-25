@@ -15,9 +15,9 @@ class NexusmodsLogin extends StatefulWidget {
 }
 
 class _NexusmodsLoginState extends State<NexusmodsLogin> {
-  final String prefix = 'nexus_mods_login';
   final WebviewController _controller = WebviewController();
   final String _mainPage = 'https://www.nexusmods.com/starwarsbattlefront22017';
+  final String prefix = 'nexus_mods_login';
   late StreamSubscription _subscription;
 
   puppeteer.Browser? _browser;
@@ -44,6 +44,7 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
       box.put('nexusmods_login', false);
     }
     _controller.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 
