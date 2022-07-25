@@ -42,7 +42,7 @@ class PuppeteerHelper {
         '--app=https://nexusmods.com',
       ],
       ignoreDefaultArgs: ['--enable-automation'],
-      headless: false,
+      headless: headless,
       plugins: [
         StealthPlugin(),
       ],
@@ -58,9 +58,6 @@ class PuppeteerHelper {
 
     if (box.containsKey('cookies') && box.containsKey('nexusmods_login')) {
       await page.setCookies(List<CookieParam>.from(box.get('cookies').map((cookie) => CookieParam.fromJson(Map<String, dynamic>.from(cookie))).toList()));
-    } else {
-      await page.setCookies([CookieParam(name: 'dummy', value: 'cookie_dummy', domain: '.nexusmods.com')]);
-      
     }
     return _browser!;
   }
