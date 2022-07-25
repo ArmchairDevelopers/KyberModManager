@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
-import 'package:kyber_mod_manager/utils/services/nexusmods_login_service.dart';
 import 'package:puppeteer/puppeteer.dart' as puppeteer;
 import 'package:webview_windows/webview_windows.dart';
 
@@ -24,6 +23,7 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
   puppeteer.Browser? _browser;
 
   bool browserOpen = false;
+  bool showOverlay = false;
 
   @override
   void initState() {
@@ -52,6 +52,7 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
 
     _subscription = _controller.url.listen((url) async {
       if (url == "https://users.nexusmods.com/account/profile/edit") {
+        setState(() => showOverlay = true);
         await _controller.loadUrl(
             'https://users.nexusmods.com/oauth/authorize?client_id=nexus&redirect_uri=https://www.nexusmods.com/oauth/callback&response_type=code&referrer=$_mainPage');
         _browser?.close();
@@ -60,7 +61,6 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
         List<puppeteer.CookieParam> cookies = [];
         for (var cookie in jsonDecode(await _controller.getCookies())['cookies']) {
           cookies.add(puppeteer.CookieParam.fromJson(cookie));
-          print(puppeteer.CookieParam.fromJson(cookie).toJson());
         }
 
         await box.put('cookies', cookies.map((e) => e.toJson()).toList());
@@ -86,7 +86,7 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
   Widget build(BuildContext context) {
     return ContentDialog(
       backgroundDismiss: false,
-      constraints: const BoxConstraints(maxWidth: 1000, maxHeight: 857),
+      constraints: BoxConstraints(maxWidth: browserOpen ? 1000 : 600, maxHeight: browserOpen ? 857 : 400),
       title: Text(translate('$prefix.title')),
       actions: [
         Button(
@@ -116,8 +116,36 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
           children: browserOpen
               ? [
                   Expanded(
-                    child: Webview(
-                      _controller,
+                    child: Stack(
+                      children: [
+                        Webview(
+                          _controller,
+                        ),
+                        if (showOverlay)
+                          Positioned.fill(
+                            child: Container(
+                              color: FluentTheme.of(context).micaBackgroundColor.withOpacity(.9),
+                              alignment: Alignment.center,
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    SizedBox(
+                                      height: 30,
+                                      width: 30,
+                                      child: ProgressRing(),
+                                    ),
+                                    SizedBox(width: 15),
+                                    Text(
+                                      'Loading...',
+                                      style: TextStyle(fontSize: 19),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ]
