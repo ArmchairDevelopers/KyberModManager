@@ -25,7 +25,7 @@ class _BattlefrontNotFoundState extends State<BattlefrontNotFound> {
           const SizedBox(
             height: 16,
           ),
-          Column(
+          Row(
             children: [
               FilledButton(
                 child: const Text('Select Battlefront 2 path manually.'),
@@ -44,6 +44,9 @@ class _BattlefrontNotFoundState extends State<BattlefrontNotFound> {
                   if (!mounted) return;
                   Navigator.of(context).pop();
                 },
+              ),
+              const SizedBox(
+                width: 15,
               ),
               Button(
                 child: const Text('Try again'),
