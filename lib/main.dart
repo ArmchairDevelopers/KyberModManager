@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
-import 'package:dynamic_env/dynamic_env.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -73,7 +72,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   void initState() {
-    DynamicEnv().setEnv('origin.exe', 'GAME_DATA_DIR', r'E:\Origin Games\STAR WARS Battlefront II\ModData\SavedProfiles\6b9ad9aa-b876-464e-a206-d900d9d06567');
     Timer.run(() async {
       ModService.watchDirectory();
       PuppeteerHelper.checkFiles();
