@@ -14,11 +14,11 @@ import 'package:logging/logging.dart';
 import 'package:version/version.dart';
 
 class FrostyService {
-  static Future<ProcessResult> startFrosty({bool launch = true, String? frostyPath}) async {
+  static Future<ProcessResult> startFrosty({bool launch = true, String? frostyPath, String? profile}) async {
     String path = frostyPath ?? box.get('frostyPath');
     var r = await Process.run(
       '$path/FrostyModManager.exe',
-      launch ? ['-launch', 'KyberModManager'] : [],
+      launch ? ['-launch', profile ?? 'KyberModManager'] : [],
       workingDirectory: path,
       includeParentEnvironment: true,
       runInShell: true,

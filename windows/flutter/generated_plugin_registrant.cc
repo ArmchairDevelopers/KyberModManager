@@ -9,6 +9,7 @@
 #include <auto_update/auto_update_plugin.h>
 #include <dart_discord_rpc/dart_discord_rpc_plugin.h>
 #include <desktop_drop/desktop_drop_plugin.h>
+#include <dynamic_env/dynamic_env_plugin_c_api.h>
 #include <flutter_acrylic/flutter_acrylic_plugin.h>
 #include <flutter_platform_alert/flutter_platform_alert_plugin.h>
 #include <screen_retriever/screen_retriever_plugin.h>
@@ -27,6 +28,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("DartDiscordRpcPlugin"));
   DesktopDropPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("DesktopDropPlugin"));
+  DynamicEnvPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("DynamicEnvPluginCApi"));
   FlutterAcrylicPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterAcrylicPlugin"));
   FlutterPlatformAlertPluginRegisterWithRegistrar(

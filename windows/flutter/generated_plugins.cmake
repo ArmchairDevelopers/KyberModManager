@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   auto_update
   dart_discord_rpc
   desktop_drop
+  dynamic_env
   flutter_acrylic
   flutter_platform_alert
   screen_retriever

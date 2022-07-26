@@ -6,18 +6,18 @@ import 'package:process_run/process_run.dart';
 import 'package:win32_registry/win32_registry.dart';
 
 class PlatformHelper {
-  static final Map<String, dynamic> _paths = {
-    'origin': {
+  static final Map<Platform, dynamic> platforms = {
+    Platform.Origin: {
       'path': r'SOFTWARE\WOW6432Node\Origin',
       'dir': 'OriginPath',
       'exe': 'Origin.exe',
     },
-    'ea desktop': {
+    Platform.EA_Desktop: {
       'path': r'SOFTWARE\WOW6432Node\Electronic Arts\EA Desktop',
       'dir': 'ClientPath',
       'exe': 'EADesktop.exe',
     },
-    'epic games': {
+    Platform.Epic_Games: {
       'path': r'SOFTWARE\WOW6432Node\EpicGames\Unreal Engine',
       'dir': 'INSTALLDIR',
       'exe': 'Launcher\\Portal\\Binaries\\Win32\\EpicGamesLauncher.exe',
@@ -30,8 +30,22 @@ class PlatformHelper {
     runExecutableArguments('$battlefrontPath\\starwarsbattlefrontii.exe', ['-datapath "$dataDir"']);
   }
 
-  static Future<void> restartPlatform(String platform, String? profile) async {
-    dynamic platformData = _paths[platform]!;
+  static bool isInstalled(Platform platform) {
+    try {
+      final key = Registry.openPath(RegistryHive.localMachine, path: platforms[platform]['path']).close();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> isPlatformRunning(Platform platform) async {
+    List<Task> tasks = await SystemTasks.tasks();
+    return tasks.where((task) => task.pname.toLowerCase().contains(platforms[platform]['exe'].toString().split('\\').last.toLowerCase())).toList().isNotEmpty;
+  }
+
+  static Future<void> restartPlatform(String platform, [String? profile]) async {
+    dynamic platformData = platforms[_platformFromString(platform)]!;
     final key = Registry.openPath(RegistryHive.localMachine, path: platformData['path']);
     List<Task> tasks = await SystemTasks.tasks();
     List<Task> oTasks = tasks.where((task) => task.pname.toLowerCase().contains(platformData['exe'].toString().split('\\').last.toLowerCase())).toList();
@@ -46,12 +60,14 @@ class PlatformHelper {
     runExecutableArguments(dir.contains('.exe') ? dir : '$dir\\$exe', [], environment: {
       'GAME_DATA_DIR': profile ?? '',
     });
+    key.close();
     await Future.delayed(const Duration(seconds: 3));
   }
 
   static bool isProfileActive() {
     final key = Registry.openPath(RegistryHive.currentUser, path: 'Environment');
     String? value = key.getValueAsString('GAME_DATA_DIR');
+    key.close();
     return value != null && value.endsWith('KyberModManager');
   }
 
@@ -74,6 +90,17 @@ class PlatformHelper {
     } else {
       key.deleteValue('GAME_DATA_DIR');
     }
+    key.close();
     return previous ? profile : profilePath;
   }
+
+  static Platform _platformFromString(String platform) {
+    return Platform.values.firstWhere((p) => p.toString().split('.').last.toLowerCase() == platform.toLowerCase());
+  }
+}
+
+enum Platform {
+  Origin,
+  EA_Desktop,
+  Epic_Games,
 }

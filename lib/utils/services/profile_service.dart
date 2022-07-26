@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:math';
 
+import 'package:dynamic_env/dynamic_env.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
+import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
@@ -16,7 +17,6 @@ import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:kyber_mod_manager/utils/types/saved_profile.dart';
 import 'package:logging/logging.dart';
-import 'package:quiver/iterables.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:uuid/uuid.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
@@ -41,6 +41,7 @@ class ProfileService {
 
     List<SavedProfile> profiles = getSavedProfiles();
     if (profiles.where((element) => equalModlist(element.mods, convertedMods)).isEmpty) {
+      await enableProfile(getProfilePath('KyberModManager'));
       if (current.isEmpty || profiles.where((element) => equalModlist(element.mods, current)).isNotEmpty) {
         return;
       }
@@ -55,7 +56,9 @@ class ProfileService {
     SavedProfile profile = profiles.firstWhere((element) => equalModlist(element.mods, convertedMods));
     profile.lastUsed = DateTime.now();
     _editProfile(profile);
-    await copyProfileData(Directory(profile.path), dir, onProgress, true);
+    await enableProfile(dir.path);
+    // await copyProfileData(Directory(profile.path), dir, onProgress, true);
+
     config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
         profile.mods.where((element) => element.filename.isNotEmpty).map((element) => '${element.filename}:True').join('|');
     await FrostyService.saveFrostyConfig(config);
@@ -82,6 +85,28 @@ class ProfileService {
     }
 
     Logger.root.info('Found profile ${profile.id}');
+  }
+
+  static String getProfilePath(String name, {bool isSavedProfile = false}) {
+    String battlefrontPath = OriginHelper.getBattlefrontPath();
+    return '$battlefrontPath\\ModData\\${isSavedProfile ? 'SavedProfiles\\$name' : name}';
+  }
+
+  static Future<void> enableProfile(String path) async {
+    if (PlatformHelper.isInstalled(Platform.EA_Desktop) && !await PlatformHelper.isPlatformRunning(Platform.Origin)) {
+      if (!(await PlatformHelper.isPlatformRunning(Platform.EA_Desktop))) {
+        await PlatformHelper.restartPlatform('EA Desktop');
+      }
+
+      await DynamicEnv().setEnv(PlatformHelper.platforms[Platform.EA_Desktop]['exe'], 'GAME_DATA_DIR', path);
+      return;
+    } else {
+      if (!(await PlatformHelper.isPlatformRunning(Platform.Origin))) {
+        await PlatformHelper.restartPlatform('origin');
+      }
+
+      await DynamicEnv().setEnv(PlatformHelper.platforms[Platform.Origin]['exe'], 'GAME_DATA_DIR', path);
+    }
   }
 
   static bool equalModlist(List<dynamic> a, List<dynamic> b) {

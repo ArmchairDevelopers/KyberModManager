@@ -33,6 +33,7 @@ class _RunDialogState extends State<RunDialog> {
   }
 
   void startFrosty() async {
+    final String profile = selectedProfile.split(' (').first;
     await ModService.createModPack(
       packType: getPackType(selectedProfile),
       profileName: selectedProfile.split(' (').first,
@@ -43,7 +44,7 @@ class _RunDialogState extends State<RunDialog> {
     if (!mounted) return;
 
     setState(() => content = translate('$prefix.frosty'));
-    await FrostyService.startFrosty();
+    await FrostyService.startFrosty(profile: getPackType(selectedProfile) == PackType.FROSTY_PACK ? profile : null);
 
     if (!mounted) return;
     Navigator.of(context).pop();

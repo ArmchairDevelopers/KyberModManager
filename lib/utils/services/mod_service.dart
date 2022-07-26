@@ -38,6 +38,7 @@ class ModService {
     Logger.root.info('Loading mods for $profileName (cosmetics: $enableCosmetics | type: $packType)');
 
     if (packType == PackType.NO_MODS) {
+      await ProfileService.enableProfile(ProfileService.getProfilePath("KyberModManager"));
       if (enableCosmetics) {
         return await FrostyProfileService.createProfile(cosmeticMods.map((e) => e.toKyberString()).toList());
       }
@@ -57,21 +58,11 @@ class ModService {
       var currentMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
       List<dynamic> mods = FrostyProfileService.getModsFromConfigProfile(profileName);
       List<String> formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
-      if (enableCosmetics) {
-        mods = [...mods, ...cosmeticMods];
-        formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
+      if (!enableCosmetics) {
+        return await ProfileService.enableProfile(ProfileService.getProfilePath(profileName));
       }
-
-      if (!listEquals(currentMods, mods)) {
-        var packMods = FrostyProfileService.getModsFromConfigProfile(profileName);
-        setContent(translate('$prefix.creating'));
-        await FrostyProfileService.createProfile(formattedMods);
-        if (listEquals(packMods, mods)) {
-          onProgress(0, 0);
-          return await FrostyProfileService.loadFrostyPack(profileName.replaceAll(' (Frosty Pack)', ''), onProgress);
-        }
-        return await ProfileService.searchProfile(formattedMods, onProgress);
-      }
+      mods = [...mods, ...cosmeticMods];
+      formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
       await FrostyProfileService.createProfile(formattedMods);
       await ProfileService.searchProfile(formattedMods, onProgress);
     } else if (packType == PackType.COSMETICS) {
@@ -160,8 +151,7 @@ class ModService {
   static bool isInstalled(String name) {
     String modName = name.substring(0, name.lastIndexOf(' ('));
     String version = name.substring(name.lastIndexOf('(') + 1, name.length - 1);
-    return mods.any((mod) => mod.name == modName && mod.version == version) ||
-        collections.any((element) => element.title == modName && element.version == version);
+    return mods.any((mod) => mod.name == modName && mod.version == version) || collections.any((element) => element.title == modName && element.version == version);
   }
 
   static Map<String, List<dynamic>> getModsByCategory([bool kyberCategories = false]) {
