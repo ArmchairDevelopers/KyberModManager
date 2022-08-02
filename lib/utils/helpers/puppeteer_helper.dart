@@ -24,7 +24,7 @@ class PuppeteerHelper {
     }
   }
 
-  static Future<Browser> startBrowser({Function? onClose, Function? onBrowserCreated, bool headless = true}) async {
+  static Future<Browser> startBrowser({Function? onClose, Function? onBrowserCreated, bool headless = true, bool asApp = true}) async {
     if (_browser != null) {
       await _browser?.close().catchError((e) => null);
       _browser = null;
@@ -39,7 +39,7 @@ class PuppeteerHelper {
         '--lang=en-EN,en',
         '--start-maximized',
         '--suppress-message-center-popups',
-        '--app=https://nexusmods.com',
+        asApp ? '--app=https://nexusmods.com/starwarsbattlefront22017/' : '',
       ],
       ignoreDefaultArgs: ['--enable-automation'],
       headless: headless,

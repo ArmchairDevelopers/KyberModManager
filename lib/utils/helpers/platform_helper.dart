@@ -57,9 +57,14 @@ class PlatformHelper {
     Logger.root.info('Starting platform...');
     String dir = key.getValueAsString(platformData['dir'])!;
     String? exe = platformData['exe'];
-    runExecutableArguments(dir.contains('.exe') ? dir : '$dir\\$exe', [], environment: {
-      'GAME_DATA_DIR': profile ?? '',
-    });
+    runExecutableArguments(
+      dir.contains('.exe') ? dir : '$dir\\$exe',
+      [],
+      environment: {
+        'GAME_DATA_DIR': profile ?? '',
+      },
+      runInShell: true,
+    );
     key.close();
     await Future.delayed(const Duration(seconds: 3));
   }
@@ -95,7 +100,8 @@ class PlatformHelper {
   }
 
   static Platform _platformFromString(String platform) {
-    return Platform.values.firstWhere((p) => p.toString().split('.').last.toLowerCase() == platform.toLowerCase());
+    print(Platform.Origin.toString());
+    return Platform.values.firstWhere((p) => p.toString().split('.').last.toLowerCase() == platform.toLowerCase().replaceAll(' ', '_'));
   }
 }
 

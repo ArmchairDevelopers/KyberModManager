@@ -4,9 +4,9 @@ import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
 
 class FrostyProfileSelector extends StatefulWidget {
-  const FrostyProfileSelector({Key? key, required this.onSelected}) : super(key: key);
+  const FrostyProfileSelector({Key? key, this.onSelected}) : super(key: key);
 
-  final Function(List<dynamic> mods) onSelected;
+  final Function(List<dynamic> mods)? onSelected;
 
   @override
   _FrostyProfileSelectorState createState() => _FrostyProfileSelectorState();
@@ -37,8 +37,10 @@ class _FrostyProfileSelectorState extends State<FrostyProfileSelector> {
         FilledButton(
           child: Text(translate('load')),
           onPressed: () {
-            widget.onSelected(profiles.firstWhere((p) => p.name == value).mods);
-            Navigator.of(context).pop();
+            if (widget.onSelected != null) {
+              widget.onSelected!(profiles.firstWhere((p) => p.name == value).mods);
+            }
+            Navigator.of(context).pop(profiles.firstWhere((p) => p.name == value));
           },
         ),
       ],

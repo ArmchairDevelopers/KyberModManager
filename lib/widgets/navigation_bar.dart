@@ -23,6 +23,7 @@ import 'package:kyber_mod_manager/screens/saved_profiles.dart';
 import 'package:kyber_mod_manager/screens/server_browser/server_browser.dart';
 import 'package:kyber_mod_manager/screens/server_host/server_host.dart';
 import 'package:kyber_mod_manager/screens/settings/settings.dart';
+import 'package:kyber_mod_manager/screens/statistics.dart';
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
@@ -111,18 +112,15 @@ class _NavigationBarState extends State<NavigationBar> {
     return BlocConsumer<WidgetCubit, dynamic>(listener: (context, state) {
       bool isFake = state.runtimeType != int && state.containsKey(state.keys.first);
       setState(() {
-        index = !isFake ? state : 10;
+        index = !isFake ? state : 11;
+
         fakeIndex = !isFake ? state : state.keys.toList().first;
       });
     }, builder: (context, widget) {
       return RawKeyboardListener(
         autofocus: true,
         onKey: (event) {
-          if (event.runtimeType == RawKeyDownEvent &&
-              event.isAltPressed &&
-              event.isControlPressed &&
-              event.logicalKey == LogicalKeyboardKey.keyC &&
-              micaSupported) {
+          if (event.runtimeType == RawKeyDownEvent && event.isAltPressed && event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyC && micaSupported) {
             if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
               box.put('micaEnabled', false);
               WindowHelper.changeWindowEffect(false);
@@ -226,10 +224,10 @@ class _NavigationBarState extends State<NavigationBar> {
             ],
             footerItems: [
               PaneItemSeparator(),
-              // PaneItem(
-              //   icon: const Icon(FluentIcons.linked_database),
-              //   title: const Text('Statistics'),
-              // ),
+              PaneItem(
+                icon: const Icon(FluentIcons.linked_database),
+                title: const Text('Statistics'),
+              ),
               // PaneItem(
               //   icon: const Icon(FluentIcons.help),
               //   title: const Text('Troubleshooting'),
@@ -284,7 +282,8 @@ class _NavigationBarState extends State<NavigationBar> {
                 const ModBrowser(),
                 const InstalledMods(),
                 const RunBattlefront(),
-                // Statistics(),
+                Statistics(),
+
                 // Troubleshooting(),
                 const feedback.Feedback(),
                 const Settings(),

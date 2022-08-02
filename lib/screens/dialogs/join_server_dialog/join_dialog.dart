@@ -15,7 +15,9 @@ import 'package:kyber_mod_manager/screens/dialogs/join_server_dialog/widgets/req
 import 'package:kyber_mod_manager/screens/dialogs/join_server_dialog/widgets/team_selector.dart';
 import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
+import 'package:kyber_mod_manager/screens/mod_profiles/frosty_profile.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
+import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
@@ -25,6 +27,7 @@ import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
@@ -50,6 +53,7 @@ class _ServerDialogState extends State<ServerDialog> {
   Timer? timer;
   String preferredTeam = '0';
   String password = '';
+  String? profile;
   String? content;
   bool downloading = false;
   bool cosmetics = false;
@@ -109,17 +113,31 @@ class _ServerDialogState extends State<ServerDialog> {
         loading = true;
       });
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.indeterminate);
-      List<String> mods = List.from(server.mods);
-      List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
-      if (cosmetics) {
-        mods.addAll(cosmeticMods.map((e) => e.toKyberString()).toList());
-      }
+      List<String> mods = [];
+      if (profile == null) {
+        mods = List.from(server.mods);
+        List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
+        if (cosmetics) {
+          mods.addAll(cosmeticMods.map((e) => e.toKyberString()).toList());
+        }
 
-      await ProfileService.searchProfile(mods, (copied, total) {
-        setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
-      }).catchError((e) {
-        NotificationService.showNotification(message: e.toString(), color: Colors.red);
-      });
+        await ProfileService.enableProfile(ProfileService.getProfilePath("KyberModManager"));
+        await ProfileService.searchProfile(mods, (copied, total) {
+          setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
+        }).catchError((e) {
+          NotificationService.showNotification(message: e.toString(), color: Colors.red);
+        });
+      } else {
+        final String path = OriginHelper.getBattlefrontPath();
+        await ProfileService.searchProfile([' ()'], (copied, total) {
+          setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
+        }, false);
+
+        await ProfileService.copyProfileData(Directory('$path\\$profile'), Directory('$path\\KyberModManager'), (copied, total) {
+          setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
+        });
+        await ProfileService.enableProfile(ProfileService.getProfilePath(profile!));
+      }
 
       if (!mounted) return;
       setState(() {
@@ -137,16 +155,19 @@ class _ServerDialogState extends State<ServerDialog> {
         return;
       }
       setState(() => startingState = 2);
-      await FrostyProfileService.createProfile(mods);
+      if (profile == null) {
+        await FrostyProfileService.createProfile(mods);
+      }
 
       if (!mounted) return;
       setState(() => startingState = 3);
 
-      var appliedMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
-      var serverMods = mods.map((e) => ModService.convertToFrostyMod(e)).toList();
-      if (!listEquals(appliedMods, serverMods)) {
+      var appliedMods = await FrostyProfileService.getModsFromProfile(profile ?? 'KyberModManager');
+      var serverMods =
+          profile != null ? server.mods.map((mod) => ModService.convertToFrostyMod(mod)).toList() : mods.map((e) => ModService.convertToFrostyMod(e)).toList();
+      if (!listEquals(profile == null ? appliedMods : appliedMods.where((element) => element.category.toString().toLowerCase() == "gameplay").toList(), serverMods)) {
         Logger.root.info("Applying Frosty mods...");
-        await FrostyService.startFrosty().catchError((error) {
+        await FrostyService.startFrosty(profile: profile).catchError((error) {
           NotificationService.showNotification(message: error, color: Colors.red);
           NavigatorService.pushErrorPage(const MissingPermissions());
         });
@@ -222,7 +243,7 @@ class _ServerDialogState extends State<ServerDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context1) {
     return ContentDialog(
       backgroundDismiss: true,
       constraints: const BoxConstraints(maxWidth: 600, minHeight: 400, maxHeight: 400),
@@ -237,10 +258,10 @@ class _ServerDialogState extends State<ServerDialog> {
           leading: Text(translate('$prefix.options.title')),
           items: [
             if (modsInstalled)
-              DropDownButtonItem(
-                title: Text(translate('$prefix.options.import_mods')),
+              MenuFlyoutItem(
+                text: Text(translate('$prefix.options.import_mods')),
                 leading: const Icon(FluentIcons.copy),
-                onTap: () {
+                onPressed: () {
                   Navigator.of(context).pop();
                   BlocProvider.of<WidgetCubit>(context).navigate(
                     2,
@@ -250,10 +271,10 @@ class _ServerDialogState extends State<ServerDialog> {
                   );
                 },
               ),
-            DropDownButtonItem(
-              title: Text(translate('copy_link')),
+            MenuFlyoutItem(
+              text: Text(translate('copy_link')),
               leading: const Icon(FluentIcons.paste),
-              onTap: () => Clipboard.setData(ClipboardData(text: 'https://kyber.gg/servers/#id=${server.id}')),
+              onPressed: () => Clipboard.setData(ClipboardData(text: 'https://kyber.gg/servers/#id=${server.id}')),
             ),
           ],
         )
@@ -267,22 +288,94 @@ class _ServerDialogState extends State<ServerDialog> {
           onPressed: downloading || unsupportedMods ? null : () => setState(() => state = state == 1 ? 0 : 1),
           child: Text(state == 1 ? translate('back') : translate('$prefix.buttons.view_mods')),
         ),
-        FilledButton(
-          onPressed: disabled ? null : onButtonPressed,
-          child: Text(
-            translate(
-              correctPassword && !unsupportedMods
-                  ? modsInstalled
-                      ? 'join'
-                      : downloading
-                          ? '$prefix.buttons.downloading'
-                          : !box.get('nexusmods_login', defaultValue: false)
-                              ? '$prefix.buttons.open_mods'
-                              : '$prefix.buttons.download'
-                  : 'continue',
+        if (correctPassword && !unsupportedMods && modsInstalled)
+          SplitButtonBar(
+            buttons: [
+              Expanded(
+                child: SizedBox(
+                  height: 30,
+                  child: FilledButton(
+                    onPressed: disabled ? null : onButtonPressed,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        translate(
+                          correctPassword && !unsupportedMods
+                              ? modsInstalled
+                                  ? 'join'
+                                  : downloading
+                                      ? '$prefix.buttons.downloading'
+                                      : !box.get('nexusmods_login', defaultValue: false)
+                                          ? '$prefix.buttons.open_mods'
+                                          : '$prefix.buttons.download'
+                              : 'continue',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+                child: DropDownButton(
+                  disabled: disabled,
+                  items: [
+                    MenuFlyoutItem(
+                      text: const Text('Manually select profile'),
+                      leading: const Icon(FluentIcons.copy),
+                      onPressed: !disabled
+                          ? () => Timer.run(() async {
+                                FrostyProfile? profile = await showDialog<FrostyProfile?>(
+                                  context: navigatorKey.currentContext!,
+                                  builder: (c) => FrostyProfileSelector(
+                                    onSelected: (s) {
+                                      setState(() => null);
+                                    },
+                                  ),
+                                );
+                                if (profile == null) return;
+                                List<dynamic> mods = profile.mods.where((e) => e.category.toLowerCase() == "gameplay").toList();
+                                if (!listEquals(mods, server.mods.map((mod) => ModService.convertToFrostyMod(mod)).toList())) {
+                                  NotificationService.showNotification(
+                                    message: 'Please select a Frosty pack that contains the server mods in the correct order!',
+                                    color: Colors.red,
+                                  );
+                                  return;
+                                }
+                                this.profile = profile.name;
+                                onButtonPressed();
+                              })
+                          : null,
+                    ),
+                  ],
+                ),
+              ),
+              // IconButton(
+              //   icon: const SizedBox(
+              //     height: 22,
+              //     child: const Icon(FluentIcons.chevron_down, size: 10.0),
+              //   ),
+              //   onPressed: () {},
+              // ),
+            ],
+          ),
+        if (!(correctPassword && !unsupportedMods && modsInstalled))
+          FilledButton(
+            onPressed: disabled ? null : onButtonPressed,
+            child: Text(
+              translate(
+                correctPassword && !unsupportedMods
+                    ? modsInstalled
+                        ? 'join'
+                        : downloading
+                            ? '$prefix.buttons.downloading'
+                            : !box.get('nexusmods_login', defaultValue: false)
+                                ? '$prefix.buttons.open_mods'
+                                : '$prefix.buttons.download'
+                    : 'continue',
+              ),
             ),
           ),
-        ),
       ],
       content: SizedBox(
         height: 250,

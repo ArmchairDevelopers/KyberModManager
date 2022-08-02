@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/types/pack_type.dart';
@@ -44,7 +45,7 @@ class _RunDialogState extends State<RunDialog> {
     if (!mounted) return;
 
     setState(() => content = translate('$prefix.frosty'));
-    await FrostyService.startFrosty(profile: getPackType(selectedProfile) == PackType.FROSTY_PACK ? profile : null);
+    await FrostyService.startFrosty(profile: dynamicEnvEnabled && getPackType(selectedProfile) == PackType.FROSTY_PACK ? profile : null);
 
     if (!mounted) return;
     Navigator.of(context).pop();

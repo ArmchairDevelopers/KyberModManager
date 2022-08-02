@@ -24,7 +24,7 @@ import 'package:windows_taskbar/windows_taskbar.dart';
 class ProfileService {
   static final File _profileFile = File('${OriginHelper.getBattlefrontPath()}\\ModData\\SavedProfiles\\profiles.json');
 
-  static Future<void> searchProfile(List<String> mods, [Function? onProgress]) async {
+  static Future<void> searchProfile(List<String> mods, [Function? onProgress, bool search = false]) async {
     if (!box.get('saveProfiles', defaultValue: true)) {
       return;
     }
@@ -53,11 +53,18 @@ class ProfileService {
       await _saveProfile(dir, current, onProgress);
     }
 
+    if (search) {
+      return;
+    }
+
     SavedProfile profile = profiles.firstWhere((element) => equalModlist(element.mods, convertedMods));
     profile.lastUsed = DateTime.now();
     _editProfile(profile);
-    await enableProfile(dir.path);
-    // await copyProfileData(Directory(profile.path), dir, onProgress, true);
+    if (dynamicEnvEnabled) {
+      enableProfile(dir.path);
+    } else {
+      await copyProfileData(Directory(profile.path), dir, onProgress, true);
+    }
 
     config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
         profile.mods.where((element) => element.filename.isNotEmpty).map((element) => '${element.filename}:True').join('|');
@@ -93,12 +100,16 @@ class ProfileService {
   }
 
   static Future<void> enableProfile(String path) async {
-    if (PlatformHelper.isInstalled(Platform.EA_Desktop) && !await PlatformHelper.isPlatformRunning(Platform.Origin)) {
+    if (!dynamicEnvEnabled) {
+      return;
+    }
+
+    if (PlatformHelper.isInstalled(Platform.EA_Desktop) && !await PlatformHelper.isPlatformRunning(Platform.Origin) && true == false) {
       if (!(await PlatformHelper.isPlatformRunning(Platform.EA_Desktop))) {
         await PlatformHelper.restartPlatform('EA Desktop');
       }
 
-      await DynamicEnv().setEnv(PlatformHelper.platforms[Platform.EA_Desktop]['exe'], 'GAME_DATA_DIR', path);
+      await DynamicEnv().setEnv(PlatformHelper.platforms[Platform.EA_Desktop]['exe'].toString().toLowerCase(), 'GAME_DATA_DIR', path);
       return;
     } else {
       if (!(await PlatformHelper.isPlatformRunning(Platform.Origin))) {

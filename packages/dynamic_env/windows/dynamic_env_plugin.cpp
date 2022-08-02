@@ -55,13 +55,18 @@ void DynamicEnvPlugin::HandleMethodCall(
 
 // No idea how this works. Thanks to BattleDash for doing this
 void DynamicEnvPlugin::SetEnv(const char *proc, const char *name, const char *value, std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
+  std::cout << "Setting env variable " << name << " to " << value << std::endl;
+  std::cout << "Setting env variable " << proc << std::endl;
   DWORD pid = 0;
   HANDLE hProcess = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   PROCESSENTRY32 pe;
   pe.dwSize = sizeof(PROCESSENTRY32);
   if (Process32First(hProcess, &pe)) {
     do {
-      if (strcmp((char *)pe.szExeFile, proc) == 0) {
+      char szExeFile[MAX_PATH];
+      WideCharToMultiByte(CP_ACP, 0, pe.szExeFile, -1, szExeFile, sizeof(szExeFile), NULL, NULL);
+      //if (strcmp((char *)pe.szExeFile, proc) == 0) {
+      if (strcmp(szExeFile, proc) == 0) {
         pid = pe.th32ProcessID;
         break;
       }

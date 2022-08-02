@@ -58,13 +58,33 @@ class ModService {
       var currentMods = await FrostyProfileService.getModsFromProfile('KyberModManager');
       List<dynamic> mods = FrostyProfileService.getModsFromConfigProfile(profileName);
       List<String> formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
-      if (!enableCosmetics) {
+
+      if (!enableCosmetics && dynamicEnvEnabled) {
         return await ProfileService.enableProfile(ProfileService.getProfilePath(profileName));
+      } else if (dynamicEnvEnabled) {
+        mods = [...mods, ...cosmeticMods];
+        formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
+        await FrostyProfileService.createProfile(formattedMods);
+        await ProfileService.searchProfile(formattedMods, onProgress);
+        return;
+      } else if (enableCosmetics) {
+        mods = [...mods, ...cosmeticMods];
+        formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
       }
-      mods = [...mods, ...cosmeticMods];
-      formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
+
+      if (!listEquals(currentMods, mods)) {
+        var packMods = FrostyProfileService.getModsFromConfigProfile(profileName);
+        setContent(translate('$prefix.creating'));
+        await FrostyProfileService.createProfile(formattedMods);
+        if (listEquals(packMods, mods)) {
+          onProgress(0, 0);
+          return await FrostyProfileService.loadFrostyPack(profileName.replaceAll(' (Frosty Pack)', ''), onProgress);
+        }
+        return await ProfileService.searchProfile(formattedMods, onProgress);
+      }
+
       await FrostyProfileService.createProfile(formattedMods);
-      await ProfileService.searchProfile(formattedMods, onProgress);
+      return await ProfileService.searchProfile(formattedMods, onProgress);
     } else if (packType == PackType.COSMETICS) {
       List<Mod> mods = List<Mod>.from(box.get('cosmetics'));
       await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);

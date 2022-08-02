@@ -1,6 +1,9 @@
 ## [1.0.8] - [-/-/-]
 
 - Added the faction selector on the host page.
+- Added an in-app browser for logging in.
+- Fixed the infinite Cloudflare loading screen.
+- Fixed Frosty Collections for the cosmetics page.
 
 ## [1.0.7] - [13/06/22]
 

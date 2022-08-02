@@ -26,6 +26,7 @@ import 'package:system_theme/system_theme.dart';
 import 'package:window_manager/window_manager.dart';
 
 final bool micaSupported = SysInfo.operatingSystemName.contains('Windows 11');
+const bool dynamicEnvEnabled = false;
 final supportedLocales = ['en', 'de', 'pl', 'ru'];
 Box box = Hive.box('data');
 String applicationDocumentsDirectory = '';

@@ -48,9 +48,9 @@ class _ModBrowserState extends State<ModBrowser> {
 
   void openBrowser() async {
     setState(() => disabled = true);
-    browser = await PuppeteerHelper.startBrowser(headless: false, onClose: () => closeBrowser());
+    browser = await PuppeteerHelper.startBrowser(headless: false, asApp: false, onClose: () => closeBrowser());
     var page = (await browser!.pages).first;
-    await page.goto('https://www.nexusmods.com/starwarsbattlefront22017/', wait: Until.networkIdle);
+    // await page.goto('https://www.nexusmods.com/starwarsbattlefront22017/', wait: Until.networkIdle);
     await PuppeteerHelper.initializePage(page);
 
     final String path = '${box.get('frostyPath')}\\mods\\starwarsbattlefrontii\\';
