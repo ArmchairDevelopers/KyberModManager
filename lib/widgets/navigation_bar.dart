@@ -224,10 +224,10 @@ class _NavigationBarState extends State<NavigationBar> {
             ],
             footerItems: [
               PaneItemSeparator(),
-              PaneItem(
-                icon: const Icon(FluentIcons.linked_database),
-                title: const Text('Statistics'),
-              ),
+              // PaneItem(
+              //   icon: const Icon(FluentIcons.linked_database),
+              //   title: const Text('Statistics'),
+              // ),
               // PaneItem(
               //   icon: const Icon(FluentIcons.help),
               //   title: const Text('Troubleshooting'),
