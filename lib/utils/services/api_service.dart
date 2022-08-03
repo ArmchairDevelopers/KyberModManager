@@ -22,6 +22,17 @@ class ApiService {
     }
   }
 
+  static Future<String> getLatestFrostyVersion() async {
+    try {
+      final response = await get(
+        Uri.parse('$BACKEND_API_BASE_URL/frosty/latest'),
+      );
+      return response.statusCode == 200 ? jsonDecode(response.body)['version'] : '';
+    } catch (e) {
+      return '';
+    }
+  }
+
   static Future<List<FrostyVersion>> versionHashes() async {
     try {
       final response = await get(

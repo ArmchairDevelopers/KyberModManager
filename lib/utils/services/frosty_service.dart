@@ -71,7 +71,7 @@ class FrostyService {
       return false;
     }
 
-    return Version.parse(version.version.replaceAll('v', '')) < Version.parse('1.0.6-beta4');
+    return Version.parse(version.version.replaceAll('v', '')) < Version.parse(await ApiService.getLatestFrostyVersion());
   }
 
   static FrostyConfig getFrostyConfig([String? path]) {
