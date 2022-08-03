@@ -133,7 +133,7 @@ class _ServerHostState extends State<ServerHost> {
       if (status.server != null) {
         setState(() {
           _hostController.text = status.server!.name;
-          _passwordController.text = config['SERVER_OPTIONS']['PASSWORD'];
+          _passwordController.text = config?['SERVER_OPTIONS']?['PASSWORD'] ?? '';
           _mapController.text = MapHelper.getMapsForMode(mode).where((m) => m.map == status.server!.map).first.name;
           server = status.server;
           mode = status.server!.mode;

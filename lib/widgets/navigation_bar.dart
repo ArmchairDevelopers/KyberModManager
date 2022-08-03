@@ -16,14 +16,12 @@ import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
-import 'package:kyber_mod_manager/screens/mod_browser.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
 import 'package:kyber_mod_manager/screens/saved_profiles.dart';
 import 'package:kyber_mod_manager/screens/server_browser/server_browser.dart';
 import 'package:kyber_mod_manager/screens/server_host/server_host.dart';
 import 'package:kyber_mod_manager/screens/settings/settings.dart';
-import 'package:kyber_mod_manager/screens/statistics.dart';
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
@@ -112,8 +110,7 @@ class _NavigationBarState extends State<NavigationBar> {
     return BlocConsumer<WidgetCubit, dynamic>(listener: (context, state) {
       bool isFake = state.runtimeType != int && state.containsKey(state.keys.first);
       setState(() {
-        index = !isFake ? state : 11;
-
+        index = !isFake ? state : 10;
         fakeIndex = !isFake ? state : state.keys.toList().first;
       });
     }, builder: (context, widget) {
@@ -192,7 +189,7 @@ class _NavigationBarState extends State<NavigationBar> {
                 title: Text(translate('$prefix.items.host')),
               ),
               PaneItemSeparator(),
-              PaneItemHeader(header: Text(translate('mods'))),
+              PaneItemHeader(header: Text(translate('navigation_bar.items.mod_profiles'))),
               PaneItem(
                 icon: const Icon(FluentIcons.list),
                 title: Text(translate('$prefix.items.mod_profiles')),
@@ -202,15 +199,15 @@ class _NavigationBarState extends State<NavigationBar> {
                 title: Text(translate('$prefix.items.saved_profiles')),
               ),
               PaneItemSeparator(),
-              PaneItemHeader(header: const Text('Mods')),
+              PaneItemHeader(header: Text(translate('mods'))),
               PaneItem(
                 icon: const Icon(FluentIcons.custom_list),
                 title: Text(translate('$prefix.items.cosmetic_mods')),
               ),
-              PaneItem(
-                icon: const Icon(FluentIcons.view_dashboard),
-                title: const Text('Mod Browser'),
-              ),
+              // PaneItem(
+              //   icon: const Icon(FluentIcons.view_dashboard),
+              //   title: const Text('Mod Browser'),
+              // ),
               PaneItem(
                 icon: const Icon(FluentIcons.installation),
                 title: Text(translate('$prefix.items.installed_mods')),
@@ -279,10 +276,10 @@ class _NavigationBarState extends State<NavigationBar> {
                 const ModProfiles(),
                 const SavedProfiles(),
                 const CosmeticMods(),
-                const ModBrowser(),
+                // const ModBrowser(),
                 const InstalledMods(),
                 const RunBattlefront(),
-                Statistics(),
+                // Statistics(),
 
                 // Troubleshooting(),
                 const feedback.Feedback(),
