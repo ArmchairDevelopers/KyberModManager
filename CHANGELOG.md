@@ -7,6 +7,8 @@
 - Added button to manually select a Frosty pack when joining a server.
 - Fixed the infinite Cloudflare loading screen.
 - Fixed Frosty Collections for the cosmetics page.
+- Fixed that KMM couldn't connect to the API.
+- UI improvements.
 
 ## [1.0.7] - [13/06/22]
 
