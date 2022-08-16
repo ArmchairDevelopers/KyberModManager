@@ -165,22 +165,18 @@ class ProfileService {
   }
 
   static Future<int> getProfileSize(String name) async {
-    ReceivePort receivePort = ReceivePort();
-    Isolate isolate = await Isolate.spawn(_getProfileSize, [name, receivePort.sendPort], onExit: receivePort.sendPort, paused: true);
-    isolate.addOnExitListener(receivePort.sendPort);
-    isolate.resume(isolate.pauseCapability!);
-    return await receivePort.first;
-  }
-
-  static _getProfileSize(List<dynamic> s) {
     String battlefrontPath = OriginHelper.getBattlefrontPath();
     int size = 0;
-    Directory('$battlefrontPath\\ModData\\SavedProfiles\\${s[0]}').listSync(recursive: true).forEach((element) async {
+    Directory dir = Directory('$battlefrontPath\\ModData\\SavedProfiles\\$name');
+    if (!dir.existsSync()) {
+      return 0;
+    }
+    dir.listSync(recursive: true).forEach((element) async {
       if (element is File) {
         size += element.lengthSync();
       }
     });
-    Isolate.exit(s[1], size);
+    return size;
   }
 
   static Future<void> copyProfileData(Directory from, Directory to, [Function? onProgress, bool symlink = false]) async {

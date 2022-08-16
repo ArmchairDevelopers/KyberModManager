@@ -133,7 +133,7 @@ class _ServerDialogState extends State<ServerDialog> {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         }, false);
 
-        await ProfileService.copyProfileData(Directory('$path\\$profile'), Directory('$path\\KyberModManager'), (copied, total) {
+        await ProfileService.copyProfileData(Directory('$path\\ModData\\$profile'), Directory('$path\\ModData\\KyberModManager'), (copied, total) {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         });
         await ProfileService.enableProfile(ProfileService.getProfilePath(profile!));

@@ -18,7 +18,7 @@ class FrostyService {
     String path = frostyPath ?? box.get('frostyPath');
     var r = await Process.run(
       '$path/FrostyModManager.exe',
-      launch ? ['-launch', profile ?? 'KyberModManager'] : [],
+      launch ? ['-launch', dynamicEnvEnabled ? (profile ?? 'KyberModManager') : 'KyberModManager'] : [],
       workingDirectory: path,
       includeParentEnvironment: true,
       runInShell: true,

@@ -110,7 +110,7 @@ class _NavigationBarState extends State<NavigationBar> {
     return BlocConsumer<WidgetCubit, dynamic>(listener: (context, state) {
       bool isFake = state.runtimeType != int && state.containsKey(state.keys.first);
       setState(() {
-        index = !isFake ? state : 10;
+        index = !isFake ? state : 9;
         fakeIndex = !isFake ? state : state.keys.toList().first;
       });
     }, builder: (context, widget) {
@@ -159,24 +159,6 @@ class _NavigationBarState extends State<NavigationBar> {
                   ),
             selected: fakeIndex,
             items: [
-              // PaneItem(
-              //   icon: const Icon(FluentIcons.power_shell),
-              //   tileColor: ButtonState.resolveWith((states) {
-              //     var theme = FluentTheme.of(context);
-              //     if (injectedDll) {
-              //       return theme.accentColor.lighter;
-              //     } else if (states.isPressing) {
-              //       return theme.accentColor.darker;
-              //     } else if (states.isHovering) {
-              //       return theme.accentColor.dark;
-              //     }
-              //     return theme.accentColor;
-              //   }),
-              //   title: Text(
-              //     translate('$prefix.kyber.' + (injectedDll ? 'running' : 'not_running')),
-              //   ),
-              // ),
-              // PaneItemSeparator(),
               PaneItemHeader(header: const Text('Kyber')),
               PaneItem(
                 mouseCursor: MouseCursor.defer,
@@ -239,18 +221,6 @@ class _NavigationBarState extends State<NavigationBar> {
               ),
             ],
             onChanged: (i) async {
-              // if (i == 0) {
-              //   if (injectedDll) {
-              //     return;
-              //   }
-              //   var result = DllInjector.getBattlefrontPID();
-              //   if (result == -1) {
-              //     NotificationService.showNotification(message: translate('$prefix.battlefront_not_running'), color: Colors.red);
-              //     return;
-              //   }
-              //   DllInjector.inject();
-              //   return;
-              // }
               setState(() {
                 index = i;
                 fakeIndex = i;
@@ -270,18 +240,13 @@ class _NavigationBarState extends State<NavigationBar> {
                 child: child,
               ),
               children: [
-                // const SizedBox(),
                 const ServerBrowser(),
                 const ServerHost(),
                 const ModProfiles(),
                 const SavedProfiles(),
                 const CosmeticMods(),
-                // const ModBrowser(),
                 const InstalledMods(),
                 const RunBattlefront(),
-                // Statistics(),
-
-                // Troubleshooting(),
                 const feedback.Feedback(),
                 const Settings(),
                 widget.runtimeType != int ? widget.values.first : const SizedBox(height: 0),
