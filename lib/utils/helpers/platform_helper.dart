@@ -100,7 +100,6 @@ class PlatformHelper {
   }
 
   static Platform _platformFromString(String platform) {
-    print(Platform.Origin.toString());
     return Platform.values.firstWhere((p) => p.toString().split('.').last.toLowerCase() == platform.toLowerCase().replaceAll(' ', '_'));
   }
 }
