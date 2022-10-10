@@ -20,10 +20,13 @@ class DllInjector {
 
   static Future downloadDll() async {
     if (DllInjector.isInjected()) {
+      Logger.root.info('Dll already injected, skipping download');
       return;
     }
 
-    await Dio().download(KYBER_DLL_LINK, _file.path).catchError((e) {
+    String release = box.get('releaseChannel', defaultValue: 'stable');
+    Logger.root.info('Downloading dll from $release channel');
+    await Dio().download("$KYBER_API_BASE_URL/downloads/distributions/$release/dll", _file.path).catchError((e) {
       Logger.root.severe('Error while downloading Kyber.dll: $e');
     });
   }
