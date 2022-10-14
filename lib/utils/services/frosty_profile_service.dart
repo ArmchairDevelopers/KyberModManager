@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -9,6 +10,7 @@ import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:logging/logging.dart';
 
@@ -20,7 +22,8 @@ class FrostyProfileService {
     packs: {'Default': '', 'KyberModManager': ''},
   );
 
-  static Future<void> createProfile(List<String> list, [String profile = 'KyberModManager']) async {
+  static Future<void> createProfile(List<String> list,
+      [String profile = 'KyberModManager']) async {
     try {
       List mods = list.map((e) => ModService.convertToFrostyMod(e)).toList();
       FrostyConfig config = FrostyService.getFrostyConfig();
@@ -29,12 +32,17 @@ class FrostyProfileService {
       }
       config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
       config.globalOptions.useDefaultProfile = true;
-      config.games['starwarsbattlefrontii']?.options.selectedPack = 'KyberModManager';
-      config.games['starwarsbattlefrontii']?.packs?[profile] =
-          mods.where((element) => element.filename.isNotEmpty).map((e) => '${e.filename.substring(e.filename.lastIndexOf('\\') + 1)}:True').join('|');
+      config.games['starwarsbattlefrontii']?.options.selectedPack =
+          'KyberModManager';
+      config.games['starwarsbattlefrontii']?.packs?[profile] = mods
+          .where((element) => element.filename.isNotEmpty)
+          .map((e) =>
+              '${e.filename.substring(e.filename.lastIndexOf('\\') + 1)}:True')
+          .join('|');
       await FrostyService.saveFrostyConfig(config);
     } catch (e) {
-      NotificationService.showNotification(message: e.toString(), color: Colors.red);
+      NotificationService.showNotification(
+          message: e.toString(), color: Colors.red);
       Logger.root.severe(e.toString());
     }
   }
@@ -60,7 +68,8 @@ class FrostyProfileService {
   }
 
   static Future<void> createFrostyConfig() async {
-    String path = applicationDocumentsDirectory.replaceAll(r'Roaming\Kyber Mod Manager', r'Local\Frosty');
+    String path = applicationDocumentsDirectory.replaceAll(
+        r'Roaming\Kyber Mod Manager', r'Local\Frosty');
     if (!Directory(path).existsSync()) {
       Directory(path).createSync(recursive: true);
     }
@@ -72,7 +81,8 @@ class FrostyProfileService {
     String battlefrontPath = OriginHelper.getBattlefrontPath();
     Logger.root.info('Creating Frosty config at "${file.path}"');
     Logger.root.info('Battlefront path: $battlefrontPath');
-    FrostyConfig config = FrostyConfig.fromJson({'Games': {}, 'GlobalOptions': Map<String, dynamic>.from({})});
+    FrostyConfig config = FrostyConfig.fromJson(
+        {'Games': {}, 'GlobalOptions': Map<String, dynamic>.from({})});
     config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
     config.globalOptions.useDefaultProfile = true;
     config.games['starwarsbattlefrontii'] = _battlefront;
@@ -83,7 +93,8 @@ class FrostyProfileService {
     Logger.root.info('Loading Frosty pack: $name');
     String bf2path = OriginHelper.getBattlefrontPath();
     List<dynamic> mods = FrostyProfileService.getModsFromConfigProfile(name);
-    await FrostyProfileService.createProfile(List<String>.from(mods.map((e) => e.toKyberString()).toList()));
+    await FrostyProfileService.createProfile(
+        List<String>.from(mods.map((e) => e.toKyberString()).toList()));
     Directory d = Directory('$bf2path\\ModData\\$name');
     if (d.existsSync()) {
       var appliedMods = await getModsFromProfile('KyberModManager');
@@ -93,7 +104,8 @@ class FrostyProfileService {
       }
 
       Logger.root.info('Copying profile data for $name');
-      await ProfileService.copyProfileData(d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress);
+      await ProfileService.copyProfileData(
+          d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress);
     }
   }
 
@@ -102,7 +114,11 @@ class FrostyProfileService {
     if (config.games['starwarsbattlefrontii']?.packs?[profile] == null) {
       return [];
     }
-    List<String> modList = config.games['starwarsbattlefrontii']!.packs![profile]!.split('|').map((e) => e.split(':')[0]).toList();
+    List<String> modList = config
+        .games['starwarsbattlefrontii']!.packs![profile]!
+        .split('|')
+        .map((e) => e.split(':')[0])
+        .toList();
     return modList.map((e) => ModService.fromFilename(e)).toList();
   }
 
@@ -113,16 +129,39 @@ class FrostyProfileService {
       return [];
     }
 
-    File file = File('$path\\ModData\\$profile\\patch\\mods.txt');
-    if (!file.existsSync()) {
+    File oldFile = File('$path\\ModData\\$profile\\patch\\mods.txt');
+    File file = File('$path\\ModData\\$profile\\patch\\mods.json');
+
+    if (oldFile.existsSync() && !file.existsSync()) {
+      var mods = oldFile
+          .readAsStringSync()
+          .split('\n')
+          .where((element) => element.contains(':') && element.contains("' '"))
+          .map((element) {
+        String filename = element.split(':')[0];
+        return ModService.getFrostyMod(filename);
+      }).toList();
+      await file.writeAsString(jsonEncode(
+        mods.map(
+          (e) => e is Mod
+              ? ({
+                  'name': e.name,
+                  'version': e.version,
+                  'category': e.category,
+                  'file_name': e.filename
+                })
+              : ({}),
+        ),
+      ));
+      return mods;
+    } else if (oldFile.existsSync() || !file.existsSync()) {
       return [];
     }
 
     String content = await file.readAsString();
-    return content.split('\n').where((element) => element.contains(':') && element.contains("' '")).map((element) {
-      String filename = element.split(':')[0];
-      return ModService.getFrostyMod(filename);
-    }).toList();
+    List<dynamic> mods = await jsonDecode(content);
+
+    return mods.map((e) => ModService.getFrostyMod(e['file_name'])).toList();
   }
 
   static List<FrostyProfile> getProfilesWithMods() {
@@ -136,7 +175,14 @@ class FrostyProfileService {
       (key, value) => profiles.add(
         FrostyProfile(
           name: key,
-          mods: value.isNotEmpty ? value.split('|').map((element) => element.split(':')[0]).toList().map((e) => ModService.getFrostyMod(e)).toList() : [],
+          mods: value.isNotEmpty
+              ? value
+                  .split('|')
+                  .map((element) => element.split(':')[0])
+                  .toList()
+                  .map((e) => ModService.getFrostyMod(e))
+                  .toList()
+              : [],
         ),
       ),
     );
