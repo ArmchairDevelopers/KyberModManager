@@ -82,7 +82,8 @@ class FrostyProfileService {
     Logger.root.info('Creating Frosty config at "${file.path}"');
     Logger.root.info('Battlefront path: $battlefrontPath');
     FrostyConfig config = FrostyConfig.fromJson(
-        {'Games': {}, 'GlobalOptions': Map<String, dynamic>.from({})});
+      {'Games': {}, 'GlobalOptions': Map<String, dynamic>.from({})},
+    );
     config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
     config.globalOptions.useDefaultProfile = true;
     config.games['starwarsbattlefrontii'] = _battlefront;
@@ -94,7 +95,8 @@ class FrostyProfileService {
     String bf2path = OriginHelper.getBattlefrontPath();
     List<dynamic> mods = FrostyProfileService.getModsFromConfigProfile(name);
     await FrostyProfileService.createProfile(
-        List<String>.from(mods.map((e) => e.toKyberString()).toList()));
+      List<String>.from(mods.map((e) => e.toKyberString()).toList()),
+    );
     Directory d = Directory('$bf2path\\ModData\\$name');
     if (d.existsSync()) {
       var appliedMods = await getModsFromProfile('KyberModManager');
@@ -133,6 +135,7 @@ class FrostyProfileService {
     File file = File('$path\\ModData\\$profile\\patch\\mods.json');
 
     if (oldFile.existsSync() && !file.existsSync()) {
+      Logger.root.info("Converting old mods.txt to mods.json");
       var mods = oldFile
           .readAsStringSync()
           .split('\n')
