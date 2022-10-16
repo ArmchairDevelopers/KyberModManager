@@ -266,7 +266,7 @@ class _ServerDialogState extends State<ServerDialog> {
                   BlocProvider.of<WidgetCubit>(context).navigate(
                     2,
                     EditProfile(
-                      profile: ModProfile(name: '', description: '', mods: server.mods.map((e) => ModService.convertToMod(e)).toList()),
+                      profile: ModProfile(name: '', description: '', mods: server.mods.map((e) => ModService.convertToFrostyMod(e)).toList()),
                     ),
                   );
                 },
