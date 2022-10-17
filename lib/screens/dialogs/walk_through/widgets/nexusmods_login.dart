@@ -68,7 +68,7 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
         await box.put('nexusmods_login', true);
         if (!mounted) return;
         Navigator.of(context).pop();
-      } else if (!url.contains('nexusmods')) {
+      } else if (!url.contains('nexusmods') ||! url.startsWith("https://users.nexusmods.com") &&! showOverlay) {
         _controller.loadUrl('https://users.nexusmods.com/auth/sign_in');
       }
     });
@@ -137,7 +137,7 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
                                     ),
                                     SizedBox(width: 15),
                                     Text(
-                                      'Loading...',
+                                      'Waiting for NexusMods...',
                                       style: TextStyle(fontSize: 19),
                                     ),
                                   ],
