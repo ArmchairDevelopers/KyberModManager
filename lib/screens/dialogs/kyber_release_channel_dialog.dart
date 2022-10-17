@@ -14,6 +14,7 @@ class KyberReleaseChannelDialog extends StatefulWidget {
 }
 
 class _KyberReleaseChannelDialogState extends State<KyberReleaseChannelDialog> {
+  bool _loading = false;
   final String prefix = "settings.kyber_release_channel";
   late TextEditingController controller;
 
@@ -38,36 +39,39 @@ class _KyberReleaseChannelDialogState extends State<KyberReleaseChannelDialog> {
           child: Text(translate("cancel")),
         ),
         FilledButton(
-          onPressed: () async {
-            if (controller.text.isEmpty) {
-              NotificationService.showNotification(
-                message: translate("$prefix.error.no_channel_selected"),
-                color: Colors.red,
-              );
-              return;
-            }
-            try {
-              await box.put('releaseChannel', controller.text);
-              await DllInjector.downloadDll();
-              if (!mounted) return;
-              Navigator.of(context).pop();
-            } catch (e) {
-              await box.put('releaseChannel', 'stable');
-              await DllInjector.downloadDll();
-              if (e is DioError) {
-                NotificationService.showNotification(
-                  message: translate("$prefix.errors.channel_not_found"),
-                  color: Colors.red,
-                );
-              } else {
-                NotificationService.showNotification(
-                  message: translate("$prefix.errors.failed_to_download"),
-                  color: Colors.red,
-                );
-              }
-              Navigator.of(context).pop();
-            }
-          },
+          onPressed: _loading
+              ? null
+              : () async {
+                  if (controller.text.isEmpty) {
+                    NotificationService.showNotification(
+                      message: translate("$prefix.error.no_channel_selected"),
+                      color: Colors.red,
+                    );
+                    return;
+                  }
+                  try {
+                    setState(() => _loading = true);
+                    await box.put('releaseChannel', controller.text);
+                    await DllInjector.downloadDll();
+                    if (!mounted) return;
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    await box.put('releaseChannel', 'stable');
+                    if (e is DioError) {
+                      NotificationService.showNotification(
+                        message: translate("$prefix.errors.channel_not_found"),
+                        color: Colors.red,
+                      );
+                    } else {
+                      NotificationService.showNotification(
+                        message: translate("$prefix.errors.failed_to_download"),
+                        color: Colors.red,
+                      );
+                    }
+                    await DllInjector.downloadDll();
+                    Navigator.of(context).pop();
+                  }
+                },
           child: Text(translate("save")),
         ),
       ],
@@ -77,6 +81,29 @@ class _KyberReleaseChannelDialogState extends State<KyberReleaseChannelDialog> {
             TextBox(
               controller: controller,
               placeholder: 'Release Channel',
+            ),
+            Expanded(
+              child: _loading
+                  ? Container(
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 25,
+                            height: 25,
+                            child: const ProgressRing(),
+                          ),
+                          SizedBox(width: 20),
+                          Text(
+                            translate(
+                                "server_browser.join_dialog.buttons.downloading"),
+                            style: TextStyle(fontSize: 17),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
             ),
           ],
         ),
