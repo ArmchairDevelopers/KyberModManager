@@ -76,7 +76,7 @@ class _RunBattlefrontState extends State<RunBattlefront> {
       return;
     }
 
-    if (DllInjector.getBattlefrontPID() != -1) {
+    if (DllInjector.battlefrontPID != -1) {
       NotificationService.showNotification(message: translate('$prefix.notifications.battlefront_already_running'), color: Colors.red);
       return;
     }

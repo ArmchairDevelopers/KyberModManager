@@ -103,7 +103,7 @@ class _ServerDialogState extends State<ServerDialog> {
       return;
     }
     if (modsInstalled) {
-      if (DllInjector.getBattlefrontPID() != -1) {
+      if (DllInjector.battlefrontPID != -1) {
         NotificationService.showNotification(message: translate('run_battlefront.notifications.battlefront_already_running'), color: Colors.red);
         return;
       }
@@ -221,17 +221,17 @@ class _ServerDialogState extends State<ServerDialog> {
   void checkInjection([x = false]) async {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
-    if (DllInjector.getBattlefrontPID() == -1) {
+    if (DllInjector.battlefrontPID == -1) {
       return startTimer();
     }
 
-    if (DllInjector.getBattlefrontPID() != -1 && !DllInjector.isInjected()) {
+    if (DllInjector.battlefrontPID != -1 && !DllInjector.isInjected()) {
       if (!x) {
         return checkInjection(true);
       }
 
       NotificationService.showNotification(message: translate('$prefix.failed_injection.notification'), color: Colors.red);
-      Process.killPid(DllInjector.getBattlefrontPID());
+      Process.killPid(DllInjector.battlefrontPID);
       setState(() {
         failedInjection = true;
         loading = false;
