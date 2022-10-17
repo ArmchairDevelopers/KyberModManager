@@ -99,4 +99,30 @@ class _TranslationDelegate implements FluentLocalizations {
 
   @override
   String get selectAllActionTooltip => 'Select all content';
+
+  @override
+  String get am => "Am";
+
+  @override
+  String get closeTabLabelSuffix => "Close";
+
+  @override
+  String get day => "-";
+
+  @override
+  String get hour => "-";
+
+  @override
+  String get localeName => "-";
+
+  String get minute => "-";
+
+  @override
+  String get month => "-";
+
+  @override
+  String get pm => "-";
+
+  @override
+  String get year => "-";
 }

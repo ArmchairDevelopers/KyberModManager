@@ -28,7 +28,6 @@ class _KyberReleaseChannelDialogState extends State<KyberReleaseChannelDialog> {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      backgroundDismiss: false,
       constraints: const BoxConstraints(maxWidth: 700, maxHeight: 400),
       title: Text(translate("$prefix.title")),
       actions: [

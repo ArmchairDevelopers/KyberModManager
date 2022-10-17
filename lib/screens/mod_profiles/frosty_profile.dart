@@ -46,12 +46,12 @@ class _FrostyProfileSelectorState extends State<FrostyProfileSelector> {
       ],
       content: InfoLabel(
         label: translate('select_frosty_profile.label'),
-        child: Combobox<String>(
+        child: ComboBox<String>(
           value: value,
           onChanged: (v) => setState(() => value = v),
           isExpanded: true,
           items: profiles.map((e) {
-            return ComboboxItem(
+            return ComboBoxItem(
               value: e.name,
               child: Text(e.name),
             );

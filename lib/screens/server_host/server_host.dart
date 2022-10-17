@@ -321,11 +321,10 @@ class _ServerHostState extends State<ServerHost> {
                 const SizedBox(height: 8),
                 InfoLabel(
                   label: translate('$prefix.forms.game_mode.header'),
-                  child: Combobox<String>(
+                  child: ComboBox<String>(
                     isExpanded: true,
-                    items: modes.map((e) => ComboboxItem<String>(value: e.mode, child: Text(e.name))).toList(),
+                    items: modes.map((e) => ComboBoxItem<String>(value: e.mode, child: Text(e.name))).toList(),
                     value: mode,
-                    comboboxColor: Colors.white,
                     onChanged: (value) {
                       setState(() {
                         mode = value ?? '';
@@ -341,7 +340,8 @@ class _ServerHostState extends State<ServerHost> {
                     controller: _mapController,
                     clearButtonEnabled: true,
                     placeholder: translate('$prefix.forms.map.placeholder'),
-                    items: MapHelper.getMapsForMode(mode).map((e) => e.name).toList(),
+                    // items: MapHelper.getMapsForMode(mode).map((e) => e.name).toList(),
+                    items: MapHelper.getMapsForMode(mode).map((e) => AutoSuggestBoxItem(value: e.name, label: e.name)).toList(),
                     onSelected: (text) {
                       FocusScope.of(context).unfocus();
                     },
@@ -368,7 +368,7 @@ class _ServerHostState extends State<ServerHost> {
                   //   }
                   // },
                   onChanged: (String? value, TextChangedReason _) => value != null && value.isNotEmpty && _formKey.currentState!.validate(),
-                  items: profiles,
+                  items: profiles.map((e) => AutoSuggestBoxItem(value: e, label: e)).toList(),
                   onSelected: (text) {
                     box.put('lastProfile', text == translate('$prefix.forms.mod_profile.no_mods_profile') ? 'no_mods' : text);
                     Timer.run(() => checkWarnings());
@@ -378,16 +378,15 @@ class _ServerHostState extends State<ServerHost> {
                 const SizedBox(height: 21),
                 InfoLabel(
                   label: 'Server Host Faction',
-                  child: Combobox<int>(
+                  child: ComboBox<int>(
                     isExpanded: true,
                     items: [0, 1].map((e) {
-                      return ComboboxItem<int>(
+                      return ComboBoxItem<int>(
                         value: e,
                         child: Text(e == 0 ? 'Light Side' : 'Dark Side'),
                       );
                     }).toList(),
                     value: faction,
-                    comboboxColor: Colors.white,
                     onChanged: (value) {
                       setState(() => faction = value ?? 0);
                     },
@@ -396,17 +395,17 @@ class _ServerHostState extends State<ServerHost> {
                 const SizedBox(height: 16),
                 InfoLabel(
                   label: translate('$prefix.forms.proxy.header'),
-                  child: Combobox<String>(
+                  child: ComboBox<String>(
                     isExpanded: true,
                     items: proxies?.map((e) {
-                          return ComboboxItem<String>(
+                          return ComboBoxItem<String>(
                             value: e.ip,
                             child: Text('${e.name} (${e.ping ?? '-1'} ms)'),
                           );
                         }).toList() ??
                         [],
                     value: proxy,
-                    comboboxColor: Colors.white,
+                    // comboBoxColor: Colors.white,
                     onChanged: (value) {
                       box.put('proxy', value);
                       setState(() => proxy = value ?? '');

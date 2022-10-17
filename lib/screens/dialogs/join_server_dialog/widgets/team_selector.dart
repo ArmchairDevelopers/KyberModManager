@@ -26,14 +26,14 @@ class TeamSelector extends StatelessWidget {
         children: [
           Text(translate('$_prefix.select_team')),
           const SizedBox(height: 8),
-          Combobox<String>(
+          ComboBox<String>(
             isExpanded: true,
             items: [
-              ComboboxItem<String>(
+              ComboBoxItem<String>(
                 value: '0',
                 child: Text(translate('$_prefix.light_side')),
               ),
-              ComboboxItem<String>(
+              ComboBoxItem<String>(
                 value: '1',
                 child: Text(translate('$_prefix.dark_side')),
               ),

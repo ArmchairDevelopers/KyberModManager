@@ -115,14 +115,13 @@ class _SettingsState extends State<Settings> {
             const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
         children: [
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.language.title')),
               subtitle: Text(translate('$prefix.language.subtitle')),
               leading: const Icon(FluentIcons.locale_language),
               trailing: SizedBox(
                 width: 250,
-                child: Combobox<dynamic>(
+                child: ComboBox<dynamic>(
                   onChanged: (dynamic value) async {
                     changeLocale(context, value);
                     await box.put('locale', value);
@@ -140,7 +139,7 @@ class _SettingsState extends State<Settings> {
                       .delegate
                       .supportedLocales
                       .map((e) {
-                    return ComboboxItem<dynamic>(
+                    return ComboBoxItem<dynamic>(
                       value: e.languageCode,
                       child: SizedBox(
                         child: Row(
@@ -162,7 +161,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.nexus_mods.title')),
               subtitle: Text(translate('$prefix.nexus_mods.subtitle')),
@@ -201,7 +199,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -267,7 +264,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -292,7 +288,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -322,7 +317,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate("$prefix.kyber_release_channel.title")),
               subtitle: Text(translate("$prefix.kyber_release_channel.description")),
@@ -341,7 +335,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.change_frosty_directory.title')),
               subtitle:
@@ -364,7 +357,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.reset.title')),
               subtitle: Text(translate('$prefix.reset.subtitle')),

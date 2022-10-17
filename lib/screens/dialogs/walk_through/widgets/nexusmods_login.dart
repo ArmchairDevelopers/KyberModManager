@@ -86,7 +86,6 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      backgroundDismiss: false,
       constraints: BoxConstraints(maxWidth: browserOpen ? 1000 : 600, maxHeight: browserOpen ? 857 : 400),
       title: Text(translate('$prefix.title')),
       actions: [

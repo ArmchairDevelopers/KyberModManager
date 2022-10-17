@@ -162,11 +162,13 @@ class _NavigationBarState extends State<NavigationBar> {
               PaneItemHeader(header: const Text('Kyber')),
               PaneItem(
                 mouseCursor: MouseCursor.defer,
+                body: const ServerBrowser(),
                 icon: const Icon(FluentIcons.server),
                 title: Text(translate('$prefix.items.server_browser')),
               ),
               PaneItem(
                 mouseCursor: MouseCursor.defer,
+                body: const ServerHost(),
                 icon: const Icon(FluentIcons.package),
                 title: Text(translate('$prefix.items.host')),
               ),
@@ -174,16 +176,19 @@ class _NavigationBarState extends State<NavigationBar> {
               PaneItemHeader(header: Text(translate('navigation_bar.items.mod_profiles'))),
               PaneItem(
                 icon: const Icon(FluentIcons.list),
+                body: const ModProfiles(),
                 title: Text(translate('$prefix.items.mod_profiles')),
               ),
               PaneItem(
                 icon: const Icon(FluentIcons.save_all),
+                body: const SavedProfiles(),
                 title: Text(translate('$prefix.items.saved_profiles')),
               ),
               PaneItemSeparator(),
               PaneItemHeader(header: Text(translate('mods'))),
               PaneItem(
                 icon: const Icon(FluentIcons.custom_list),
+                body: const CosmeticMods(),
                 title: Text(translate('$prefix.items.cosmetic_mods')),
               ),
               // PaneItem(
@@ -192,12 +197,14 @@ class _NavigationBarState extends State<NavigationBar> {
               // ),
               PaneItem(
                 icon: const Icon(FluentIcons.installation),
+                body: const InstalledMods(),
                 title: Text(translate('$prefix.items.installed_mods')),
               ),
               PaneItemSeparator(),
               PaneItemHeader(header: const Text('Battlefront 2')),
               PaneItem(
                 icon: const Icon(FluentIcons.processing_run),
+                body: const RunBattlefront(),
                 title: Text(translate('$prefix.items.run_bf2')),
               ),
             ],
@@ -213,10 +220,12 @@ class _NavigationBarState extends State<NavigationBar> {
               // ),
               PaneItem(
                 icon: const Icon(FluentIcons.feedback),
+                body: const feedback.Feedback(),
                 title: Text(translate('$prefix.items.feedback')),
               ),
               PaneItem(
                 icon: const Icon(FluentIcons.settings),
+                body: const Settings(),
                 title: Text(translate('$prefix.items.settings')),
               ),
             ],
@@ -228,31 +237,20 @@ class _NavigationBarState extends State<NavigationBar> {
             },
             displayMode: PaneDisplayMode.auto,
           ),
-          content: DropTarget(
-            onDragDone: (details) {
-              ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
-            },
-            child: NavigationBody(
-              index: index,
-              transitionBuilder: (child, animation) => EntrancePageTransition(
-                animation: animation,
-                startFrom: .015,
-                child: child,
-              ),
-              children: [
-                const ServerBrowser(),
-                const ServerHost(),
-                const ModProfiles(),
-                const SavedProfiles(),
-                const CosmeticMods(),
-                const InstalledMods(),
-                const RunBattlefront(),
-                const feedback.Feedback(),
-                const Settings(),
-                widget.runtimeType != int ? widget.values.first : const SizedBox(height: 0),
-              ],
-            ),
+          transitionBuilder: (child, animation) => EntrancePageTransition(
+            animation: animation,
+            startFrom: .015,
+            child: child,
           ),
+          paneBodyBuilder: (selectedPaneItemBody) {
+            return DropTarget(
+              onDragDone: (details) {
+                ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
+              },
+              // TODO: fix animation for sub-pages
+              child: fakeIndex != index ? widget.values.first : selectedPaneItemBody,
+            );
+          },
         ),
       );
     });

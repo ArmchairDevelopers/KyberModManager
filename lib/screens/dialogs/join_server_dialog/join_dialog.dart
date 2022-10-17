@@ -245,7 +245,6 @@ class _ServerDialogState extends State<ServerDialog> {
   @override
   Widget build(BuildContext context1) {
     return ContentDialog(
-      backgroundDismiss: true,
       constraints: const BoxConstraints(maxWidth: 600, minHeight: 400, maxHeight: 400),
       title: Row(children: [
         Expanded(
