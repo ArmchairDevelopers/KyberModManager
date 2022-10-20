@@ -107,7 +107,7 @@ class FrostyProfileService {
 
       Logger.root.info('Copying profile data for $name');
       await ProfileService.copyProfileData(
-          d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress);
+          d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress, true);
     }
   }
 
@@ -146,14 +146,12 @@ class FrostyProfileService {
       }).toList();
       await file.writeAsString(jsonEncode(
         mods.map(
-          (e) => e is Mod
-              ? ({
+          (e) => ({
                   'name': e.name,
                   'version': e.version,
                   'category': e.category,
                   'file_name': e.filename
-                })
-              : ({}),
+                }),
         ),
       ));
       return mods;
