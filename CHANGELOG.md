@@ -1,5 +1,6 @@
 ## [1.0.8] - [-/-/-]
 
+- Added a selection menu for Kyber release channels.
 - Faster loading of saved profile through symlinks.
 - Added the ability to manually select the BF2 path.
 - Added the faction selector on the host page.
@@ -7,7 +8,7 @@
 - Added button to manually select a Frosty pack when joining a server.
 - Fixed the infinite Cloudflare loading screen.
 - Fixed Frosty Collections for the cosmetics page.
-- Fixed that KMM couldn't connect to the API.
+- Several minor bug fixes.
 - UI improvements.
 
 ## [1.0.7] - [13/06/22]
