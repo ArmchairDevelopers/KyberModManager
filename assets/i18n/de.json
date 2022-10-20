@@ -296,6 +296,16 @@
          "title":"Nach Updates suchen",
          "no_updates_available":"Keine Updates verfügbar."
       },
+      "kyber_release_channel":{
+         "title":"Kyber Release Channel",
+         "description":"Choose the release channel you want to use for Kyber.",
+         "button":"Select",
+         "errors":{
+            "no_channel_selected":"Please select a release channel.",
+            "channel_not_found":"Invalid release channel, using stable channel",
+            "failed_to_download":"Failed to download dll, using stable channel"
+         }
+      },
       "language":{
          "title":"Sprache",
          "subtitle":"Wähle deine Sprache."
@@ -323,59 +333,14 @@
          "title":"Discord Aktivität",
          "subtitle":"Zeigt deine aktuelle Server Aktivität auf Discord an."
       },
-      "settings":{
-         "title":"Einstellungen",
-         "export_log_file":"Logdatei exportieren",
-         "check_for_updates":{
-            "title":"Nach Updates suchen",
-            "no_updates_available":"Keine Updates verfügbar."
-         },
-         "kyber_release_channel":{
-            "title":"Kyber Release Channel",
-            "description":"Choose the release channel you want to use for Kyber.",
-            "button":"Select",
-            "errors":{
-               "no_channel_selected":"Please select a release channel.",
-               "channel_not_found":"Invalid release channel, using stable channel",
-               "failed_to_download":"Failed to download dll, using stable channel"
-            }
-         },
-         "language":{
-            "title":"Sprache",
-            "subtitle":"Wähle deine Sprache."
-         },
-         "platform_selector":{
-            "title":"Wähle deine Plattform",
-            "subtitle":"Plattform",
-            "enable":"Aktivieren"
-         },
-         "frosty_profile":{
-            "title":"Frosty Profil",
-            "subtitle":"Aktiviert das Frosty-Profil global für Battlefront II. (Überschreibt FrostyFix und startet die ausgewählte Plattform neu).",
-            "tooltip":"Diese Option ist wie FrostyFix, das im Wesentlichen die gleiche Aufgabe wie FrostyFix erfüllt. Sie aktiviert das Mod Profil auf allen Platform die du Installiert hast.\nEs wird jedoch nur das KyberModManager Profil Global aktiviert!\nAchtung! Diese Option bleibt auch nach einem PC-Neustart oder dem Schließen der KMM-App aktiviert."
-         },
-         "saved_profiles":{
-            "title":"Gespeicherte Profile",
-            "subtitle":"Speichert deine angewandten Frosty Profile und stellt sie bei Bedarf wieder her."
-         },
-         "nexus_mods":{
-            "title":"Nexus Mods",
-            "subtitle":"Melde dich mit deinem NexusMods Konto an, um das automatische Herunterladen von Mods zu aktivieren.",
-            "logout":"Abmelden"
-         },
-         "discord_activity":{
-            "title":"Discord Aktivität",
-            "subtitle":"Zeigt deine aktuelle Server Aktivität auf Discord an."
-         },
-         "change_frosty_directory":{
-            "title":"Frosty Pfad neu auswählen",
-            "subtitle":"Ändere Frosty Pfad an einen anderen Ort.",
-            "change":"Ändern"
-         },
-         "reset":{
-            "title":"Zurücksetzen",
-            "subtitle":"Setzt alle Einstellungen zurück. (KyberModManager)"
-         }
+      "change_frosty_directory":{
+         "title":"Frosty Pfad neu auswählen",
+         "subtitle":"Ändere Frosty Pfad an einen anderen Ort.",
+         "change":"Ändern"
+      },
+      "reset":{
+         "title":"Zurücksetzen",
+         "subtitle":"Setzt alle Einstellungen zurück. (KyberModManager)"
       },
       "languages":{
          "en":"Englisch",
