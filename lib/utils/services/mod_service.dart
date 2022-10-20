@@ -135,7 +135,11 @@ class ModService {
     if (file.existsSync()) {
       file.deleteSync();
     }
-    mods.remove(mod);
+    if (mod is Mod) {
+      mods.remove(mod);
+    } else if (mod is FrostyCollection) {
+      collections.remove(mod);
+    }
   }
 
   static Mod convertToMod(String mod) {
@@ -171,7 +175,8 @@ class ModService {
   static bool isInstalled(String name) {
     String modName = name.substring(0, name.lastIndexOf(' ('));
     String version = name.substring(name.lastIndexOf('(') + 1, name.length - 1);
-    return mods.any((mod) => mod.name == modName && mod.version == version) || collections.any((element) => element.title == modName && element.version == version);
+    return mods.any((mod) => mod.name == modName && mod.version == version) ||
+        collections.any((element) => element.title == modName && element.version == version);
   }
 
   static Map<String, List<dynamic>> getModsByCategory([bool kyberCategories = false]) {
