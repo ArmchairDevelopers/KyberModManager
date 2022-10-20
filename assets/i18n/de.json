@@ -341,12 +341,12 @@
       "reset":{
          "title":"Zurücksetzen",
          "subtitle":"Setzt alle Einstellungen zurück. (KyberModManager)"
-      },
-      "languages":{
-         "en":"Englisch",
-         "de":"Deutsch",
-         "pl":"Polnisch",
-         "ru":"Russisch"
       }
+   },
+   "languages":{
+      "en":"Englisch",
+      "de":"Deutsch",
+      "pl":"Polnisch",
+      "ru":"Russisch"
    }
 }
