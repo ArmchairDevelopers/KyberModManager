@@ -174,11 +174,11 @@ class _WalkThroughState extends State<WalkThrough> {
           children: [
             InfoLabel(
               label: 'Frosty Version',
-              child: Combobox(
+              child: ComboBox(
                 isExpanded: true,
                 items: frostyVersions
                     .map(
-                      (e) => ComboboxItem(
+                      (e) => ComboBoxItem(
                         value: e,
                         child: Text(
                           e.version +
@@ -360,7 +360,6 @@ class _WalkThroughState extends State<WalkThrough> {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      backgroundDismiss: false,
       constraints: const BoxConstraints(maxWidth: 700),
       title: Row(children: [
         Expanded(child: Text(index == 3 ? 'Frosty Download' : translate('$prefix.title'))),

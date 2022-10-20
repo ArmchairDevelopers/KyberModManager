@@ -296,6 +296,16 @@
             "title": "Check for updates",
             "no_updates_available": "No updates available."
         },
+        "kyber_release_channel": {
+          "title": "Kyber Release Channel",
+          "description": "Choose the release channel you want to use for Kyber.",
+          "button": "Select",
+          "errors": {
+            "no_channel_selected": "Please select a release channel.",
+            "channel_not_found": "Invalid release channel, using stable channel",
+            "failed_to_download": "Failed to download dll, using stable channel"
+          }
+        },
         "language": {
             "title": "Language",
             "subtitle": "Select your language."

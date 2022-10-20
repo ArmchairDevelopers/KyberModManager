@@ -72,7 +72,6 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      backgroundDismiss: false,
       constraints: const BoxConstraints(maxWidth: 700, maxHeight: 400),
       title: const Text("Outdated Frosty"),
       actions: [

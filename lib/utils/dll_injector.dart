@@ -11,6 +11,8 @@ import 'package:version/version.dart';
 import 'package:win32/win32.dart';
 
 class DllInjector {
+  static int _battlefrontPID = -1;
+
   static final DynamicLibrary _kernel32 = DynamicLibrary.open("kernel32.dll");
 
   static File get _file => File('$applicationDocumentsDirectory\\Kyber.dll');
@@ -18,12 +20,17 @@ class DllInjector {
   static Future<Version> getLatestKyberVersion() =>
       Dio().get<String>('$KYBER_API_BASE_URL/version/launcher').then((value) => Version.parse(value.data!.replaceAll('\n', '')));
 
+  static get battlefrontPID => _battlefrontPID;
+
   static Future downloadDll() async {
     if (DllInjector.isInjected()) {
+      Logger.root.info('Dll already injected, skipping download');
       return;
     }
 
-    await Dio().download(KYBER_DLL_LINK, _file.path).catchError((e) {
+    String release = box.get('releaseChannel', defaultValue: 'stable');
+    Logger.root.info('Downloading dll from $release channel');
+    await Dio().download("$KYBER_API_BASE_URL/downloads/distributions/$release/dll", _file.path).catchError((e) {
       Logger.root.severe('Error while downloading Kyber.dll: $e');
     });
   }
@@ -48,7 +55,7 @@ class DllInjector {
   }
 
   static bool inject() {
-    int pid = getBattlefrontPID();
+    int pid = _battlefrontPID;
     if (pid == -1) {
       return false;
     }
@@ -102,13 +109,13 @@ class DllInjector {
   }
 
   static bool isInjected([int? pid]) {
-    pid ??= getBattlefrontPID();
+    pid ??= _battlefrontPID;
 
     return processModules(pid).modules.contains('$applicationDocumentsDirectory\\Kyber.dll');
   }
 
   static ProcessModules processModules([int? pid]) {
-    pid ??= getBattlefrontPID();
+    pid ??= _battlefrontPID;
 
     if (pid == -1) {
       return ProcessModules(modulesLength: 0, modules: []);
@@ -137,7 +144,7 @@ class DllInjector {
     return ProcessModules(modulesLength: length, modules: modules);
   }
 
-  static int getBattlefrontPID() {
+  static void updateBattlefrontPID() {
     final processes = <ProcessDetails>[];
 
     _withMemory<void, Uint32>(sizeOf<Uint32>() * 2048, (pProcesses) {
@@ -157,7 +164,7 @@ class DllInjector {
       });
     });
 
-    return processes.isEmpty ? -1 : processes.first.pid;
+    _battlefrontPID = processes.isEmpty ? -1 : processes.first.pid;
   }
 
   static String getWindowsProcessName(int processID) {

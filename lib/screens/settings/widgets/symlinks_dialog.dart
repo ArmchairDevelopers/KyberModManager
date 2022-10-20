@@ -19,7 +19,6 @@ class _SymlinksDialogState extends State<SymlinksDialog> {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      backgroundDismiss: true,
       constraints: const BoxConstraints(maxWidth: 600, minHeight: 400, maxHeight: 400),
       title: const Text("Symlinks"),
       actions: [

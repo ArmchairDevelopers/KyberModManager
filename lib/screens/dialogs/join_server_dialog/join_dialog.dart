@@ -103,7 +103,7 @@ class _ServerDialogState extends State<ServerDialog> {
       return;
     }
     if (modsInstalled) {
-      if (DllInjector.getBattlefrontPID() != -1) {
+      if (DllInjector.battlefrontPID != -1) {
         NotificationService.showNotification(message: translate('run_battlefront.notifications.battlefront_already_running'), color: Colors.red);
         return;
       }
@@ -133,7 +133,7 @@ class _ServerDialogState extends State<ServerDialog> {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         }, false);
 
-        await ProfileService.copyProfileData(Directory('$path\\$profile'), Directory('$path\\KyberModManager'), (copied, total) {
+        await ProfileService.copyProfileData(Directory('$path\\ModData\\$profile'), Directory('$path\\ModData\\KyberModManager'), (copied, total) {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         });
         await ProfileService.enableProfile(ProfileService.getProfilePath(profile!));
@@ -221,17 +221,17 @@ class _ServerDialogState extends State<ServerDialog> {
   void checkInjection([x = false]) async {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
-    if (DllInjector.getBattlefrontPID() == -1) {
+    if (DllInjector.battlefrontPID == -1) {
       return startTimer();
     }
 
-    if (DllInjector.getBattlefrontPID() != -1 && !DllInjector.isInjected()) {
+    if (DllInjector.battlefrontPID != -1 && !DllInjector.isInjected()) {
       if (!x) {
         return checkInjection(true);
       }
 
       NotificationService.showNotification(message: translate('$prefix.failed_injection.notification'), color: Colors.red);
-      Process.killPid(DllInjector.getBattlefrontPID());
+      Process.killPid(DllInjector.battlefrontPID);
       setState(() {
         failedInjection = true;
         loading = false;
@@ -245,7 +245,6 @@ class _ServerDialogState extends State<ServerDialog> {
   @override
   Widget build(BuildContext context1) {
     return ContentDialog(
-      backgroundDismiss: true,
       constraints: const BoxConstraints(maxWidth: 600, minHeight: 400, maxHeight: 400),
       title: Row(children: [
         Expanded(
@@ -266,7 +265,7 @@ class _ServerDialogState extends State<ServerDialog> {
                   BlocProvider.of<WidgetCubit>(context).navigate(
                     2,
                     EditProfile(
-                      profile: ModProfile(name: '', description: '', mods: server.mods.map((e) => ModService.convertToMod(e)).toList()),
+                      profile: ModProfile(name: '', description: '', mods: server.mods.map((e) => ModService.convertToFrostyMod(e)).toList()),
                     ),
                   );
                 },

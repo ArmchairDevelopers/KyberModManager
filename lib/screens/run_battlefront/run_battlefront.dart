@@ -76,7 +76,7 @@ class _RunBattlefrontState extends State<RunBattlefront> {
       return;
     }
 
-    if (DllInjector.getBattlefrontPID() != -1) {
+    if (DllInjector.battlefrontPID != -1) {
       NotificationService.showNotification(message: translate('$prefix.notifications.battlefront_already_running'), color: Colors.red);
       return;
     }
@@ -128,14 +128,15 @@ class _RunBattlefrontState extends State<RunBattlefront> {
                 controller: _controller,
                 clearButtonEnabled: true,
                 placeholder: translate('host_server.forms.mod_profile.placeholder'),
-                items: profiles ?? [],
-                onSelected: (text) {
-                  if (text == translate('host_server.forms.mod_profile.no_mods_profile')) {
-                    text = 'no_mods';
-                  } else if (text == translate('host_server.forms.cosmetic_mods.header')) {
-                    text = 'cosmetic_mods';
+                items: profiles?.map((e) => AutoSuggestBoxItem(value: e, label: e)).toList() ?? [],
+                onSelected: (AutoSuggestBoxItem item) {
+                  String value = item.value;
+                  if (item.value == translate('host_server.forms.mod_profile.no_mods_profile')) {
+                    value = 'no_mods';
+                  } else if (item.value == translate('host_server.forms.cosmetic_mods.header')) {
+                    value = 'cosmetic_mods';
                   }
-                  box.put('runBf2lastProfile', text);
+                  box.put('runBf2lastProfile', value);
                   FocusScope.of(context).unfocus();
                 },
               ),

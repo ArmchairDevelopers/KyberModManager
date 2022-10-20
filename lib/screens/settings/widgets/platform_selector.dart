@@ -15,7 +15,6 @@ class _PlatformSelectorState extends State<PlatformSelector> {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      backgroundDismiss: true,
       title: Text(translate('$prefix.title')),
       constraints: const BoxConstraints(maxWidth: 500),
       actions: [
@@ -34,12 +33,12 @@ class _PlatformSelectorState extends State<PlatformSelector> {
       ],
       content: InfoLabel(
         label: translate('$prefix.subtitle'),
-        child: Combobox<String>(
+        child: ComboBox<String>(
           value: platform,
           onChanged: (v) => setState(() => platform = v ?? 'Origin'),
           isExpanded: true,
           items: ['Origin', 'EA Desktop', 'Epic Games'].map((e) {
-            return ComboboxItem(
+            return ComboBoxItem(
               value: e.toLowerCase(),
               child: Text(e),
             );

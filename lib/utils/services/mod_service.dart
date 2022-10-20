@@ -140,7 +140,7 @@ class ModService {
 
   static Mod convertToMod(String mod) {
     ModInfo info = convertToModInfo(mod);
-    return mods.firstWhere((element) => element.name == info.name && element.version == info.version, orElse: () => Mod.fromString(mod));
+    return mods.firstWhere((element) => element.name == info.name && element.version.trim() == info.version.trim(), orElse: () => Mod.fromString(mod));
   }
 
   static dynamic convertToFrostyMod(String mod) {

@@ -86,7 +86,7 @@ class _ServerBrowserState extends State<ServerBrowser> {
         scrollDirection: Axis.vertical,
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
-          height: loading ? MediaQuery.of(context).size.height - 130 : null,
+          height: loading ? MediaQuery.of(context).size.height - 160 : null,
           child: loading ? const Center(child: ProgressRing()) : FadeIn(duration: const Duration(milliseconds: 100), child: buildTable()),
         ),
       ),

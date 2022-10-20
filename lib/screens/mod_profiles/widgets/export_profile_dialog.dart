@@ -59,13 +59,13 @@ class _ExportProfileDialogState extends State<ExportProfileDialog> {
         children: [
           InfoLabel(
             label: translate('$prefix.export_type'),
-            child: Combobox(
+            child: ComboBox(
               value: 'Frosty Pack',
               isExpanded: true,
               onChanged: (String? e) => setState(() => selectedType = e ?? 'Frosty Pack'),
               items: [
                 'Frosty Pack' /*, 'File'*/
-              ].map((e) => ComboboxItem(value: e, child: Text(e))).toList(),
+              ].map((e) => ComboBoxItem(value: e, child: Text(e))).toList(),
             ),
           ),
           const SizedBox(height: 15),

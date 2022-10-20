@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
@@ -19,11 +20,12 @@ class GameStatusCubic extends Cubit<GameStatus> {
   }
 
   void check() async {
-    bool running = DllInjector.getBattlefrontPID() != -1;
-    bool injected = DllInjector.isInjected();
+    DllInjector.updateBattlefrontPID();
+    bool running = DllInjector.battlefrontPID != -1;
+    bool injected = running ? DllInjector.isInjected() : false;
     DateTime? started = state.started;
     KyberServer? server = state.server;
-    ProcessModules? processModules = DllInjector.processModules();
+    ProcessModules? processModules = running ? DllInjector.processModules() : ProcessModules(modulesLength: 0, modules: []);
     interval++;
     if (interval >= 20 && injected) {
       interval = 0;

@@ -8,6 +8,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/screens/dialogs/kyber_release_channel_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart';
@@ -74,10 +75,14 @@ class _SettingsState extends State<Settings> {
               onPressed: () async {
                 var version = await AutoUpdater().updateAvailable();
                 if (version == null) {
-                  NotificationService.showNotification(message: translate('$prefix.check_for_updates.no_updates_available'));
+                  NotificationService.showNotification(
+                      message: translate(
+                          '$prefix.check_for_updates.no_updates_available'));
                   return;
                 }
-                showDialog(context: context, builder: (c) => UpdateDialog(versionInfo: version));
+                showDialog(
+                    context: context,
+                    builder: (c) => UpdateDialog(versionInfo: version));
               },
               child: ButtonText(
                 icon: const Icon(FluentIcons.refresh),
@@ -89,10 +94,13 @@ class _SettingsState extends State<Settings> {
               onPressed: () async {
                 var outdated = await FrostyService.isOutdated();
                 if (!outdated) {
-                  NotificationService.showNotification(message: "You already have the latest version of Frosty Mod Manager installed.");
+                  NotificationService.showNotification(
+                      message:
+                          "You already have the latest version of Frosty Mod Manager installed.");
                   return;
                 }
-                showDialog(context: context, builder: (c) => OutdatedFrostyDialog());
+                showDialog(
+                    context: context, builder: (c) => OutdatedFrostyDialog());
               },
               child: const ButtonText(
                 icon: Icon(FluentIcons.refresh),
@@ -103,29 +111,35 @@ class _SettingsState extends State<Settings> {
         ),
       ),
       content: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
         children: [
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.language.title')),
               subtitle: Text(translate('$prefix.language.subtitle')),
               leading: const Icon(FluentIcons.locale_language),
               trailing: SizedBox(
                 width: 250,
-                child: Combobox<dynamic>(
+                child: ComboBox<dynamic>(
                   onChanged: (dynamic value) async {
                     changeLocale(context, value);
                     await box.put('locale', value);
                     Jiffy.locale(AppLocale().getLocale().languageCode);
                     var cubit = BlocProvider.of<WidgetCubit>(context);
+                    cubit.toIndex(7);
                     cubit.toIndex(8);
-                    cubit.toIndex(9);
                   },
                   isExpanded: true,
-                  value: LocalizedApp.of(context).delegate.currentLocale.languageCode,
-                  items: LocalizedApp.of(context).delegate.supportedLocales.map((e) {
-                    return ComboboxItem<dynamic>(
+                  value: LocalizedApp.of(context)
+                      .delegate
+                      .currentLocale
+                      .languageCode,
+                  items: LocalizedApp.of(context)
+                      .delegate
+                      .supportedLocales
+                      .map((e) {
+                    return ComboBoxItem<dynamic>(
                       value: e.languageCode,
                       child: SizedBox(
                         child: Row(
@@ -147,36 +161,44 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.nexus_mods.title')),
               subtitle: Text(translate('$prefix.nexus_mods.subtitle')),
               leading: const Icon(FluentIcons.download),
               trailing: CustomFilledButton(
-                color: box.get('nexusmods_login', defaultValue: false) ? Colors.red : SystemTheme.accentColor.accent,
+                color: box.get('nexusmods_login', defaultValue: false)
+                    ? Colors.red
+                    : SystemTheme.accentColor.accent,
                 onPressed: () async {
                   if (box.get('nexusmods_login', defaultValue: false)) {
-                    var s = Directory('$applicationDocumentsDirectory\\puppeteer');
+                    var s =
+                        Directory('$applicationDocumentsDirectory\\puppeteer');
                     if (s.existsSync()) {
                       s.deleteSync(recursive: true);
                     }
                     await box.put('nexusmods_login', false);
                     await box.delete('cookies');
                   } else {
-                    await showDialog(context: context, builder: (c) => const NexusmodsLogin());
+                    await showDialog(
+                        context: context,
+                        builder: (c) => const NexusmodsLogin());
                   }
                   setState(() => null);
                 },
                 child: ButtonText(
-                  text: Text(translate(box.get('nexusmods_login', defaultValue: false) ? '$prefix.nexus_mods.logout' : 'Login')),
-                  icon: Icon(box.get('nexusmods_login', defaultValue: false) ? FluentIcons.user_remove : FluentIcons.user_sync),
+                  text: Text(translate(
+                      box.get('nexusmods_login', defaultValue: false)
+                          ? '$prefix.nexus_mods.logout'
+                          : 'Login')),
+                  icon: Icon(box.get('nexusmods_login', defaultValue: false)
+                      ? FluentIcons.user_remove
+                      : FluentIcons.user_sync),
                 ),
               ),
             ),
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -211,7 +233,8 @@ class _SettingsState extends State<Settings> {
                               disabled = false;
                             });
                           }
-                          path = await PlatformHelper.activateProfile('KyberModManager');
+                          path = await PlatformHelper.activateProfile(
+                              'KyberModManager');
                           await box.put('platform', result);
                           if (result.contains('epic')) {
                             await Future.wait([
@@ -222,8 +245,12 @@ class _SettingsState extends State<Settings> {
                             await PlatformHelper.restartPlatform(result, path);
                           }
                         } else {
-                          path = await PlatformHelper.activateProfile(box.get('previousProfile') ?? '', previous: true);
-                          await PlatformHelper.restartPlatform(box.get('platform', defaultValue: 'origin'), path);
+                          path = await PlatformHelper.activateProfile(
+                              box.get('previousProfile') ?? '',
+                              previous: true);
+                          await PlatformHelper.restartPlatform(
+                              box.get('platform', defaultValue: 'origin'),
+                              path);
                           await box.put('previousProfile', null);
                         }
                         await box.put('frostyProfile', value);
@@ -237,7 +264,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -262,7 +288,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Row(
                 children: [
@@ -292,14 +317,33 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
+            child: ListTile(
+              title: Text(translate("$prefix.kyber_release_channel.title")),
+              subtitle: Text(translate("$prefix.kyber_release_channel.description")),
+              leading: const Icon(FluentIcons.release_gate),
+              trailing: FilledButton(
+                child: ButtonText(
+                  text: Text(translate("$prefix.kyber_release_channel.button")),
+                  icon: const Icon(FluentIcons.edit),
+                ),
+                onPressed: () => showDialog(
+                  builder: (_) => const KyberReleaseChannelDialog(),
+                  context: context,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
             child: ListTile(
               title: Text(translate('$prefix.change_frosty_directory.title')),
-              subtitle: Text(translate('$prefix.change_frosty_directory.subtitle')),
+              subtitle:
+                  Text(translate('$prefix.change_frosty_directory.subtitle')),
               leading: const Icon(FluentIcons.folder),
               trailing: FilledButton(
                 child: ButtonText(
-                  text: Text(translate('$prefix.change_frosty_directory.change')),
+                  text:
+                      Text(translate('$prefix.change_frosty_directory.change')),
                   icon: const Icon(FluentIcons.move_to_folder),
                 ),
                 onPressed: () => showDialog(
@@ -313,7 +357,6 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 0,
             child: ListTile(
               title: Text(translate('$prefix.reset.title')),
               subtitle: Text(translate('$prefix.reset.subtitle')),
@@ -322,11 +365,13 @@ class _SettingsState extends State<Settings> {
                 color: Colors.red,
                 onPressed: () => box.deleteFromDisk().then((value) async {
                   await StorageHelper.initializeHive();
-                  var s = Directory('$applicationDocumentsDirectory\\puppeteer');
+                  var s =
+                      Directory('$applicationDocumentsDirectory\\puppeteer');
                   if (s.existsSync()) {
                     s.deleteSync(recursive: true);
                   }
-                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/', (route) => false);
                 }),
                 child: ButtonText(
                   text: Text(translate('$prefix.reset.title')),

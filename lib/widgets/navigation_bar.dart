@@ -16,14 +16,12 @@ import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
-import 'package:kyber_mod_manager/screens/mod_browser.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
 import 'package:kyber_mod_manager/screens/saved_profiles.dart';
 import 'package:kyber_mod_manager/screens/server_browser/server_browser.dart';
 import 'package:kyber_mod_manager/screens/server_host/server_host.dart';
 import 'package:kyber_mod_manager/screens/settings/settings.dart';
-import 'package:kyber_mod_manager/screens/statistics.dart';
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
@@ -112,8 +110,7 @@ class _NavigationBarState extends State<NavigationBar> {
     return BlocConsumer<WidgetCubit, dynamic>(listener: (context, state) {
       bool isFake = state.runtimeType != int && state.containsKey(state.keys.first);
       setState(() {
-        index = !isFake ? state : 11;
-
+        index = !isFake ? state : 9;
         fakeIndex = !isFake ? state : state.keys.toList().first;
       });
     }, builder: (context, widget) {
@@ -162,98 +159,77 @@ class _NavigationBarState extends State<NavigationBar> {
                   ),
             selected: fakeIndex,
             items: [
-              // PaneItem(
-              //   icon: const Icon(FluentIcons.power_shell),
-              //   tileColor: ButtonState.resolveWith((states) {
-              //     var theme = FluentTheme.of(context);
-              //     if (injectedDll) {
-              //       return theme.accentColor.lighter;
-              //     } else if (states.isPressing) {
-              //       return theme.accentColor.darker;
-              //     } else if (states.isHovering) {
-              //       return theme.accentColor.dark;
-              //     }
-              //     return theme.accentColor;
-              //   }),
-              //   title: Text(
-              //     translate('$prefix.kyber.' + (injectedDll ? 'running' : 'not_running')),
-              //   ),
-              // ),
-              // PaneItemSeparator(),
               PaneItemHeader(header: const Text('Kyber')),
               PaneItem(
                 mouseCursor: MouseCursor.defer,
+                body: const ServerBrowser(),
                 icon: const Icon(FluentIcons.server),
                 title: Text(translate('$prefix.items.server_browser')),
               ),
               PaneItem(
                 mouseCursor: MouseCursor.defer,
+                body: const ServerHost(),
                 icon: const Icon(FluentIcons.package),
                 title: Text(translate('$prefix.items.host')),
               ),
               PaneItemSeparator(),
-              PaneItemHeader(header: Text(translate('mods'))),
+              PaneItemHeader(header: Text(translate('navigation_bar.items.mod_profiles'))),
               PaneItem(
                 icon: const Icon(FluentIcons.list),
+                body: const ModProfiles(),
                 title: Text(translate('$prefix.items.mod_profiles')),
               ),
               PaneItem(
                 icon: const Icon(FluentIcons.save_all),
+                body: const SavedProfiles(),
                 title: Text(translate('$prefix.items.saved_profiles')),
               ),
               PaneItemSeparator(),
-              PaneItemHeader(header: const Text('Mods')),
+              PaneItemHeader(header: Text(translate('mods'))),
               PaneItem(
                 icon: const Icon(FluentIcons.custom_list),
+                body: const CosmeticMods(),
                 title: Text(translate('$prefix.items.cosmetic_mods')),
               ),
-              PaneItem(
-                icon: const Icon(FluentIcons.view_dashboard),
-                title: const Text('Mod Browser'),
-              ),
+              // PaneItem(
+              //   icon: const Icon(FluentIcons.view_dashboard),
+              //   title: const Text('Mod Browser'),
+              // ),
               PaneItem(
                 icon: const Icon(FluentIcons.installation),
+                body: const InstalledMods(),
                 title: Text(translate('$prefix.items.installed_mods')),
               ),
               PaneItemSeparator(),
               PaneItemHeader(header: const Text('Battlefront 2')),
               PaneItem(
                 icon: const Icon(FluentIcons.processing_run),
+                body: const RunBattlefront(),
                 title: Text(translate('$prefix.items.run_bf2')),
               ),
             ],
             footerItems: [
               PaneItemSeparator(),
-              PaneItem(
-                icon: const Icon(FluentIcons.linked_database),
-                title: const Text('Statistics'),
-              ),
+              // PaneItem(
+              //   icon: const Icon(FluentIcons.linked_database),
+              //   title: const Text('Statistics'),
+              // ),
               // PaneItem(
               //   icon: const Icon(FluentIcons.help),
               //   title: const Text('Troubleshooting'),
               // ),
               PaneItem(
                 icon: const Icon(FluentIcons.feedback),
+                body: const feedback.Feedback(),
                 title: Text(translate('$prefix.items.feedback')),
               ),
               PaneItem(
                 icon: const Icon(FluentIcons.settings),
+                body: const Settings(),
                 title: Text(translate('$prefix.items.settings')),
               ),
             ],
             onChanged: (i) async {
-              // if (i == 0) {
-              //   if (injectedDll) {
-              //     return;
-              //   }
-              //   var result = DllInjector.getBattlefrontPID();
-              //   if (result == -1) {
-              //     NotificationService.showNotification(message: translate('$prefix.battlefront_not_running'), color: Colors.red);
-              //     return;
-              //   }
-              //   DllInjector.inject();
-              //   return;
-              // }
               setState(() {
                 index = i;
                 fakeIndex = i;
@@ -261,36 +237,20 @@ class _NavigationBarState extends State<NavigationBar> {
             },
             displayMode: PaneDisplayMode.auto,
           ),
-          content: DropTarget(
-            onDragDone: (details) {
-              ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
-            },
-            child: NavigationBody(
-              index: index,
-              transitionBuilder: (child, animation) => EntrancePageTransition(
-                animation: animation,
-                startFrom: .015,
-                child: child,
-              ),
-              children: [
-                // const SizedBox(),
-                const ServerBrowser(),
-                const ServerHost(),
-                const ModProfiles(),
-                const SavedProfiles(),
-                const CosmeticMods(),
-                const ModBrowser(),
-                const InstalledMods(),
-                const RunBattlefront(),
-                Statistics(),
-
-                // Troubleshooting(),
-                const feedback.Feedback(),
-                const Settings(),
-                widget.runtimeType != int ? widget.values.first : const SizedBox(height: 0),
-              ],
-            ),
+          transitionBuilder: (child, animation) => EntrancePageTransition(
+            animation: animation,
+            startFrom: .015,
+            child: child,
           ),
+          paneBodyBuilder: (selectedPaneItemBody) {
+            return DropTarget(
+              onDragDone: (details) {
+                ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
+              },
+              // TODO: fix animation for sub-pages
+              child: fakeIndex != index ? widget.values.first : selectedPaneItemBody,
+            );
+          },
         ),
       );
     });
