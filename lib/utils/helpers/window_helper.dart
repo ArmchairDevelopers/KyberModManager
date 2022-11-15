@@ -18,12 +18,7 @@ class WindowHelper {
   }
 
   static Future<void> initializeWindow() async {
-    bool micaEnabled = false;
     await Window.initialize();
-    if (micaSupported && (!box.containsKey('micaEnabled') || box.get('micaEnabled'))) {
-      await Window.setEffect(effect: WindowEffect.mica, dark: true);
-      micaEnabled = true;
-    }
 
     if (!micaSupported) {
       windowManager.waitUntilReadyToShow().then((_) async {
@@ -36,11 +31,16 @@ class WindowHelper {
       });
     } else {
       windowManager.waitUntilReadyToShow().then((_) async {
+        bool enabled = !box.containsKey('micaEnabled') || box.get('micaEnabled');
         await windowManager.setTitleBarStyle(TitleBarStyle.normal, windowButtonVisibility: false);
         await windowManager.setSize(_size);
         await windowManager.setMinimumSize(_minimumSize);
         await windowManager.show();
-        await windowManager.setBackgroundColor(micaEnabled ? Colors.transparent : ThemeData.dark().navigationPaneTheme.backgroundColor!);
+        await windowManager.setBackgroundColor(enabled ? Colors.transparent : ThemeData.dark().navigationPaneTheme.backgroundColor!);
+
+        if (enabled) {
+          await Window.setEffect(effect: WindowEffect.mica, dark: true);
+        }
       });
     }
   }
