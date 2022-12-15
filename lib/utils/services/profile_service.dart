@@ -24,9 +24,9 @@ import 'package:windows_taskbar/windows_taskbar.dart';
 class ProfileService {
   static final File _profileFile = File('${OriginHelper.getBattlefrontPath()}\\ModData\\SavedProfiles\\profiles.json');
 
-  static Future<void> searchProfile(List<String> mods, [Function? onProgress, bool search = false]) async {
+  static Future<String?> searchProfile(List<String> mods, [Function? onProgress, bool search = false]) async {
     if (!box.get('saveProfiles', defaultValue: true)) {
-      return;
+      return null;
     }
     String battlefrontPath = OriginHelper.getBattlefrontPath();
     FrostyConfig config = FrostyService.getFrostyConfig();
@@ -36,17 +36,17 @@ class ProfileService {
 
     if (listEquals(current, convertedMods)) {
       Logger.root.info('Profile is already up to date');
-      return;
+      return null;
     }
 
     List<SavedProfile> profiles = getSavedProfiles();
     if (profiles.where((element) => equalModlist(element.mods, convertedMods)).isEmpty) {
       await enableProfile(getProfilePath('KyberModManager'));
       if (current.isEmpty || profiles.where((element) => equalModlist(element.mods, current)).isNotEmpty) {
-        return;
+        return null;
       }
       await _saveProfile(dir, current, onProgress);
-      return;
+      return null;
     }
 
     if (current.isNotEmpty && profiles.where((element) => equalModlist(current, element.mods)).isEmpty) {
@@ -54,7 +54,7 @@ class ProfileService {
     }
 
     if (search) {
-      return;
+      return null;
     }
 
     SavedProfile profile = profiles.firstWhere((element) => equalModlist(element.mods, convertedMods));
@@ -92,6 +92,7 @@ class ProfileService {
     }
 
     Logger.root.info('Found profile ${profile.id}');
+    return profile.path;
   }
 
   static String getProfilePath(String name, {bool isSavedProfile = false}) {
@@ -100,7 +101,8 @@ class ProfileService {
   }
 
   static Future<void> enableProfile(String path) async {
-    if (!dynamicEnvEnabled) {
+    if (dynamicEnvEnabled) {
+      await DynamicEnv().setEnv(pid, "GAME_DATA_DIR", path);
       return;
     }
 

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:dynamic_env/dynamic_env.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
@@ -11,6 +11,7 @@ class GameStatusCubic extends Cubit<GameStatus> {
   GameStatusCubic() : super(GameStatus(injected: false, running: false));
 
   String? _serverId;
+  String? _profile;
   ISentrySpan? _transaction;
   int interval = 0;
 
@@ -19,6 +20,8 @@ class GameStatusCubic extends Cubit<GameStatus> {
     check();
   }
 
+  void setProfile(String? profile) => _profile = profile;
+
   void check() async {
     DllInjector.updateBattlefrontPID();
     bool running = DllInjector.battlefrontPID != -1;
@@ -26,12 +29,16 @@ class GameStatusCubic extends Cubit<GameStatus> {
     DateTime? started = state.started;
     KyberServer? server = state.server;
     ProcessModules? processModules = running ? DllInjector.processModules() : ProcessModules(modulesLength: 0, modules: []);
+
     interval++;
     if (interval >= 20 && injected) {
       interval = 0;
       server = await _getServer();
     }
     if (!state.running && running) {
+      if (_profile != null) {
+        DynamicEnv().setEnv(DllInjector.battlefrontPID, "GAME_DATA_DIR", _profile!);
+      }
       started = DateTime.now();
       if (state.server == null && injected) {
         server = await _getServer();

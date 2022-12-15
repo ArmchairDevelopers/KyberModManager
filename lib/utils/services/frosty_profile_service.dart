@@ -124,15 +124,43 @@ class FrostyProfileService {
     return modList.map((e) => ModService.fromFilename(e)).toList();
   }
 
-  static Future<List<dynamic>> getModsFromProfile(String profile) async {
+  static Future<void> convertModsFile(String profile) async {
+    String path = OriginHelper.getBattlefrontPath();
+    File oldFile = File('$path\\ModData\\$profile\\patch\\mods.txt');
+    File file = File('$path\\ModData\\$profile\\patch\\mods.json');
+    if (oldFile.existsSync() && !file.existsSync()) {
+      Logger.root.info("Converting old mods.txt to mods.json");
+      var mods = oldFile
+          .readAsStringSync()
+          .split('\n')
+          .where((element) => element.contains(':') && element.contains("' '"))
+          .map((element) {
+        String filename = element.split(':')[0];
+        return ModService.getFrostyMod(filename);
+      }).toList();
+      await file.writeAsString(jsonEncode(
+        mods.map(
+              (e) => ({
+            'name': e.name,
+            'version': e.version,
+            'category': e.category,
+            'file_name': e.filename
+          }),
+        ),
+      ));
+    }
+  }
+
+  static Future<List<dynamic>> getModsFromProfile(String profile, {bool isPath = false}) async {
     FrostyConfig config = FrostyService.getFrostyConfig();
     String path = OriginHelper.getBattlefrontPath();
-    if (config.games['starwarsbattlefrontii']?.packs![profile] == null) {
+    if (!isPath && config.games['starwarsbattlefrontii']?.packs![profile] == null) {
       return [];
     }
 
-    File oldFile = File('$path\\ModData\\$profile\\patch\\mods.txt');
-    File file = File('$path\\ModData\\$profile\\patch\\mods.json');
+    String basePath = !isPath ? '$path\\ModData\\$profile' : profile;
+    File oldFile = File('$basePath\\patch\\mods.txt');
+    File file = File('$basePath\\patch\\mods.json');
 
     if (oldFile.existsSync() && !file.existsSync()) {
       Logger.root.info("Converting old mods.txt to mods.json");
