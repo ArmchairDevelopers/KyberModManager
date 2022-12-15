@@ -29,7 +29,7 @@ class _ExportProfileDialogState extends State<ExportProfileDialog> {
 
   void export() {
     if (selectedType == "Frosty Pack") {
-      List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
+      List<dynamic> cosmeticMods = List<dynamic>.from(box.get('cosmetics'));
       FrostyProfileService.createProfile([
         ...widget.profile.mods.map((e) => e.toKyberString()).toList(),
         if (cosmetics) ...cosmeticMods.map((e) => e.toKyberString()).toList(),
