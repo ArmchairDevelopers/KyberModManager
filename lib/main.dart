@@ -20,14 +20,16 @@ import 'package:kyber_mod_manager/utils/translation/translation_delegate.dart';
 import 'package:kyber_mod_manager/widgets/navigation_bar.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:protocol_handler/protocol_handler.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:system_info2/system_info2.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:window_manager/window_manager.dart';
 
 final bool micaSupported = SysInfo.operatingSystemName.contains('Windows 11');
-const bool dynamicEnvEnabled = false;
+const bool dynamicEnvEnabled = true;
 final supportedLocales = ['en', 'de', 'pl', 'ru'];
+const String protocol = "kmm";
 Box box = Hive.box('data');
 String applicationDocumentsDirectory = '';
 
@@ -50,6 +52,7 @@ void main() async {
     await StorageHelper.initializeHive();
     await WindowHelper.initializeWindow();
     await SystemTheme.accentColor.load();
+    await protocolHandler.register(protocol);
     var delegate = await LocalizationDelegate.create(
       fallbackLocale: 'en',
       supportedLocales: supportedLocales,
@@ -76,7 +79,6 @@ class _AppState extends State<App> {
     Timer.run(() async {
       ModService.watchDirectory();
       PuppeteerHelper.checkFiles();
-      ProfileService.enableProfile(ProfileService.getProfilePath('KyberModManager'));
       await ModService.loadMods(context);
       if (box.containsKey('setup')) {
         ProfileService.migrateSavedProfiles();

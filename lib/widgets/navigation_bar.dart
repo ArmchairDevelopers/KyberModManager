@@ -10,6 +10,7 @@ import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
+import 'package:kyber_mod_manager/screens/dialogs/join_server_dialog/join_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart';
@@ -27,10 +28,14 @@ import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
+import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
+import 'package:logging/logging.dart';
+import 'package:protocol_handler/protocol_handler.dart';
 import 'package:window_manager/window_manager.dart';
 
 class NavigationBar extends StatefulWidget {
@@ -42,7 +47,7 @@ class NavigationBar extends StatefulWidget {
   _NavigationBarState createState() => _NavigationBarState();
 }
 
-class _NavigationBarState extends State<NavigationBar> {
+class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
   final String prefix = 'navigation_bar';
 
   bool injectedDll = false;
@@ -51,6 +56,7 @@ class _NavigationBarState extends State<NavigationBar> {
 
   @override
   void initState() {
+    protocolHandler.addListener(this);
     Jiffy.locale(supportedLocales.contains(AppLocale().getLocale().languageCode) ? AppLocale().getLocale().languageCode : 'en');
     Timer.run(() async {
       ProfileService.generateFiles();
@@ -91,6 +97,46 @@ class _NavigationBarState extends State<NavigationBar> {
       }
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    protocolHandler.removeListener(this);
+    super.dispose();
+  }
+
+  @override
+  void onProtocolUrlReceived(String url) async {
+    if (!box.containsKey("setup") || !mounted) {
+      Logger.root.severe("Received protocol url but setup is not complete");
+      return;
+    }
+
+    if (url.startsWith("kmm://join_server")) {
+      String? serverId = url.split("?").last;
+      if (serverId.isEmpty) {
+        Logger.root.severe("Received protocol url but server_id is null");
+        return;
+      }
+
+      if (index != 0) {
+        setState(() => index = 0);
+      }
+      KyberServer? server = await KyberApiService.getServer(serverId);
+      if (server == null) {
+        NotificationService.showNotification(message: "Server not found", color: Colors.red);
+        Logger.root.severe("Received protocol url but server is null");
+        return;
+      }
+
+      showDialog(
+        context: context,
+        builder: (context) => ServerDialog(
+          server: server,
+          join: true,
+        ),
+      );
+    }
   }
 
   Future<void> openDialog() async {

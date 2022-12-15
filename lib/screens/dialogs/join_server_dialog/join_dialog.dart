@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/dialogs/join_server_dialog/widgets/download_screen.dart';
@@ -37,9 +38,10 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
 class ServerDialog extends StatefulWidget {
-  const ServerDialog({Key? key, required this.server}) : super(key: key);
+  const ServerDialog({Key? key, required this.server, this.join = false}) : super(key: key);
 
   final KyberServer server;
+  final bool join;
 
   @override
   _ServerDialogState createState() => _ServerDialogState();
@@ -74,6 +76,9 @@ class _ServerDialogState extends State<ServerDialog> {
     modsInstalled = server.mods.every((element) => ModService.isInstalled(element));
     correctPassword = !(server.requiresPassword);
     cosmetics = server.mods.length < 10 ? box.get('enableCosmetics', defaultValue: false) : false;
+    if (widget.join) {
+      onButtonPressed();
+    }
     super.initState();
   }
 
@@ -114,30 +119,30 @@ class _ServerDialogState extends State<ServerDialog> {
       });
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.indeterminate);
       List<String> mods = [];
+      String? path;
       if (profile == null) {
         mods = List.from(server.mods);
-        List<Mod> cosmeticMods = List<Mod>.from(box.get('cosmetics'));
+        List<dynamic> cosmeticMods = List<dynamic>.from(box.get('cosmetics'));
         if (cosmetics) {
-          mods.addAll(cosmeticMods.map((e) => e.toKyberString()).toList());
+          mods.addAll(List<String>.from(cosmeticMods.map((e) => e.toKyberString()).toList()));
         }
 
-        await ProfileService.enableProfile(ProfileService.getProfilePath("KyberModManager"));
-        await ProfileService.searchProfile(mods, (copied, total) {
+        //await ProfileService.enableProfile(ProfileService.getProfilePath("KyberModManager"));
+        path = await ProfileService.searchProfile(mods, (copied, total) {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         }).catchError((e) {
           NotificationService.showNotification(message: e.toString(), color: Colors.red);
         });
-      } else {
+      }/* else {
         final String path = OriginHelper.getBattlefrontPath();
         await ProfileService.searchProfile([' ()'], (copied, total) {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         }, false);
-
         await ProfileService.copyProfileData(Directory('$path\\ModData\\$profile'), Directory('$path\\ModData\\KyberModManager'), (copied, total) {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         });
         await ProfileService.enableProfile(ProfileService.getProfilePath(profile!));
-      }
+      }*/
 
       if (!mounted) return;
       setState(() {
@@ -162,9 +167,8 @@ class _ServerDialogState extends State<ServerDialog> {
       if (!mounted) return;
       setState(() => startingState = 3);
 
-      var appliedMods = await FrostyProfileService.getModsFromProfile(profile ?? 'KyberModManager');
-      var serverMods =
-          profile != null ? server.mods.map((mod) => ModService.convertToFrostyMod(mod)).toList() : mods.map((e) => ModService.convertToFrostyMod(e)).toList();
+      var appliedMods = await FrostyProfileService.getModsFromProfile(path ?? profile ?? 'KyberModManager', isPath: path != null);
+      var serverMods = profile != null ? server.mods.map((mod) => ModService.convertToFrostyMod(mod)).toList() : mods.map((e) => ModService.convertToFrostyMod(e)).toList();
       if (!listEquals(profile == null ? appliedMods : appliedMods.where((element) => element.category.toString().toLowerCase() == "gameplay").toList(), serverMods)) {
         Logger.root.info("Applying Frosty mods...");
         await FrostyService.startFrosty(profile: profile).catchError((error) {
@@ -172,6 +176,7 @@ class _ServerDialogState extends State<ServerDialog> {
           NavigatorService.pushErrorPage(const MissingPermissions());
         });
       } else {
+        BlocProvider.of<GameStatusCubic>(context).setProfile(path ?? profile ?? "KyberModManager");
         try {
           Logger.root.info("Mods are already applied.");
           PlatformHelper.startBattlefront();
@@ -477,14 +482,13 @@ class _ServerDialogState extends State<ServerDialog> {
             padding: EdgeInsets.only(bottom: 15),
             child: InfoBar(
               title: Text(translate('$prefix.frosty_profile_disabled')),
-              content: const Text(
-                  "Frosty Profile enables use of the mods for the platform of your choice. If you do not use it, you can experience problems with mods not loading."),
+              content: const Text("Frosty Profile enables use of the mods for the platform of your choice. If you do not use it, you can experience problems with mods not loading."),
               isLong: true,
               action: Button(
                 child: const Text('Open Settings'),
                 onPressed: () {
                   BlocProvider.of<WidgetCubit>(context).toIndex(0);
-                  BlocProvider.of<WidgetCubit>(context).toIndex(9);
+                  BlocProvider.of<WidgetCubit>(context).toIndex(8);
                   Navigator.of(context).pop();
                 },
               ),
