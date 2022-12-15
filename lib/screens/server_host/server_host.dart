@@ -370,7 +370,7 @@ class _ServerHostState extends State<ServerHost> {
                   onChanged: (String? value, TextChangedReason _) => value != null && value.isNotEmpty && _formKey.currentState!.validate(),
                   items: profiles.map((e) => AutoSuggestBoxItem(value: e, label: e)).toList(),
                   onSelected: (text) {
-                    box.put('lastProfile', text == translate('$prefix.forms.mod_profile.no_mods_profile') ? 'no_mods' : text);
+                    box.put('lastProfile', text.value == translate('$prefix.forms.mod_profile.no_mods_profile') ? 'no_mods' : text.value);
                     Timer.run(() => checkWarnings());
                     FocusScope.of(context).unfocus();
                   },
