@@ -86,6 +86,10 @@ class RPCService {
           largeImageKey: 'bf2',
           smallImageText: map['name'],
           smallImageKey: 'test',
+          button1Label: 'View Server',
+          button1Url: 'https://kyber.gg/servers#id=${_gameStatus.server!.id}',
+          button2Label: 'Join Server',
+          button2Url: 'kmm://join_server?${_gameStatus.server!.id}',
         ));
       } catch (e) {
         return;
