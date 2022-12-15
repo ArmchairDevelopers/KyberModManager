@@ -1066,10 +1066,12 @@ packages:
   webview_windows:
     dependency: "direct main"
     description:
-      path: "packages/flutter-webview-windows-updated"
-      relative: true
-    source: path
-    version: "0.2.0"
+      path: "."
+      ref: HEAD
+      resolved-ref: b04250e66b412869b382b5074fe52af8f440ad79
+      url: "https://github.com/7reax/flutter-webview-windows"
+    source: git
+    version: "0.2.2"
   win32:
     dependency: "direct main"
     description:
@@ -1123,4 +1125,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.18.0 <3.0.0"
-  flutter: ">=3.0.0"
+  flutter: ">=3.3.0"
