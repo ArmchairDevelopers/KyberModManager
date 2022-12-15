@@ -120,7 +120,10 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
       }
 
       if (index != 0) {
-        setState(() => index = 0);
+        setState(() {
+          index = 0;
+          fakeIndex = 0;
+        });
       }
       KyberServer? server = await KyberApiService.getServer(serverId);
       if (server == null) {
