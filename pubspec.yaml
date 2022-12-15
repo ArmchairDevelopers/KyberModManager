@@ -31,9 +31,6 @@ dependencies:
       url: https://github.com/MMMzq/bot_toast.git
   auto_update: ^0.0.4
   flutter_markdown: ^0.6.10+3
-  win32_registry:
-    git:
-      url: https://github.com/Zekfad/win32_registry.git
   logging: ^1.0.2
   version: ^3.0.0
   file_picker: ^5.0.0
@@ -69,9 +66,15 @@ dependencies:
   freezed_annotation:
   syncfusion_flutter_charts: ^20.2.39
   influxdb_client: ^2.5.0
-  dart_discord_rpc: ^0.0.2
-
+  dart_discord_rpc:
+    git:
+      url: https://github.com/alexmercerind/dart_discord_rpc.git
+      ref: harmonoid
+  protocol_handler: ^0.1.4
 dependency_overrides:
+  win32_registry:
+    git:
+      url: https://github.com/Zekfad/win32_registry.git
   ffi: ^2.0.0
 
 dev_dependencies:
