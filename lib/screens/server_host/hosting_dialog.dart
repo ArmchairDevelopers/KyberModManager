@@ -94,6 +94,7 @@ class _HostingDialogState extends State<HostingDialog> {
 
     setState(() => content = translate('$dialog_prefix.joining_states.creating'));
     await ModService.createModPack(
+      context,
       packType: getPackType(widget.selectedProfile!),
       profileName: selectedProfile.split(' (').first,
       cosmetics: true,

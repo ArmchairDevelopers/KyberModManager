@@ -133,7 +133,8 @@ class _ServerDialogState extends State<ServerDialog> {
         }).catchError((e) {
           NotificationService.showNotification(message: e.toString(), color: Colors.red);
         });
-      }/* else {
+      }
+      /* else {
         final String path = OriginHelper.getBattlefrontPath();
         await ProfileService.searchProfile([' ()'], (copied, total) {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
@@ -167,7 +168,7 @@ class _ServerDialogState extends State<ServerDialog> {
       if (!mounted) return;
       setState(() => startingState = 3);
 
-      var appliedMods = await FrostyProfileService.getModsFromProfile(path ?? profile ?? 'KyberModManager', isPath: path != null);
+      var appliedMods = await FrostyProfileService.getModsFromProfile(path ?? profile ?? "KyberModManager", isPath: path != null);
       var serverMods = profile != null ? server.mods.map((mod) => ModService.convertToFrostyMod(mod)).toList() : mods.map((e) => ModService.convertToFrostyMod(e)).toList();
       if (!listEquals(profile == null ? appliedMods : appliedMods.where((element) => element.category.toString().toLowerCase() == "gameplay").toList(), serverMods)) {
         Logger.root.info("Applying Frosty mods...");
@@ -176,7 +177,7 @@ class _ServerDialogState extends State<ServerDialog> {
           NavigatorService.pushErrorPage(const MissingPermissions());
         });
       } else {
-        BlocProvider.of<GameStatusCubic>(context).setProfile(path ?? profile ?? "KyberModManager");
+        BlocProvider.of<GameStatusCubic>(context).setProfile(path ?? profile ?? ProfileService.getProfilePath("KyberModManager"));
         try {
           Logger.root.info("Mods are already applied.");
           PlatformHelper.startBattlefront();
@@ -482,7 +483,8 @@ class _ServerDialogState extends State<ServerDialog> {
             padding: EdgeInsets.only(bottom: 15),
             child: InfoBar(
               title: Text(translate('$prefix.frosty_profile_disabled')),
-              content: const Text("Frosty Profile enables use of the mods for the platform of your choice. If you do not use it, you can experience problems with mods not loading."),
+              content:
+                  const Text("Frosty Profile enables use of the mods for the platform of your choice. If you do not use it, you can experience problems with mods not loading."),
               isLong: true,
               action: Button(
                 child: const Text('Open Settings'),
