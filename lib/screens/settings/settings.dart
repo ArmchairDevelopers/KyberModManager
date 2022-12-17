@@ -164,7 +164,7 @@ class _SettingsState extends State<Settings> {
             child: CustomFilledButton(
               color: box.get('nexusmods_login', defaultValue: false)
                   ? Colors.red
-                  : SystemTheme.accentColor.accent,
+                  : null,
               onPressed: () async {
                 if (box.get('nexusmods_login', defaultValue: false)) {
                   var s =
