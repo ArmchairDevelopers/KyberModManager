@@ -4,7 +4,9 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
@@ -25,7 +27,7 @@ class ModService {
   static List<FrostyCollection> collections = [];
   static StreamSubscription? _subscription;
 
-  static Future<List<dynamic>> createModPack({
+  static Future<List<dynamic>> createModPack(BuildContext context, {
     required PackType packType,
     required String profileName,
     bool cosmetics = false,
@@ -54,6 +56,11 @@ class ModService {
         formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
       }
 
+      if (dynamicEnvEnabled) {
+        BlocProvider.of<GameStatusCubic>(context).setProfile(ProfileService.getProfilePath(profileName));
+        return formattedMods;
+      }
+
       await FrostyProfileService.createProfile(formattedMods);
       await ProfileService.searchProfile(formattedMods, onProgress);
       return mods;
@@ -63,7 +70,7 @@ class ModService {
       List<String> formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
 
       if (!enableCosmetics && dynamicEnvEnabled) {
-        await ProfileService.enableProfile(ProfileService.getProfilePath(profileName));
+        BlocProvider.of<GameStatusCubic>(context).setProfile(ProfileService.getProfilePath(profileName));
         return mods;
       } else if (dynamicEnvEnabled) {
         mods = [...mods, ...cosmeticMods];
@@ -89,14 +96,16 @@ class ModService {
       }
 
       await FrostyProfileService.createProfile(formattedMods);
-      await ProfileService.searchProfile(formattedMods, onProgress);
+      String? profile = await ProfileService.searchProfile(formattedMods, onProgress);
+      BlocProvider.of<GameStatusCubic>(context).setProfile(profile);
       return mods;
     } else if (packType == PackType.COSMETICS) {
       List<Mod> mods = List<Mod>.from(box.get('cosmetics'));
       await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
       setContent(translate('$prefix.creating'));
       await FrostyProfileService.createProfile(mods.map((e) => e.toKyberString()).toList());
-      await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
+      String? profile = await ProfileService.searchProfile(mods.map((e) => e.toKyberString()).toList(), onProgress);
+      BlocProvider.of<GameStatusCubic>(context).setProfile(profile);
       return mods;
     }
     NotificationService.showNotification(message: translate('host_server.forms.mod_profile.no_profile_found'));
