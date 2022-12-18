@@ -23,7 +23,7 @@ class DynamicEnvPlugin : public flutter::Plugin {
   void HandleMethodCall(
       const flutter::MethodCall<flutter::EncodableValue> &method_call,
       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
-  void SetEnv(const char *proc, const char *name, const char *value, std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result); 
+  void SetEnv(const char *procesId, const char *name, const char *value, std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
 };
 
 }  // namespace dynamic_env

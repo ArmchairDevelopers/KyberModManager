@@ -16,7 +16,7 @@ abstract class DynamicEnvPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> setEnv(String proccessName, String name, String value) {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  Future<void> setEnv(int pid, String name, String value) {
+    throw UnimplementedError('setEnv() has not been implemented.');
   }
 }

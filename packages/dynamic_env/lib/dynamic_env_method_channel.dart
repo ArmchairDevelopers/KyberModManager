@@ -8,11 +8,11 @@ class MethodChannelDynamicEnv extends DynamicEnvPlatform {
   final methodChannel = const MethodChannel('dynamic_env');
 
   @override
-  Future<void> setEnv(String proccessName, String name, String value) async {
+  Future<void> setEnv(int pid, String name, String value) async {
     await methodChannel.invokeMethod<String>(
       'setEnv',
       <String, dynamic>{
-        'proc': proccessName,
+        'proc': pid.toString(),
         'name': name,
         'value': value,
       },

@@ -76,14 +76,21 @@ class PlatformHelper {
     return value != null && value.endsWith('KyberModManager');
   }
 
-  static Future<String> activateProfile(String profile, {bool previous = false}) async {
+  static String getProfile() {
+    final key = Registry.openPath(RegistryHive.currentUser, path: 'Environment');
+    String? value = key.getValueAsString('GAME_DATA_DIR');
+    key.close();
+    return value ?? '';
+  }
+
+  static Future<String> activateProfile(String profile, {bool previous = false, bool isPath = false}) async {
     final key = Registry.openPath(RegistryHive.currentUser, path: 'Environment', desiredAccessRights: AccessRights.allAccess);
     String battlefrontPath = OriginHelper.getBattlefrontPath();
     String profilePath = '$battlefrontPath\\ModData\\$profile';
     RegistryValue path = RegistryValue(
       'GAME_DATA_DIR',
       RegistryValueType.string,
-      previous ? profile : '$battlefrontPath\\ModData\\$profile',
+      previous || isPath ? profile : '$battlefrontPath\\ModData\\$profile',
     );
     Logger.root.info('Activating profile $profile');
     if (key.getValue('GAME_DATA_DIR') != null && !previous) {

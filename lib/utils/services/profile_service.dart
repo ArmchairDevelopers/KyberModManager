@@ -7,6 +7,7 @@ import 'package:dynamic_env/dynamic_env.dart';
 import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
+import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
@@ -61,34 +62,35 @@ class ProfileService {
     profile.lastUsed = DateTime.now();
     _editProfile(profile);
     if (dynamicEnvEnabled) {
-      enableProfile(dir.path);
+      enableProfile(profile.path);
     } else {
       await copyProfileData(Directory(profile.path), dir, onProgress, true);
     }
 
-    config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
-        profile.mods.where((element) => element.filename.isNotEmpty).map((element) => '${element.filename}:True').join('|');
-    await FrostyService.saveFrostyConfig(config);
+    if (!dynamicEnvEnabled) {
+      config.games['starwarsbattlefrontii']?.packs?['KyberModManager'] =
+          profile.mods.where((element) => element.filename.isNotEmpty).map((element) => '${element.filename}:True').join('|');
+      await FrostyService.saveFrostyConfig(config);
 
-    File file = File('${dir.path}\\patch\\mods.txt');
-    if (!file.existsSync()) {
-      return;
-    }
-
-    String content = await file.readAsString();
-    String newContent = '';
-    content.split('\n').where((element) => element.contains(':') && element.contains("' '")).map((element) {
-      String filename = element.split(':')[0];
-      String line = element.trim().replaceAll(RegExp(r'(\n){3,}'), "");
-      var mod = ModService.getFrostyMod(filename);
-      if (line.endsWith("'${mod.category}'")) {
-        newContent += "$line ''\n";
-      } else {
-        newContent += '$line\n';
+      File file = File('${dir.path}\\patch\\mods.txt');
+      if (file.existsSync()) {
+        String content = await file.readAsString();
+        String newContent = '';
+        content.split('\n').where((element) => element.contains(':') && element.contains("' '")).map((element) {
+          String filename = element.split(':')[0];
+          String line = element.trim().replaceAll(RegExp(r'(\n){3,}'), "");
+          var mod = ModService.getFrostyMod(filename);
+          if (line.endsWith("'${mod.category}'")) {
+            newContent += "$line ''\n";
+          } else {
+            newContent += '$line\n';
+          }
+        }).toList();
+        if (newContent != content) {
+          await file.writeAsString(newContent);
+        }
+        await FrostyProfileService.convertModsFile("KyberModManager");
       }
-    }).toList();
-    if (newContent != content) {
-      await file.writeAsString(newContent);
     }
 
     Logger.root.info('Found profile ${profile.id}');
@@ -106,19 +108,23 @@ class ProfileService {
       return;
     }
 
-    if (PlatformHelper.isInstalled(Platform.EA_Desktop) && !await PlatformHelper.isPlatformRunning(Platform.Origin) && true == false) {
+    await PlatformHelper.activateProfile(path, isPath: true);
+
+    if (PlatformHelper.isInstalled(Platform.EA_Desktop) && !await PlatformHelper.isPlatformRunning(Platform.Origin)) {
       if (!(await PlatformHelper.isPlatformRunning(Platform.EA_Desktop))) {
         await PlatformHelper.restartPlatform('EA Desktop');
       }
 
-      await DynamicEnv().setEnv(PlatformHelper.platforms[Platform.EA_Desktop]['exe'].toString().toLowerCase(), 'GAME_DATA_DIR', path);
+      int pid = DllInjector.getPid(PlatformHelper.platforms[Platform.EA_Desktop]['exe'].toString().toLowerCase());
+      await DynamicEnv().setEnv(pid, 'GAME_DATA_DIR', path);
       return;
     } else {
       if (!(await PlatformHelper.isPlatformRunning(Platform.Origin))) {
         await PlatformHelper.restartPlatform('origin');
       }
 
-      await DynamicEnv().setEnv(PlatformHelper.platforms[Platform.Origin]['exe'], 'GAME_DATA_DIR', path);
+      int pid = DllInjector.getPid(PlatformHelper.platforms[Platform.Origin]['exe'].toString().toLowerCase());
+      await DynamicEnv().setEnv(pid, 'GAME_DATA_DIR', path);
     }
   }
 

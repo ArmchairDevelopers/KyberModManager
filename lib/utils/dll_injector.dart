@@ -144,7 +144,7 @@ class DllInjector {
     return ProcessModules(modulesLength: length, modules: modules);
   }
 
-  static void updateBattlefrontPID() {
+  static int getPid(String processName) {
     final processes = <ProcessDetails>[];
 
     _withMemory<void, Uint32>(sizeOf<Uint32>() * 2048, (pProcesses) {
@@ -157,14 +157,18 @@ class DllInjector {
         for (var i = 0; i < cProcesses; i++) {
           final pid = pProcesses.elementAt(i).value;
           final name = getWindowsProcessName(pid);
-          if (pid != 0 && name.toLowerCase().contains('starwarsbattlefrontii.exe')) {
+          if (pid != 0 && name.toLowerCase().contains(processName)) {
             processes.add(ProcessDetails(pid, name, '0K'));
           }
         }
       });
     });
 
-    _battlefrontPID = processes.isEmpty ? -1 : processes.first.pid;
+    return processes.isEmpty ? -1 : processes.first.pid;
+  }
+
+  static void updateBattlefrontPID() {
+    _battlefrontPID = getPid("starwarsbattlefrontii.exe");
   }
 
   static String getWindowsProcessName(int processID) {
