@@ -15,7 +15,7 @@ class KyberApiService {
 
   static Future<KyberServer?> searchServer(String name) async {
     List<KyberServer> servers = await KyberApiService.getAllServers();
-    Iterable<KyberServer> filtered = servers.where((server) => server.name == name);
+    Iterable<KyberServer> filtered = servers.where((server) => server.name.trim() == name.trim());
     return filtered.isNotEmpty ? filtered.first : null;
   }
 
