@@ -478,26 +478,6 @@ class _ServerDialogState extends State<ServerDialog> {
 
     return Column(
       children: [
-        if (!profileEnabled)
-          Padding(
-            padding: EdgeInsets.only(bottom: 15),
-            child: InfoBar(
-              title: Text(translate('$prefix.frosty_profile_disabled')),
-              content:
-                  const Text("Frosty Profile enables use of the mods for the platform of your choice. If you do not use it, you can experience problems with mods not loading."),
-              isLong: true,
-              action: Button(
-                child: const Text('Open Settings'),
-                onPressed: () {
-                  BlocProvider.of<WidgetCubit>(context).toIndex(0);
-                  BlocProvider.of<WidgetCubit>(context).toIndex(8);
-                  Navigator.of(context).pop();
-                },
-              ),
-              onClose: () => setState(() => profileEnabled = true),
-              severity: InfoBarSeverity.warning,
-            ),
-          ),
         TeamSelector(
           server: server,
           value: preferredTeam,
