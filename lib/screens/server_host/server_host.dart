@@ -38,7 +38,7 @@ class _ServerHostState extends State<ServerHost> {
 
   late List<ModProfile> _profiles;
 
-  late StreamSubscription _subscription;
+  StreamSubscription? _subscription;
   KyberServer? server;
   List<KyberProxy>? proxies;
   late List<String> profiles;
@@ -65,17 +65,22 @@ class _ServerHostState extends State<ServerHost> {
     _mapController.text = '';
     _profiles = List<ModProfile>.from(box.get('profiles') ?? []);
     cosmetics = box.get('enableCosmetics', defaultValue: false);
-    Timer.run(() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
       GameStatus status = BlocProvider.of<GameStatusCubic>(context).state;
       checkServerStatus(status);
       _subscription = BlocProvider.of<GameStatusCubic>(context).stream.listen((status) => checkServerStatus(status));
+      KyberApiService.getProxies().then(
+        (proxies) => mounted
+            ? setState(() {
+                this.proxies = proxies;
+                proxy = box.get('proxy') ?? proxies.first.ip;
+              })
+            : null,
+      );
     });
-    KyberApiService.getProxies().then(
-      (proxies) => setState(() {
-        this.proxies = proxies;
-        proxy = box.get('proxy') ?? proxies.first.ip;
-      }),
-    );
     loadProfiles();
     super.initState();
   }
@@ -123,7 +128,7 @@ class _ServerHostState extends State<ServerHost> {
   @override
   void dispose() {
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
-    _subscription.cancel();
+    _subscription?.cancel();
     super.dispose();
   }
 
