@@ -13,10 +13,10 @@ class ApiService {
   static Future<bool> isAvailable(String name) async {
     try {
       final response = await get(
-        Uri.parse('$BACKEND_API_BASE_URL/mods/check?query=$name'),
+        Uri.parse('$BACKEND_API_BASE_URL/mods?q=$name'),
         headers: {'Accept': 'application/json'},
       );
-      return response.statusCode == 200 && json.decode(response.body)['found'];
+      return response.statusCode == 200;
     } catch (e) {
       return false;
     }
@@ -52,7 +52,6 @@ class ApiService {
       );
       return List<String>.from(json.decode(response.body));
     } catch (e) {
-      print(e);
       return [];
     }
   }
@@ -72,7 +71,7 @@ class ApiService {
   }
 
   static Future<DownloadInfo?> getDownloadInfo(String modName) async {
-    final resp = await get(Uri.parse('$BACKEND_API_BASE_URL/mods/download?query=$modName'));
+    final resp = await get(Uri.parse('$BACKEND_API_BASE_URL/mods?q=$modName'));
     if (resp.statusCode == 200) {
       return DownloadInfo.fromJson(json.decode(resp.body));
     }
