@@ -5,13 +5,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
+import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
+import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
+import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
+import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/game_status.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/pack_type.dart';
+import 'package:logging/logging.dart';
 
 class HostingDialog extends StatefulWidget {
   const HostingDialog({Key? key, this.name, this.password, this.maxPlayers, this.kyberServer, this.selectedProfile}) : super(key: key);
@@ -93,10 +98,12 @@ class _HostingDialogState extends State<HostingDialog> {
     }
 
     setState(() => content = translate('$dialog_prefix.joining_states.creating'));
-    await ModService.createModPack(
+    final PackType packType = getPackType(widget.selectedProfile!);
+    final String profile = selectedProfile.split(' (').first;
+    List<dynamic> mods = await ModService.createModPack(
       context,
-      packType: getPackType(widget.selectedProfile!),
-      profileName: selectedProfile.split(' (').first,
+      packType: packType,
+      profileName: profile,
       cosmetics: true,
       onProgress: onCopied,
       setContent: (content) => setState(() => this.content = content),
@@ -104,9 +111,35 @@ class _HostingDialogState extends State<HostingDialog> {
       NotificationService.showNotification(message: error.toString(), color: Colors.red);
     });
     if (!mounted) return;
-    setState(() => content = translate('$dialog_prefix.joining_states.frosty'));
+    bool startFrosty = (!dynamicEnvEnabled);
+    if (dynamicEnvEnabled) {
+      if (packType == PackType.FROSTY_PACK) {
+        List<dynamic> appliedMods = await FrostyProfileService.getModsFromProfile(profile);
+        if (!ProfileService.equalModlist(mods, appliedMods)) {
+          Logger.root.info('Mod list is not equal, applying mods');
+          startFrosty = true;
+        }
+      } else if (packType == PackType.MOD_PROFILE || packType == PackType.COSMETICS) {
+        String currentPath = PlatformHelper.getProfile();
+        List<dynamic> activeMods = await FrostyProfileService.getModsFromProfile(currentPath, isPath: true);
+        if (!ProfileService.equalModlist(activeMods, mods) && ProfileService.getSavedProfiles().where((element) => ProfileService.equalModlist(element.mods, mods)).isEmpty) {
+          Logger.root.info("No profile found, starting Frosty");
+          startFrosty = true;
+        }
+      } else if (packType == PackType.NO_MODS) {
+        Logger.root.info("No mods, starting Frosty");
+        startFrosty = true;
+      }
+    }
 
-    await FrostyService.startFrosty();
+    if (startFrosty) {
+      setState(() => content = translate('$dialog_prefix.joining_states.frosty'));
+      await FrostyService.startFrosty();
+    } else {
+      PlatformHelper.startBattlefront();
+    }
+
+    //await FrostyService.startFrosty();
     if (!mounted) return;
 
     setState(() => state = 1);
