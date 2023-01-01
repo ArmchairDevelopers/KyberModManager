@@ -212,7 +212,7 @@
                 "header": "Proxy"
             },
             "max_players": {
-                "header": "max players ({0})",
+                "header": "Max Players ({0})",
                 "tooltip": "Choose the desired number of players your server will be for.\nRemember: Fast internet connection is required to allow many players to join your server and play on it without lags."
             },
             "cosmetic_mods": {
