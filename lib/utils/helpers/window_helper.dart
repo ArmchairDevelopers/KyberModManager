@@ -35,6 +35,7 @@ class WindowHelper {
         await windowManager.setTitleBarStyle(TitleBarStyle.normal, windowButtonVisibility: false);
         await windowManager.setSize(_size);
         await windowManager.setMinimumSize(_minimumSize);
+        await windowManager.center();
         await windowManager.show();
         await windowManager.setBackgroundColor(enabled ? Colors.transparent : ThemeData.dark().navigationPaneTheme.backgroundColor!);
 
