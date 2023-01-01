@@ -33,9 +33,8 @@ class _InstalledModsState extends State<InstalledMods> {
       await Future.delayed(const Duration(milliseconds: 200));
       loaded = true;
     }
-    setState(() =>
-        _installedMods = [...ModService.mods, ...ModService.collections].where((element) => element.toString().toLowerCase().contains(search.toLowerCase())).toList()
-          ..sort((dynamic a, dynamic b) => a.name.compareTo(b.name)));
+    setState(() => _installedMods = [...ModService.mods, ...ModService.collections].where((element) => element.toString().toLowerCase().contains(search.toLowerCase())).toList()
+      ..sort((dynamic a, dynamic b) => a.name.compareTo(b.name)));
   }
 
   @override
@@ -45,13 +44,12 @@ class _InstalledModsState extends State<InstalledMods> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('$prefix.title')),
-        commandBar: Row(
-          children: [
-            FilledButton(
-              child: ButtonText(
-                icon: const Icon(FluentIcons.folder_search),
-                text: Text(translate('$prefix.open_directory')),
-              ),
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            CommandBarButton(
+              icon: const Icon(FluentIcons.folder_search),
+              label: Text(translate('$prefix.open_directory')),
               onPressed: () => launchUrlString('file://${box.get('frostyPath')}\\Mods\\starwarsbattlefrontii'),
             ),
           ],
@@ -132,8 +130,7 @@ class _InstalledModsState extends State<InstalledMods> {
                                 Container(
                                   alignment: Alignment.centerRight,
                                   child: SizedBox(
-                                    child: CustomFilledButton(
-                                      color: Colors.red,
+                                    child: Button(
                                       child: ButtonText(
                                         text: Text(translate('delete')),
                                         icon: const Icon(FluentIcons.delete),
