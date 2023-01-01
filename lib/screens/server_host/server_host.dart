@@ -116,7 +116,6 @@ class _ServerHostState extends State<ServerHost> {
 
   void checkWarnings() async {
     var mods = ModService.getModsFromModPack(_profileController.text);
-
     if (mods.length > 20 || mods.where((element) => element.name.contains('BF2022')).isNotEmpty) {
       setState(() => warning = true);
       return;
@@ -339,9 +338,15 @@ class _ServerHostState extends State<ServerHost> {
                 const SizedBox(height: 16),
                 InfoLabel(
                   label: translate('$prefix.forms.map.header'),
-                  child: AutoSuggestBox(
+                  child: AutoSuggestBox.form(
                     controller: _mapController,
                     clearButtonEnabled: true,
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty || MapHelper.getMapsForMode(mode).where((element) => element.name == value).isEmpty) {
+                        return translate('$prefix.forms.map.error');
+                      }
+                      return null;
+                    },
                     placeholder: translate('$prefix.forms.map.placeholder'),
                     // items: MapHelper.getMapsForMode(mode).map((e) => e.name).toList(),
                     items: MapHelper.getMapsForMode(mode).map((e) => AutoSuggestBoxItem(value: e.name, label: e.name)).toList(),
@@ -362,14 +367,15 @@ class _ServerHostState extends State<ServerHost> {
                     )
                   ],
                 ),
-                AutoSuggestBox /*.form*/ (
+                AutoSuggestBox.form(
                   controller: _profileController,
                   placeholder: translate('$prefix.forms.mod_profile.placeholder'),
-                  // validator: (String? value) {
-                  //   if (value == null || value.isEmpty || !profiles.contains(value)) {
-                  //     return translate('$prefix.forms.mod_profile.no_profile_found');
-                  //   }
-                  // },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty || !profiles.contains(value)) {
+                      return translate('$prefix.forms.mod_profile.no_profile_found');
+                    }
+                    return null;
+                  },
                   onChanged: (String? value, TextChangedReason _) => value != null && value.isNotEmpty && _formKey.currentState!.validate(),
                   items: profiles.map((e) => AutoSuggestBoxItem(value: e, label: e)).toList(),
                   onSelected: (text) {
