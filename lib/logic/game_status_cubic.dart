@@ -5,6 +5,7 @@ import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/game_status.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/process_details.dart';
+import 'package:logging/logging.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class GameStatusCubic extends Cubit<GameStatus> {
@@ -37,6 +38,7 @@ class GameStatusCubic extends Cubit<GameStatus> {
     }
     if (!state.running && running) {
       if (_profile != null) {
+        Logger.root.info("Game started with profile: $_profile");
         DynamicEnv().setEnv(DllInjector.battlefrontPID, "GAME_DATA_DIR", _profile!);
       }
       started = DateTime.now();

@@ -69,8 +69,8 @@ class ModService {
       List<dynamic> mods = FrostyProfileService.getModsFromConfigProfile(profileName);
       List<String> formattedMods = List<String>.from(mods.map((e) => e.toKyberString()).toList());
 
+      BlocProvider.of<GameStatusCubic>(context).setProfile(ProfileService.getProfilePath(profileName));
       if (!enableCosmetics && dynamicEnvEnabled) {
-        BlocProvider.of<GameStatusCubic>(context).setProfile(ProfileService.getProfilePath(profileName));
         return mods;
       } else if (dynamicEnvEnabled) {
         mods = [...mods, ...cosmeticMods];
@@ -287,7 +287,7 @@ Future<List<FrostyCollection>> _loadCollections(List<dynamic> files) async {
     List<int> data = [];
     await file.openRead(0, 6000).toList().then((value) => value.forEach((element) => element.forEach((element1) => data.add(element1))));
     String decoded = utf8.decode(
-      data.getRange(28, data.length).toList(),
+        data.getRange(28, data.length).toList(),
       allowMalformed: true,
     );
     decoded = Uri.decodeComponent(Uri.encodeComponent(decoded).split('%00').first);

@@ -73,7 +73,7 @@ class _RunDialogState extends State<RunDialog> {
 
     if (startFrosty) {
       setState(() => content = translate('$prefix.frosty'));
-      await FrostyService.startFrosty();
+      await FrostyService.startFrosty(profile: packType == PackType.FROSTY_PACK ? profile : null);
     } else {
       PlatformHelper.startBattlefront();
     }

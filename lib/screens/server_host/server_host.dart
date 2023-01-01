@@ -34,7 +34,7 @@ class _ServerHostState extends State<ServerHost> {
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _mapController = TextEditingController();
-  final TextEditingController _profileController = TextEditingController(text: translate('host_server.forms.mod_profile.no_mods_profile'));
+  final TextEditingController _profileController = TextEditingController();
 
   late List<ModProfile> _profiles;
 
