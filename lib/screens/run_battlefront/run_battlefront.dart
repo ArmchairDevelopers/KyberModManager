@@ -117,6 +117,21 @@ class _RunBattlefrontState extends State<RunBattlefront> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('run_battlefront.title')),
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            CommandBarButton(
+              onPressed: _controller.text.isNotEmpty && profiles!.contains(_controller.text) ? () => showMods() : null,
+              icon: const Icon(FluentIcons.view_list),
+              label: Text(translate('server_browser.join_dialog.buttons.view_mods')),
+            ),
+            CommandBarButton(
+              onPressed: () => launchFrosty(),
+              icon: const Icon(FluentIcons.play),
+              label: Text(translate('start')),
+            ),
+          ],
+        ),
       ),
       content: Container(
         padding: const EdgeInsets.all(16),
@@ -141,30 +156,6 @@ class _RunBattlefrontState extends State<RunBattlefront> {
                 },
               ),
             ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                FilledButton(
-                  style: ButtonStyle(
-                    padding: ButtonState.all(
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 7),
-                    ),
-                  ),
-                  onPressed: _controller.text.isNotEmpty && profiles!.contains(_controller.text) ? () => showMods() : null,
-                  child: Text(translate('server_browser.join_dialog.buttons.view_mods')),
-                ),
-                FilledButton(
-                  style: ButtonStyle(
-                    padding: ButtonState.all(
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 7),
-                    ),
-                  ),
-                  onPressed: () => launchFrosty(),
-                  child: Text(translate('start')),
-                ),
-              ],
-            )
           ],
         ),
       ),

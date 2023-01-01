@@ -78,12 +78,14 @@ class ApiService {
     return null;
   }
 
+  static HiveCacheStore get cacheStore => HiveCacheStore(
+    applicationDocumentsDirectory,
+    hiveBoxName: 'cache',
+  );
+
   static Dio dio({Duration? maxCacheStale, CachePolicy? cachePolicy}) {
     var cacheOptions = CacheOptions(
-      store: HiveCacheStore(
-        applicationDocumentsDirectory,
-        hiveBoxName: 'cache',
-      ),
+      store: cacheStore,
       maxStale: maxCacheStale,
       policy: cachePolicy ?? CachePolicy.request,
       priority: CachePriority.high,

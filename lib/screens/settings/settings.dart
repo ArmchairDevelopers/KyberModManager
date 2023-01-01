@@ -5,6 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:influxdb_client/api.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
@@ -19,6 +20,7 @@ import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
+import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
@@ -48,13 +50,25 @@ class _SettingsState extends State<Settings> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('$prefix.title')),
-        commandBar: Row(
-          children: [
-            Button(
-              child: ButtonText(
-                icon: const Icon(FluentIcons.export),
-                text: Text(translate('$prefix.export_log_file')),
-              ),
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            CommandBarButton(
+              onPressed: () async {
+                var version = await AutoUpdater().updateAvailable();
+                if (version == null) {
+                  NotificationService.showNotification(message: translate('$prefix.check_for_updates.no_updates_available'));
+                  return;
+                }
+                showDialog(context: context, builder: (c) => UpdateDialog(versionInfo: version));
+              },
+              icon: const Icon(FluentIcons.refresh),
+              label: Text(translate('$prefix.check_for_updates.title')),
+            ),
+            const CommandBarSeparator(),
+            CommandBarButton(
+              icon: const Icon(FluentIcons.export),
+              label: Text(translate('$prefix.export_log_file')),
               onPressed: () async {
                 String? path = await FilePicker.platform.saveFile(
                   type: FileType.custom,
@@ -66,55 +80,27 @@ class _SettingsState extends State<Settings> {
                 if (path == null) {
                   return;
                 }
-
                 String content = CustomLogger.getLogs();
                 File(path).writeAsStringSync(content);
               },
-            ),
-            const SizedBox(width: 10),
-            Button(
+            )
+          ],
+          secondaryItems: [
+            CommandBarButton(
+              icon: const Icon(FluentIcons.empty_recycle_bin),
+              label: const Text("Clear cache"),
               onPressed: () async {
-                var version = await AutoUpdater().updateAvailable();
-                if (version == null) {
-                  NotificationService.showNotification(
-                      message: translate(
-                          '$prefix.check_for_updates.no_updates_available'));
-                  return;
-                }
-                showDialog(
-                    context: context,
-                    builder: (c) => UpdateDialog(versionInfo: version));
+                ApiService.cacheStore.clean();
+                Navigator.of(context).pop();
               },
-              child: ButtonText(
-                icon: const Icon(FluentIcons.refresh),
-                text: Text(translate('$prefix.check_for_updates.title')),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Button(
-              onPressed: () async {
-                var outdated = await FrostyService.isOutdated();
-                if (!outdated) {
-                  NotificationService.showNotification(
-                      message:
-                          "You already have the latest version of Frosty Mod Manager installed.");
-                  return;
-                }
-                showDialog(
-                    context: context, builder: (c) => OutdatedFrostyDialog());
-              },
-              child: const ButtonText(
-                icon: Icon(FluentIcons.refresh),
-                text: Text('Update FMM'),
-              ),
-            ),
+            )
           ],
         ),
       ),
       content: ListView(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 20),
         children: [
+          InfoLabel(label: translate('General')),
           SettingsCard(
             icon: FluentIcons.locale_language,
             title: Text(translate('$prefix.language.title')),
@@ -131,12 +117,8 @@ class _SettingsState extends State<Settings> {
                   cubit.toIndex(8);
                 },
                 isExpanded: true,
-                value: LocalizedApp.of(context)
-                    .delegate
-                    .currentLocale
-                    .languageCode,
-                items:
-                    LocalizedApp.of(context).delegate.supportedLocales.map((e) {
+                value: LocalizedApp.of(context).delegate.currentLocale.languageCode,
+                items: LocalizedApp.of(context).delegate.supportedLocales.map((e) {
                   return ComboBoxItem<dynamic>(
                     value: e.languageCode,
                     child: SizedBox(
@@ -156,42 +138,68 @@ class _SettingsState extends State<Settings> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SettingsCard(
+            icon: FluentIcons.activity_feed,
+            title: Text(translate('$prefix.discord_activity.title')),
+            subtitle: Text(translate('$prefix.discord_activity.subtitle')),
+            child: ToggleSwitch(
+              checked: box.get('discordRPC', defaultValue: true),
+              onChanged: (enabled) async {
+                await box.put('discordRPC', enabled);
+                if (enabled) {
+                  RPCService.start();
+                } else {
+                  RPCService.dispose();
+                }
+                setState(() => null);
+              },
+            ),
+          ),
           SettingsCard(
             icon: FluentIcons.download,
             title: Text(translate('$prefix.nexus_mods.title')),
             subtitle: Text(translate('$prefix.nexus_mods.subtitle')),
-            child: CustomFilledButton(
-              color: box.get('nexusmods_login', defaultValue: false)
-                  ? Colors.red
-                  : null,
+            child: Button(
               onPressed: () async {
                 if (box.get('nexusmods_login', defaultValue: false)) {
-                  var s =
-                      Directory('$applicationDocumentsDirectory\\puppeteer');
+                  var s = Directory('$applicationDocumentsDirectory\\puppeteer');
                   if (s.existsSync()) {
                     s.deleteSync(recursive: true);
                   }
                   await box.put('nexusmods_login', false);
                   await box.delete('cookies');
                 } else {
-                  await showDialog(
-                      context: context, builder: (c) => const NexusmodsLogin());
+                  await showDialog(context: context, builder: (c) => const NexusmodsLogin());
                 }
                 setState(() => null);
               },
               child: ButtonText(
-                text: Text(translate(
-                    box.get('nexusmods_login', defaultValue: false)
-                        ? '$prefix.nexus_mods.logout'
-                        : 'Login')),
-                icon: Icon(box.get('nexusmods_login', defaultValue: false)
-                    ? FluentIcons.user_remove
-                    : FluentIcons.user_sync),
+                text: Text(translate(box.get('nexusmods_login', defaultValue: false) ? '$prefix.nexus_mods.logout' : 'Login')),
+                icon: Icon(box.get('nexusmods_login', defaultValue: false) ? FluentIcons.user_remove : FluentIcons.user_sync),
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+          InfoLabel(label: translate('Frosty')),
+          SettingsCard(
+            icon: FluentIcons.refresh,
+            title: const Text("Check for Frosty updates"),
+            subtitle: const Text("Check for Frosty updates and download them automatically"),
+            child: Button(
+              child: const ButtonText(
+                text: Text("Check for updates"),
+                icon: Icon(FluentIcons.refresh),
+              ),
+              onPressed: () async {
+                var outdated = await FrostyService.isOutdated();
+                if (!outdated) {
+                  NotificationService.showNotification(message: "You already have the latest version of Frosty Mod Manager installed.");
+                  return;
+                }
+                showDialog(context: context, builder: (c) => OutdatedFrostyDialog());
+              },
+            ),
+          ),
           SettingsCard(
             icon: FluentIcons.game,
             title: Row(
@@ -226,8 +234,7 @@ class _SettingsState extends State<Settings> {
                             disabled = false;
                           });
                         }
-                        path = await PlatformHelper.activateProfile(
-                            'KyberModManager');
+                        path = await PlatformHelper.activateProfile('KyberModManager');
                         await box.put('platform', result);
                         if (result.contains('epic')) {
                           await Future.wait([
@@ -238,11 +245,8 @@ class _SettingsState extends State<Settings> {
                           await PlatformHelper.restartPlatform(result, path);
                         }
                       } else {
-                        path = await PlatformHelper.activateProfile(
-                            box.get('previousProfile') ?? '',
-                            previous: true);
-                        await PlatformHelper.restartPlatform(
-                            box.get('platform', defaultValue: 'origin'), path);
+                        path = await PlatformHelper.activateProfile(box.get('previousProfile') ?? '', previous: true);
+                        await PlatformHelper.restartPlatform(box.get('platform', defaultValue: 'origin'), path);
                         await box.put('previousProfile', null);
                       }
                       await box.put('frostyProfile', value);
@@ -253,25 +257,6 @@ class _SettingsState extends State<Settings> {
                   : null,
             ),
           ),
-          const SizedBox(height: 16),
-          SettingsCard(
-            icon: FluentIcons.activity_feed,
-            title: Text(translate('$prefix.discord_activity.title')),
-            subtitle: Text(translate('$prefix.discord_activity.subtitle')),
-            child: ToggleSwitch(
-              checked: box.get('discordRPC', defaultValue: true),
-              onChanged: (enabled) async {
-                await box.put('discordRPC', enabled);
-                if (enabled) {
-                  RPCService.start();
-                } else {
-                  RPCService.dispose();
-                }
-                setState(() => null);
-              },
-            ),
-          ),
-          const SizedBox(height: 16),
           SettingsCard(
             icon: FluentIcons.settings,
             title: Row(
@@ -298,65 +283,60 @@ class _SettingsState extends State<Settings> {
               },
             ),
           ),
-          const SizedBox(height: 16),
-          SettingsCard(
-            icon: FluentIcons.release_gate,
-            title: Text(translate("$prefix.kyber_release_channel.title")),
-              subtitle:
-                  Text(translate("$prefix.kyber_release_channel.description")),
-              child: FilledButton(
-                child: ButtonText(
-                  text: Text(translate("$prefix.kyber_release_channel.button")),
-                  icon: const Icon(FluentIcons.edit),
-                ),
-                onPressed: () => showDialog(
-                  builder: (_) => const KyberReleaseChannelDialog(),
-                  context: context,
-                ),
-              ),
-          ),
-          const SizedBox(height: 16),
           SettingsCard(
             icon: FluentIcons.folder,
             title: Text(translate('$prefix.change_frosty_directory.title')),
-              subtitle:
-                  Text(translate('$prefix.change_frosty_directory.subtitle')),
-              child: FilledButton(
-                child: ButtonText(
-                  text:
-                      Text(translate('$prefix.change_frosty_directory.change')),
-                  icon: const Icon(FluentIcons.move_to_folder),
-                ),
-                onPressed: () => showDialog(
-                  builder: (_) => const WalkThrough(
-                    changeFrostyPath: true,
-                  ),
-                  context: context,
-                ),
+            subtitle: Text(translate('$prefix.change_frosty_directory.subtitle')),
+            child: Button(
+              child: ButtonText(
+                text: Text(translate('$prefix.change_frosty_directory.change')),
+                icon: const Icon(FluentIcons.move_to_folder),
               ),
+              onPressed: () => showDialog(
+                builder: (_) => const WalkThrough(
+                  changeFrostyPath: true,
+                ),
+                context: context,
+              ),
+            ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+          InfoLabel(label: translate('Kyber')),
+          SettingsCard(
+            icon: FluentIcons.release_gate,
+            title: Text(translate("$prefix.kyber_release_channel.title")),
+            subtitle: Text(translate("$prefix.kyber_release_channel.description")),
+            child: Button(
+              child: ButtonText(
+                text: Text(translate("$prefix.kyber_release_channel.button")),
+                icon: const Icon(FluentIcons.edit),
+              ),
+              onPressed: () => showDialog(
+                builder: (_) => const KyberReleaseChannelDialog(),
+                context: context,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          InfoLabel(label: translate('Other')),
           SettingsCard(
             icon: FluentIcons.reset,
             title: Text(translate('$prefix.reset.title')),
-              subtitle: Text(translate('$prefix.reset.subtitle')),
-              child: CustomFilledButton(
-                color: Colors.red,
-                onPressed: () => box.deleteFromDisk().then((value) async {
-                  await StorageHelper.initializeHive();
-                  var s =
-                      Directory('$applicationDocumentsDirectory\\puppeteer');
-                  if (s.existsSync()) {
-                    s.deleteSync(recursive: true);
-                  }
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/', (route) => false);
-                }),
-                child: ButtonText(
-                  text: Text(translate('$prefix.reset.title')),
-                  icon: const Icon(FluentIcons.reset),
-                ),
+            subtitle: Text(translate('$prefix.reset.subtitle')),
+            child: FilledButton(
+              onPressed: () => box.deleteFromDisk().then((value) async {
+                await StorageHelper.initializeHive();
+                var s = Directory('$applicationDocumentsDirectory\\puppeteer');
+                if (s.existsSync()) {
+                  s.deleteSync(recursive: true);
+                }
+                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+              }),
+              child: ButtonText(
+                text: Text(translate('$prefix.reset.title')),
+                icon: const Icon(FluentIcons.reset),
               ),
+            ),
           ),
           const SizedBox(
             height: 10,

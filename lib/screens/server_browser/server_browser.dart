@@ -41,6 +41,7 @@ class _ServerBrowserState extends State<ServerBrowser> {
       (value) => setState(() {
         response = value;
         loading = false;
+        this.page = value.pageCount > page ? 1 : page;
       }),
     );
   }
@@ -59,7 +60,7 @@ class _ServerBrowserState extends State<ServerBrowser> {
             ),
             Text(translate('$prefix.current_page', args: {'0': page, '1': response?.pageCount})),
             Button(
-              onPressed: page == response?.pageCount || response?.pageCount == 0 ? null : () => loadPage(page + 1),
+              onPressed: page == response?.pageCount || response?.pageCount == null || response?.pageCount == 0 ? null : () => loadPage(page + 1),
               child: Text(translate('$prefix.next_page')),
             ),
           ],
@@ -67,17 +68,12 @@ class _ServerBrowserState extends State<ServerBrowser> {
       ),
       header: PageHeader(
         title: Text(translate('$prefix.title')),
-        commandBar: Row(
-          children: [
-            FilledButton(
-              child: Row(
-                children: [
-                  const Icon(FluentIcons.refresh),
-                  const SizedBox(width: 8),
-                  Text(translate('$prefix.refresh')),
-                ],
-              ),
-              onPressed: () => loadPage(1),
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            CommandBarButton(
+              icon: const Icon(FluentIcons.refresh),
+              onPressed: () => loadPage(page),
             ),
           ],
         ),

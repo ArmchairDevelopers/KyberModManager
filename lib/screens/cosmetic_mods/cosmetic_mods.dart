@@ -8,8 +8,6 @@ import 'package:kyber_mod_manager/screens/mod_profiles/widgets/export_profile_di
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/installed_mods.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
-import 'package:kyber_mod_manager/widgets/button_text.dart';
-import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
 
 class CosmeticMods extends StatefulWidget {
   const CosmeticMods({Key? key}) : super(key: key);
@@ -39,14 +37,13 @@ class _CosmeticModsState extends State<CosmeticMods> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('$prefix.title')),
-        commandBar: Row(
-          children: [
-            if (activeMods.isNotEmpty) ...[
-              Button(
-                child: const ButtonText(
-                  text: Text("Export"),
-                  icon: Icon(FluentIcons.share),
-                ),
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            if (activeMods.isNotEmpty)
+              CommandBarButton(
+                label: const Text("Export"),
+                icon: const Icon(FluentIcons.share),
                 onPressed: () => showDialog(
                   context: context,
                   builder: (_) => ExportProfileDialog(
@@ -58,15 +55,9 @@ class _CosmeticModsState extends State<CosmeticMods> {
                   ),
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
-            ],
-            FilledButton(
-              child: ButtonText(
-                icon: const Icon(FluentIcons.download),
-                text: Text(translate('edit_mod_profile.load_frosty_profile.title')),
-              ),
+            CommandBarButton(
+              icon: const Icon(FluentIcons.download),
+              label: Text(translate('edit_mod_profile.load_frosty_profile.title')),
               onPressed: () => showDialog(
                 context: context,
                 builder: (c) => FrostyProfileSelector(onSelected: (s) {
@@ -74,14 +65,13 @@ class _CosmeticModsState extends State<CosmeticMods> {
                 }),
               ),
             ),
-            CustomTooltip(message: translate('edit_mod_profile.load_frosty_profile.tooltip'))
           ],
         ),
       ),
       content: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          height: MediaQuery.of(context).size.height - 109,
+          height: MediaQuery.of(context).size.height - 79,
           child: Row(
             children: [
               Flexible(

@@ -246,49 +246,47 @@ class _ServerHostState extends State<ServerHost> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('$prefix.title')),
-        commandBar: Container(
-          alignment: Alignment.centerRight,
-          margin: const EdgeInsets.symmetric(vertical: 10).copyWith(right: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              if (isHosting)
-                Padding(
-                  padding: const EdgeInsets.only(right: 25),
-                  child: FilledButton(
-                    onPressed: server == null
-                        ? null
-                        : () => showDialog(
-                              context: context,
-                              builder: (context) => HostingDialog(kyberServer: server, name: formattedServerName),
-                            ),
-                    child: Text(
-                      translate('$prefix.buttons.server_info'),
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ),
-              FilledButton(
-                onPressed: server == null && isHosting
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            if (isHosting)
+              CommandBarButton(
+                onPressed: server == null
                     ? null
-                    : !disabled || isHosting && server != null
-                        ? () => host(isHosting)
-                        : null,
-                child: Text(
-                  isHosting
-                      ? server != null
-                          ? translate('$prefix.buttons.update_server')
-                          : translate('$prefix.buttons.server_is_starting')
-                      : translate('$prefix.buttons.host'),
+                    : () => showDialog(
+                          context: context,
+                          builder: (context) => HostingDialog(kyberServer: server, name: formattedServerName),
+                        ),
+                icon: const Icon(FluentIcons.info),
+                label: Text(
+                  translate('$prefix.buttons.server_info'),
                   style: const TextStyle(
                     fontSize: 14,
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            CommandBarButton(
+              onPressed: server == null && isHosting
+                  ? null
+                  : !disabled || isHosting && server != null
+                      ? () => host(isHosting)
+                      : null,
+              icon: Icon(
+                isHosting ? FluentIcons.refresh : FluentIcons.play,
+                color: Colors.white,
+              ),
+              label: Text(
+                isHosting
+                    ? server != null
+                        ? translate('$prefix.buttons.update_server')
+                        : translate('$prefix.buttons.server_is_starting')
+                    : translate('$prefix.buttons.host'),
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       content: Container(
