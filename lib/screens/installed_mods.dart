@@ -20,6 +20,7 @@ class _InstalledModsState extends State<InstalledMods> {
   final String prefix = 'installed_mods';
   List<dynamic> _installedMods = [];
   bool loaded = false;
+  final TextEditingController _searchController = TextEditingController();
   String search = '';
 
   @override
@@ -34,15 +35,17 @@ class _InstalledModsState extends State<InstalledMods> {
       loaded = true;
     }
     if (mounted) {
-      setState(() =>
-      _installedMods = [...ModService.mods, ...ModService.collections].where((element) => element.toString().toLowerCase().contains(search.toLowerCase())).toList()
+      setState(() => _installedMods = [...ModService.mods, ...ModService.collections].where((element) => element.toString().toLowerCase().contains(search.toLowerCase())).toList()
         ..sort((dynamic a, dynamic b) => a.name.compareTo(b.name)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final color = FluentTheme.of(context).typography.body!.color!;
+    final style = FluentTheme.of(context).typography.body?.copyWith(
+          fontSize: 12,
+          color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+        );
 
     return ScaffoldPage(
       header: PageHeader(
@@ -68,102 +71,112 @@ class _InstalledModsState extends State<InstalledMods> {
                 setState(() => search = value ?? '');
                 loadMods();
               },
+              controller: _searchController,
+              suffix: search.isEmpty ? Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Icon(
+                  FluentIcons.search,
+                  color: FluentTheme.of(context).typography.body?.color?.withOpacity(.5),
+                ),
+              ) : IconButton(
+                icon: const Icon(FluentIcons.cancel),
+                onPressed: () {
+                  _searchController.clear();
+                  setState(() => search = '');
+                  loadMods();
+                },
+              ),
               placeholder: translate('search'),
             ),
           ),
           Expanded(
             child: ConstrainedBox(
               constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width),
-              child: Stack(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 200,
-                    child: SingleChildScrollView(
-                      child: material.DataTable(
-                        dataRowHeight: 40,
-                        columns: [
-                          material.DataColumn(
-                            label: SizedBox(
-                              child: Text(
-                                translate('name'),
-                                style: TextStyle(
-                                  color: color.withOpacity(.5),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Stack(
+                  children: [
+                    ListView.builder(
+                      padding: const EdgeInsets.only(top: 10),
+                      itemCount: _installedMods.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final mod = _installedMods[index];
+                        return Card(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: ListTile(
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      mod.name,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(mod.author, style: style),
+                                        Container(
+                                          width: 1,
+                                          height: 12,
+                                          color: Colors.white,
+                                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                                        ),
+                                        Text(mod.category, style: style),
+                                        Container(
+                                          width: 1,
+                                          height: 12,
+                                          color: Colors.white,
+                                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                                        ),
+                                        Text(mod.version, style: style),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ),
-                          ),
-                          material.DataColumn(
-                            label: SizedBox(
-                              child: Text(
-                                translate('author'),
-                                style: TextStyle(
-                                  color: color.withOpacity(.5),
-                                ),
-                              ),
-                            ),
-                          ),
-                          material.DataColumn(
-                            label: SizedBox(
-                              child: Text(
-                                translate('version'),
-                                style: TextStyle(
-                                  color: color.withOpacity(.5),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                          const material.DataColumn(
-                            label: Text(''),
-                          ),
-                        ],
-                        rows: _installedMods.map((e) {
-                          return material.DataRow(
-                            cells: [
-                              material.DataCell(
-                                Text(e.name),
-                              ),
-                              material.DataCell(
-                                Text(e.author),
-                              ),
-                              material.DataCell(
-                                Text(e.version, textAlign: TextAlign.center),
-                              ),
-                              material.DataCell(
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: SizedBox(
-                                    child: Button(
-                                      child: ButtonText(
-                                        text: Text(translate('delete')),
-                                        icon: const Icon(FluentIcons.delete),
-                                      ),
+                                DropDownButton(
+                                  title: const Icon(FluentIcons.more),
+                                  closeAfterClick: true,
+                                  leading: const SizedBox(
+                                    height: 30,
+                                  ),
+                                  trailing: const SizedBox(),
+                                  buttonStyle: ButtonStyle(
+                                    border: ButtonState.all(BorderSide.none),
+                                    backgroundColor: ButtonState.resolveWith((states) => states.isNone ? Colors.transparent : null),
+                                  ),
+                                  items: [
+                                    MenuFlyoutItem(
+                                      text: Text(translate('delete')),
                                       onPressed: () {
-                                        ModService.deleteMod(e);
+                                        ModService.deleteMod(mod);
                                         loadMods();
                                       },
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                  if (!loaded)
-                    Positioned(
-                      top: MediaQuery.of(context).size.height * 0.4,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        height: 50,
-                        alignment: Alignment.center,
-                        child: const ProgressRing(),
+                    if (!loaded)
+                      Positioned(
+                        top: MediaQuery.of(context).size.height * 0.4,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          child: const ProgressRing(),
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
