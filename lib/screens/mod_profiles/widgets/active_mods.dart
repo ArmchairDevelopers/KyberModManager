@@ -43,23 +43,26 @@ class ActiveMods extends StatelessWidget {
               return ReorderableDragStartListener(
                 index: mods.indexWhere((element) => element.filename == e.filename),
                 key: Key(e.version == 'Unknown' ? getRandomString(10) : e.filename),
-                child: ListTile(
-                  leading: IconButton(
-                    icon: const Icon(FluentIcons.delete),
-                    onPressed: () => onRemove(e),
-                  ),
-                  title: Text(
-                    e.name,
-                    style: textStyle,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  trailing: ReorderableDragStartListener(
-                    index: mods.indexOf(e),
-                    key: Key(e.filename),
-                    child: IconButton(
-                      icon: const Icon(FluentIcons.drag_object),
-                      onPressed: () => null,
+                child: Card(
+                  padding: EdgeInsets.zero,
+                  child: ListTile(
+                    leading: IconButton(
+                      icon: const Icon(FluentIcons.delete),
+                      onPressed: () => onRemove(e),
+                    ),
+                    title: Text(
+                      e.name,
+                      style: textStyle,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    trailing: ReorderableDragStartListener(
+                      index: mods.indexOf(e),
+                      key: Key(e.filename),
+                      child: IconButton(
+                        icon: const Icon(FluentIcons.drag_object),
+                        onPressed: () => null,
+                      ),
                     ),
                   ),
                 ),
