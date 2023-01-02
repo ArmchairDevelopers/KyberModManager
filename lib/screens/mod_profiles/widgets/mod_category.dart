@@ -58,32 +58,35 @@ class _InstalledModCategoryState extends State<InstalledModCategory> {
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 25),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: Text(category, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        ),
-        ListView(
-          padding: const EdgeInsets.all(0),
-          shrinkWrap: true,
-          children: mods.map((dynamic mod) {
-            return ListTile(
-              title: Text(
-                '${mod.name} (${mod.version})${mod is FrostyCollection ? ' (Frosty Collection)' : ''}',
-                style: const TextStyle(fontSize: 14),
-                overflow: TextOverflow.ellipsis,
-              ),
-              leading: IconButton(
-                icon: const Icon(FluentIcons.add),
-                onPressed: () => setState(() => widget.onAdd(mod)),
-              ),
-            );
-          }).toList(),
-        )
-      ],
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.all(10).copyWith(bottom: 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: Text(category, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
+          ListView(
+            padding: const EdgeInsets.all(0),
+            shrinkWrap: true,
+            children: mods.map((dynamic mod) {
+              return ListTile(
+                title: Text(
+                  '${mod.name} (${mod.version})${mod is FrostyCollection ? ' (Frosty Collection)' : ''}',
+                  style: const TextStyle(fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                leading: IconButton(
+                  icon: const Icon(FluentIcons.add),
+                  onPressed: () => setState(() => widget.onAdd(mod)),
+                ),
+              );
+            }).toList(),
+          )
+        ],
+      ),
     );
   }
 
