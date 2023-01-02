@@ -22,6 +22,7 @@ class GameStatusCubic extends Cubit<GameStatus> {
   }
 
   void setProfile(String? profile) => _profile = profile;
+  String? get profile => _profile;
 
   void check() async {
     DllInjector.updateBattlefrontPID();
