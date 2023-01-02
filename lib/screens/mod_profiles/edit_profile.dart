@@ -44,7 +44,7 @@ class _EditProfileState extends State<EditProfile> {
         description: _descriptionController.text,
       ));
       await box.put('profiles', profiles);
-      BlocProvider.of<WidgetCubit>(context).toIndex(2);
+      BlocProvider.of<WidgetCubit>(context).toIndex(3);
     }
   }
 
@@ -62,13 +62,12 @@ class _EditProfileState extends State<EditProfile> {
             onPressed: () => BlocProvider.of<WidgetCubit>(context).toIndex(2),
           ),
         ),
-        commandBar: Row(
-          children: [
-            Button(
-              child: ButtonText(
-                icon: const Icon(FluentIcons.download),
-                text: Text(translate('$prefix.load_frosty_profile.title')),
-              ),
+        commandBar: CommandBar(
+          mainAxisAlignment: MainAxisAlignment.end,
+          primaryItems: [
+            CommandBarButton(
+              icon: const Icon(FluentIcons.download),
+              label: Text(translate('$prefix.load_frosty_profile.title')),
               onPressed: () => showDialog(
                 context: context,
                 builder: (c) => FrostyProfileSelector(onSelected: (s) {
@@ -76,18 +75,12 @@ class _EditProfileState extends State<EditProfile> {
                 }),
               ),
             ),
-            CustomTooltip(message: translate('$prefix.load_frosty_profile.tooltip')),
-            const SizedBox(
-              width: 15,
-            ),
-            FilledButton(
-              child: ButtonText(
-                icon: const Icon(FluentIcons.save),
-                text: Text(
-                  translate('save'),
-                  style: const TextStyle(
-                    fontSize: 15,
-                  ),
+            CommandBarButton(
+              icon: const Icon(FluentIcons.save),
+              label: Text(
+                translate('save'),
+                style: const TextStyle(
+                  fontSize: 15,
                 ),
               ),
               onPressed: () => save(),
