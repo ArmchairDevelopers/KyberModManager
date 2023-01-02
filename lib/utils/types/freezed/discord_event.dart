@@ -1,9 +1,4 @@
-// To parse this JSON data, do
-//
-//     final discordEvent = discordEventFromJson(jsonString);
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
 
 part 'discord_event.freezed.dart';
 part 'discord_event.g.dart';

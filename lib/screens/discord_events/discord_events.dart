@@ -1,17 +1,8 @@
-import 'dart:ui';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/event_cubic.dart';
-import 'package:kyber_mod_manager/logic/widget_cubic.dart';
-import 'package:kyber_mod_manager/main.dart';
-import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
-import 'package:kyber_mod_manager/screens/mod_profiles/widgets/export_profile_dialog.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
-import 'package:kyber_mod_manager/widgets/button_text.dart';
-import 'package:kyber_mod_manager/widgets/custom_button.dart';
 
 class DiscordEvents extends StatefulWidget {
   const DiscordEvents({Key? key}) : super(key: key);
