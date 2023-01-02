@@ -48,7 +48,7 @@ class _ModProfilesState extends State<ModProfiles> {
               icon: const Icon(FluentIcons.add),
               label: Text(translate('mod_profiles.create_profile')),
               onPressed: () {
-                BlocProvider.of<WidgetCubit>(context).navigate(2, const EditProfile());
+                BlocProvider.of<WidgetCubit>(context).navigate(3, const EditProfile());
               },
             ),
           ],
@@ -81,21 +81,26 @@ class _ModProfilesState extends State<ModProfiles> {
                           text: Text(translate('edit')),
                           icon: const Icon(FluentIcons.edit),
                         ),
-                        onPressed: () => BlocProvider.of<WidgetCubit>(context).navigate(2, EditProfile(profile: e)),
+                        onPressed: () => BlocProvider.of<WidgetCubit>(context).navigate(3, EditProfile(profile: e)),
                       ),
                       const SizedBox(width: 8),
-                      Button(
-                        child: const ButtonText(
-                          text: Text("Export"),
-                          icon: Icon(FluentIcons.share),
+                      DropDownButton(
+                        title: const Icon(FluentIcons.more),
+                        closeAfterClick: true,
+                        leading: const SizedBox(
+                          height: 20,
                         ),
-                        onPressed: () => showDialog(context: context, builder: (_) => ExportProfileDialog(profile: e)),
-                      ),
-                      const SizedBox(width: 8),
-                      CustomFilledButton(
-                        color: Colors.red,
-                        child: ButtonText(text: Text(translate('delete')), icon: const Icon(FluentIcons.delete)),
-                        onPressed: () => deleteProfile(e),
+                        trailing: const SizedBox(),
+                        items: [
+                          MenuFlyoutItem(
+                            text: Text("Export"),
+                            onPressed: () => showDialog(context: context, builder: (_) => ExportProfileDialog(profile: e)),
+                          ),
+                          MenuFlyoutItem(
+                            text: Text(translate('delete')),
+                            onPressed: () => deleteProfile(e),
+                          ),
+                        ],
                       ),
                     ],
                   ),
