@@ -343,7 +343,7 @@ class _ServerHostState extends State<ServerHost> {
                     clearButtonEnabled: true,
                     validator: (String? value) {
                       if (value == null || value.isEmpty || MapHelper.getMapsForMode(mode).where((element) => element.name == value).isEmpty) {
-                        return translate('$prefix.forms.map.error');
+                        return translate('$prefix.forms.map.map_not_found');
                       }
                       return null;
                     },
