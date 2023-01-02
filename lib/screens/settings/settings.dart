@@ -113,8 +113,8 @@ class _SettingsState extends State<Settings> {
                   await box.put('locale', value);
                   Jiffy.locale(AppLocale().getLocale().languageCode);
                   var cubit = BlocProvider.of<WidgetCubit>(context);
-                  cubit.toIndex(7);
                   cubit.toIndex(8);
+                  cubit.toIndex(9);
                 },
                 isExpanded: true,
                 value: LocalizedApp.of(context).delegate.currentLocale.languageCode,
