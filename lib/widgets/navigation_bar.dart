@@ -59,6 +59,7 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
   void initState() {
     protocolHandler.addListener(this);
     Jiffy.locale(supportedLocales.contains(AppLocale().getLocale().languageCode) ? AppLocale().getLocale().languageCode : 'en');
+    ProfileService.generateFiles();
     Timer.run(() async {
       ProfileService.generateFiles();
       if (!box.containsKey('setup')) {
@@ -70,32 +71,9 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
       ModInstallerService.initialize();
       DllInjector.downloadDll();
       RPCService.initialize();
+      await checkFrostyInstallation();
+      checkForUpdates();
       Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
-
-      bool exists = await FrostyService.checkDirectory();
-      if (!exists) {
-        await box.delete('setup');
-        NotificationService.showNotification(message: 'FrostyModManager not found!', color: Colors.red);
-        await openDialog();
-      }
-
-      VersionInfo? versionInfo = await AutoUpdater().updateAvailable();
-      if (versionInfo != null) {
-        await showDialog(context: context, builder: (_) => UpdateDialog(versionInfo: versionInfo));
-      }
-
-      bool outdatedFrosty = await FrostyService.isOutdated();
-      if (outdatedFrosty) {
-        if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
-          await Future.delayed(const Duration(seconds: 2));
-          return NotificationService.showNotification(message: 'Your FrostyModManager is outdated!', color: Colors.orange);
-        }
-        await showDialog(context: context, builder: (context) => OutdatedFrostyDialog());
-      } else {
-        if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
-          box.put('skipFrostyVersionCheck', false);
-        }
-      }
     });
     super.initState();
   }
@@ -140,6 +118,35 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
           join: true,
         ),
       );
+    }
+  }
+
+  void checkForUpdates() async {
+    VersionInfo? versionInfo = await AutoUpdater().updateAvailable();
+    if (versionInfo != null) {
+      await showDialog(context: context, builder: (_) => UpdateDialog(versionInfo: versionInfo));
+    }
+
+    bool outdatedFrosty = await FrostyService.isOutdated();
+    if (outdatedFrosty) {
+      if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
+        await Future.delayed(const Duration(seconds: 2));
+        return NotificationService.showNotification(message: 'Your FrostyModManager is outdated!', color: Colors.orange);
+      }
+      await showDialog(context: context, builder: (context) => OutdatedFrostyDialog());
+    } else {
+      if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
+        box.put('skipFrostyVersionCheck', false);
+      }
+    }
+  }
+
+  Future<void> checkFrostyInstallation() async {
+    bool exists = await FrostyService.checkDirectory();
+    if (!exists) {
+      await box.delete('setup');
+      NotificationService.showNotification(message: 'FrostyModManager not found!', color: Colors.red);
+      await openDialog();
     }
   }
 
