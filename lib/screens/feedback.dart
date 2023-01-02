@@ -24,124 +24,137 @@ class _FeedbackState extends State<Feedback> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: MediaQuery.of(context).size.height / 8),
-            const Center(
-              child: Text(
-                'Kyber Mod Manager: ',
-                style: TextStyle(fontSize: 18),
+            Card(
+              child: Column(
+                children: [
+                  const Center(
+                    child: Text(
+                      'Kyber Mod Manager: ',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomFilledButton(
+                        onPressed: () => launchUrlString('https://discord.gg/t2YBaHqbkb'),
+                        color: const Color.fromRGBO(88, 101, 242, 1),
+                        child: const Text(
+                          'Discord',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      CustomFilledButton(
+                        onPressed: () => launchUrlString('https://github.com/7reax/kyber-mod-manager'),
+                        color: Colors.grey,
+                        child: const Text(
+                          'GitHub',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomFilledButton(
-                  onPressed: () => launchUrlString('https://discord.gg/t2YBaHqbkb'),
-                  color: const Color.fromRGBO(88, 101, 242, 1),
-                  child: const Text(
-                    'Discord',
-                    style: TextStyle(color: Colors.white),
+            const SizedBox(height: 8),
+            Card(
+              child: Column(
+                children: [
+                  const Center(
+                    child: Text(
+                      'Frosty Mod Manager: ',
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                CustomFilledButton(
-                  onPressed: () => launchUrlString('https://github.com/7reax/kyber-mod-manager'),
-                  color: Colors.grey,
-                  child: const Text(
-                    'GitHub',
-                    style: TextStyle(color: Colors.white),
+                  const SizedBox(
+                    height: 8,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            const Divider(),
-            const SizedBox(height: 32),
-            const Center(
-              child: Text(
-                'Frosty Mod Manager: ',
-                style: TextStyle(fontSize: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomFilledButton(
+                        onPressed: () => launchUrlString('https://discord.gg/DSW2cU6Ywq'),
+                        color: const Color.fromRGBO(88, 101, 242, 1),
+                        child: const Text(
+                          'Discord',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      CustomFilledButton(
+                        onPressed: () => launchUrlString('https://github.com/CadeEvs/FrostyToolsuite'),
+                        color: Colors.grey,
+                        child: const Text(
+                          'GitHub',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomFilledButton(
-                  onPressed: () => launchUrlString('https://discord.gg/DSW2cU6Ywq'),
-                  color: const Color.fromRGBO(88, 101, 242, 1),
-                  child: const Text(
-                    'Discord',
-                    style: TextStyle(color: Colors.white),
+            const SizedBox(height: 8),
+            Card(
+              child: Column(
+                children: [
+                  const Center(
+                    child: Text(
+                      'Kyber: ',
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                CustomFilledButton(
-                  onPressed: () => launchUrlString('https://github.com/CadeEvs/FrostyToolsuite'),
-                  color: Colors.grey,
-                  child: const Text(
-                    'GitHub',
-                    style: TextStyle(color: Colors.white),
+                  const SizedBox(
+                    height: 8,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            const Divider(),
-            const SizedBox(height: 32),
-            const Center(
-              child: Text(
-                'Kyber: ',
-                style: TextStyle(fontSize: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomFilledButton(
+                        onPressed: () => launchUrlString('https://discord.gg/kyber'),
+                        color: const Color.fromRGBO(88, 101, 242, 1),
+                        child: const Text(
+                          'Discord',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      CustomFilledButton(
+                        onPressed: () => launchUrlString('https://twitter.com/KyberServers'),
+                        color: const Color.fromRGBO(29, 161, 242, 1),
+                        child: const Text(
+                          'Twitter',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      CustomFilledButton(
+                        onPressed: () => launchUrlString('https://github.com/BattleDash/Kyber'),
+                        color: Colors.grey,
+                        child: const Text(
+                          'GitHub',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      CustomFilledButton(
+                        onPressed: () => launchUrlString('https://patreon.com/KyberServers'),
+                        color: const Color.fromRGBO(249, 104, 84, 1),
+                        child: const Text(
+                          'Patreon',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomFilledButton(
-                  onPressed: () => launchUrlString('https://discord.gg/kyber'),
-                  color: const Color.fromRGBO(88, 101, 242, 1),
-                  child: const Text(
-                    'Discord',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                CustomFilledButton(
-                  onPressed: () => launchUrlString('https://twitter.com/KyberServers'),
-                  color: const Color.fromRGBO(29, 161, 242, 1),
-                  child: const Text(
-                    'Twitter',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                CustomFilledButton(
-                  onPressed: () => launchUrlString('https://github.com/BattleDash/Kyber'),
-                  color: Colors.grey,
-                  child: const Text(
-                    'GitHub',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                CustomFilledButton(
-                  onPressed: () => launchUrlString('https://patreon.com/KyberServers'),
-                  color: const Color.fromRGBO(249, 104, 84, 1),
-                  child: const Text(
-                    'Patreon',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
+            )
           ],
         ),
       ),
