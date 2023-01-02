@@ -59,8 +59,7 @@ class _InstalledModCategoryState extends State<InstalledModCategory> {
     }
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.all(10).copyWith(bottom: 5),
+      padding: const EdgeInsets.all(10).copyWith(bottom: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
