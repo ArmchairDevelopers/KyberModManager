@@ -59,7 +59,7 @@ class _EditProfileState extends State<EditProfile> {
           padding: const EdgeInsets.only(right: 15, left: 15),
           child: IconButton(
             icon: const Icon(FluentIcons.back),
-            onPressed: () => BlocProvider.of<WidgetCubit>(context).toIndex(2),
+            onPressed: () => BlocProvider.of<WidgetCubit>(context).toIndex(3),
           ),
         ),
         commandBar: CommandBar(
