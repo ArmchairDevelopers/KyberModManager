@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:kyber_mod_manager/logic/event_cubic.dart';
 import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
@@ -232,6 +233,18 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
               PaneItem(
                 mouseCursor: MouseCursor.defer,
                 body: const DiscordEvents(),
+                infoBadge: BlocBuilder<EventCubic, EventCubicState>(
+                  bloc: BlocProvider.of<EventCubic>(context),
+                  builder: (context, state) {
+                    if (state.events.isEmpty) {
+                      return const SizedBox();
+                    }
+
+                    return InfoBadge(
+                      source: Text(state.events.length.toString()),
+                    );
+                  },
+                ),
                 icon: const Icon(FluentIcons.event),
                 title: Text(translate('$prefix.items.events')),
               ),
