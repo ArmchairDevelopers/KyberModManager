@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
 import 'package:kyber_mod_manager/constants/api_constants.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/discord_event.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_version.dart';
 
 class ApiService {

@@ -15,6 +15,7 @@ import 'package:kyber_mod_manager/screens/dialogs/outdated_frosty_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/update_dialog/update_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart';
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/widgets/nexusmods_login.dart';
+import 'package:kyber_mod_manager/screens/discord_events/discord_events.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as feedback;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
@@ -220,6 +221,12 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
                 body: const ServerHost(),
                 icon: const Icon(FluentIcons.package),
                 title: Text(translate('$prefix.items.host')),
+              ),
+              PaneItem(
+                mouseCursor: MouseCursor.defer,
+                body: const DiscordEvents(),
+                icon: const Icon(FluentIcons.event),
+                title: Text(translate('$prefix.items.events')),
               ),
               PaneItemSeparator(),
               PaneItemHeader(header: Text(translate('navigation_bar.items.mod_profiles'))),
