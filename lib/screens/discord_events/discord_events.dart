@@ -58,14 +58,42 @@ class _DiscordEventsState extends State<DiscordEvents> {
                         Text(state.events[index].description ?? ''),
                         Row(
                           children: [
-                            Text(Jiffy(state.events[index].scheduledStartTime).fromNow()),
+                            Text(
+                              Jiffy(state.events[index].scheduledStartTime).fromNow(),
+                              style: FluentTheme.of(context).typography.body?.copyWith(
+                                    fontSize: 12,
+                                    color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+                                  ),
+                            ),
                             if (state.events[index].userCount != null) ...[
-                              const Divider(),
-                              Text(translate('events.interested', args: {'count': state.events[index].userCount ?? -1})),
+                              Container(
+                                width: 1,
+                                height: 10,
+                                color: Colors.white,
+                                margin: const EdgeInsets.symmetric(horizontal: 5),
+                              ),
+                              Text(
+                                translate('events.interested', args: {'count': state.events[index].userCount ?? -1}),
+                                style: FluentTheme.of(context).typography.body?.copyWith(
+                                      fontSize: 12,
+                                      color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+                                    ),
+                              ),
                             ],
                             if (state.events[index].creator?.username != null) ...[
-                              const Divider(),
-                              Text(state.events[index].creator!.username!),
+                              Container(
+                                width: 1,
+                                height: 10,
+                                color: Colors.white,
+                                margin: const EdgeInsets.symmetric(horizontal: 5),
+                              ),
+                              Text(
+                                state.events[index].creator!.username!,
+                                style: FluentTheme.of(context).typography.body?.copyWith(
+                                      fontSize: 12,
+                                      color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+                                    ),
+                              ),
                             ],
                           ],
                         )
