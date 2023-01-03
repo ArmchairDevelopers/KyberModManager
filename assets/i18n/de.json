@@ -213,7 +213,7 @@
                 "header": "Proxy"
             },
             "max_players": {
-                "header": "Max Players ({0})",
+                "header": "Max. Spieler ({0})",
                 "tooltip": "Wähle die gewünschte Anzahl von Spielern.\nDenke daran: Eine schnelle Internetverbindung ist erforderlich, damit viele Spieler deinem Server beitreten und ohne Verzögerungen spielen können."
             },
             "cosmetic_mods": {
@@ -227,15 +227,15 @@
     },
     "events": {
         "title": "Events",
-        "no_events": "There are currently no events.",
-        "subscribe": "Subscribe",
-        "unsubscribe": "Unsubscribe",
+        "no_events": "Derzeit gibt es keine Events.",
+        "subscribe": "Abonnieren",
+        "unsubscribe": "Abbestellen",
         "subscribe_dialog": {
             "title": "Subscribe to event",
             "text": "Are you sure you want to subscribe to events and get push notifications?"
         },
-        "interested": "{count} interested",
-        "view_on_discord": "View on Discord"
+        "interested": "{count} interessiert",
+        "view_on_discord": "Auf Discord anzeigen"
     },
     "mod_profiles": {
         "title": "Mod Profile",
@@ -310,11 +310,11 @@
             "no_updates_available": "Keine Updates verfügbar."
         },
         "kyber_release_channel": {
-            "title": "Kyber Release Channel",
-            "description": "Choose the release channel you want to use for Kyber.",
-            "button": "Select",
+            "title": "Kyber Release-Kanal",
+            "description": "Wähle den Versionskanal, den du für Kyber verwenden möchtest.",
+            "button": "Wählen",
             "errors": {
-                "no_channel_selected": "Please select a release channel.",
+                "no_channel_selected": "Bitte wähle einen Versionskanal.",
                 "channel_not_found": "Invalid release channel, using stable channel",
                 "failed_to_download": "Failed to download dll, using stable channel"
             }
