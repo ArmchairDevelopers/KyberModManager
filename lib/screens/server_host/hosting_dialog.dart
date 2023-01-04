@@ -135,11 +135,13 @@ class _HostingDialogState extends State<HostingDialog> {
     if (startFrosty) {
       setState(() => content = translate('$dialog_prefix.joining_states.frosty'));
       await FrostyService.startFrosty();
+      if (dynamicEnvEnabled) {
+        BlocProvider.of<GameStatusCubic>(context).setProfile(ProfileService.getProfilePath("KyberModManager"));
+      }
     } else {
       PlatformHelper.startBattlefront();
     }
 
-    //await FrostyService.startFrosty();
     if (!mounted) return;
 
     setState(() => state = 1);
@@ -176,7 +178,8 @@ class _HostingDialogState extends State<HostingDialog> {
             readOnly: true,
             controller: TextEditingController(text: link!),
           ),
-          FilledButton(
+          const SizedBox(height: 10),
+          Button(
             child: Text(translate('copy_link')),
             onPressed: () => Clipboard.setData(
               ClipboardData(text: link!),
