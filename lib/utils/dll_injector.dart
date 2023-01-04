@@ -125,7 +125,7 @@ class DllInjector {
     final hMods = calloc<HMODULE>(1024);
     final cbNeeded = calloc<DWORD>();
     List<String> modules = [];
-    late int length;
+    int length = 0;
 
     if (EnumProcessModules(hProcess, hMods, sizeOf<HMODULE>() * 1024, cbNeeded) == 1) {
       length = (cbNeeded.value ~/ sizeOf<HMODULE>()).toInt();

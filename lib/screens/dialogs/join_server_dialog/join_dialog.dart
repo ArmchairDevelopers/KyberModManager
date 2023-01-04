@@ -269,7 +269,7 @@ class _ServerDialogState extends State<ServerDialog> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   BlocProvider.of<WidgetCubit>(context).navigate(
-                    2,
+                    3 ,
                     EditProfile(
                       profile: ModProfile(name: '', description: '', mods: server.mods.map((e) => ModService.convertToFrostyMod(e)).toList()),
                     ),

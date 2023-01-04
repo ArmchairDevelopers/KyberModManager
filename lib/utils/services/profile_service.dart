@@ -29,6 +29,7 @@ class ProfileService {
     if (!box.get('saveProfiles', defaultValue: true)) {
       return null;
     }
+
     String battlefrontPath = OriginHelper.getBattlefrontPath();
     FrostyConfig config = FrostyService.getFrostyConfig();
     Directory dir = Directory('$battlefrontPath\\ModData\\KyberModManager');
