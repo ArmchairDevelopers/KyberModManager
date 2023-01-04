@@ -11,6 +11,12 @@ class EventCubic extends Cubit<EventCubicState> {
     _loadEvents();
   }
 
+  @override
+  Future<void> close() {
+    _timer?.cancel();
+    return super.close();
+  }
+
   void _loadEvents() async {
     state.events = await ApiService.getEvents();
     emit(state);
