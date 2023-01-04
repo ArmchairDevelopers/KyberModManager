@@ -80,7 +80,7 @@ class PlatformHelper {
     final key = Registry.openPath(RegistryHive.currentUser, path: 'Environment');
     String? value = key.getValueAsString('GAME_DATA_DIR');
     key.close();
-    return value ?? '';
+    return value ?? '${box.get("frostyPath")}\\ModData\\KyberModManager';
   }
 
   static Future<String> activateProfile(String profile, {bool previous = false, bool isPath = false}) async {
