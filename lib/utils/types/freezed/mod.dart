@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_collection.dart';
@@ -36,6 +38,25 @@ class Mod with _$Mod {
       filename: filename.split('\\').last,
       category: Uri.decodeComponent(formatted[2]),
       version: Uri.decodeComponent(formatted[3]),
+    );
+  }
+
+  @Implements<FrostyMod>()
+  factory Mod.fromBytes(String filename, [List<int>? data]) {
+    List<String> modData = [];
+    int lastIndex = 0;
+    for (int i = 0; i != data?.length; i++) {
+      if (modData.length > 3) break;
+      if (data?[i] != 0x00) continue;
+      modData.add(utf8.decode(data?.getRange(lastIndex == 0 ? 0 : lastIndex + 1, i).toList() ?? [], allowMalformed: true));
+      lastIndex = i;
+    }
+    return Mod(
+      name: modData[0],
+      author: modData[1],
+      filename: filename.split('\\').last,
+      category: modData[2],
+      version: modData[3],
     );
   }
 }

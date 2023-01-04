@@ -6,6 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
+import 'package:kyber_mod_manager/utils/services/frosty_troubleshoot_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_version.dart';
@@ -14,6 +15,8 @@ import 'package:logging/logging.dart';
 import 'package:version/version.dart';
 
 class FrostyService {
+  static FrostyConfig? _config;
+
   static Future<ProcessResult> startFrosty({bool launch = true, String? frostyPath, String? profile}) async {
     String path = frostyPath ?? box.get('frostyPath');
     var r = await Process.run(
@@ -58,13 +61,13 @@ class FrostyService {
       return false;
     }
 
-    List<FrostyVersion> hashes = await ApiService.versionHashes();
     File file = File('${box.get('frostyPath')}\\FrostyModManager.exe');
     var content = await file.readAsBytes();
     if (content.isEmpty) {
       return false;
     }
 
+    List<FrostyVersion> hashes = await ApiService.versionHashes();
     var digest = sha256.convert(content.toList()).toString();
     var version = hashes.firstWhere((element) => element.hash == digest, orElse: () => const FrostyVersion(version: '', hash: ''));
     if (version.version == '') {
@@ -74,15 +77,21 @@ class FrostyService {
     return Version.parse(version.version.replaceAll('v', '')) < Version.parse(await ApiService.getLatestFrostyVersion());
   }
 
-  static FrostyConfig getFrostyConfig([String? path]) {
+  static FrostyConfig getFrostyConfig([String? path, bool force = false]) {
     String? filePath = path ?? getFrostyConfigPath();
     if (filePath == null) {
       return FrostyConfig.fromJson({'Games': [], 'GlobalOptions': Map<String, dynamic>.from({})});
     }
+
+    if (_config != null &&! force) {
+      return _config!;
+    }
+
     File file = File(filePath);
     FrostyConfig config = FrostyConfig.fromJson(
       jsonDecode(file.readAsStringSync()),
     );
+    _config = config;
     return config;
   }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -26,8 +27,10 @@ class ModService {
   static List<Mod> mods = [];
   static List<FrostyCollection> collections = [];
   static StreamSubscription? _subscription;
+  static StreamSubscription? _configSubscription;
 
-  static Future<List<dynamic>> createModPack(BuildContext context, {
+  static Future<List<dynamic>> createModPack(
+    BuildContext context, {
     required PackType packType,
     required String profileName,
     bool cosmetics = false,
@@ -57,11 +60,11 @@ class ModService {
       }
 
       if (dynamicEnvEnabled) {
-        BlocProvider.of<GameStatusCubic>(context).setProfile(ProfileService.getProfilePath(profileName));
-        return formattedMods;
+        FrostyProfileService.createProfile(formattedMods);
+        await ProfileService.searchProfile(formattedMods);
+        return mods;
       }
 
-      await FrostyProfileService.createProfile(formattedMods);
       await ProfileService.searchProfile(formattedMods, onProgress);
       return mods;
     } else if (packType == PackType.FROSTY_PACK) {
@@ -192,8 +195,7 @@ class ModService {
   static bool isInstalled(String name) {
     String modName = name.substring(0, name.lastIndexOf(' ('));
     String version = name.substring(name.lastIndexOf('(') + 1, name.length - 1);
-    return mods.any((mod) => mod.name == modName && mod.version == version) ||
-        collections.any((element) => element.title == modName && element.version == version);
+    return mods.any((mod) => mod.name == modName && mod.version == version) || collections.any((element) => element.title == modName && element.version == version);
   }
 
   static Map<String, List<dynamic>> getModsByCategory([bool kyberCategories = false]) {
@@ -227,6 +229,10 @@ class ModService {
       _subscription?.cancel();
     }
 
+    if (_configSubscription != null) {
+      _configSubscription?.cancel();
+    }
+
     DateTime cooldown = DateTime.now();
     Logger.root.info('Watching directory for changes');
     _subscription = dir.watch(events: FileSystemEvent.all).listen((event) {
@@ -237,6 +243,14 @@ class ModService {
         }
         loadMods();
       });
+    });
+
+    if (FrostyService.getFrostyConfigPath() == null) {
+      return;
+    }
+    _configSubscription = File(FrostyService.getFrostyConfigPath()!).watch(events: FileSystemEvent.modify).listen((event) {
+      Logger.root.info("Reloading Frosty config");
+      FrostyService.getFrostyConfig(null, true);
     });
   }
 
@@ -253,6 +267,7 @@ class ModService {
       return;
     }
 
+    DateTime time = DateTime.now();
     final List<FileSystemEntity> entities = await dir.list().toList();
     mods = await compute(_loadMods, entities.map((e) => e.path).toList());
     if (context != null) {
@@ -260,6 +275,7 @@ class ModService {
     }
 
     collections = await _loadCollections(entities.map((e) => e.path).toList());
+    Logger.root.info("Loaded ${mods.length} mods in ${DateTime.now().difference(time).inMilliseconds}ms");
   }
 
   static Future<Mod> getDataFromFile(File file) async {
@@ -287,10 +303,11 @@ Future<List<FrostyCollection>> _loadCollections(List<dynamic> files) async {
     List<int> data = [];
     await file.openRead(0, 6000).toList().then((value) => value.forEach((element) => element.forEach((element1) => data.add(element1))));
     String decoded = utf8.decode(
-        data.getRange(28, data.length).toList(),
+      data.getRange(28, data.length).toList(),
       allowMalformed: true,
     );
-    decoded = Uri.decodeComponent(Uri.encodeComponent(decoded).split('%00').first);
+    var range = data.getRange(28, data.length).toList();
+    decoded = utf8.decode(range.getRange(0, range.indexOf(0x00)).toList(), allowMalformed: true);
     loadedCollections.add(FrostyCollection.fromFile(element, jsonDecode(decoded.substring(0, decoded.lastIndexOf('}') + 1))));
   });
   return loadedCollections;
@@ -299,24 +316,13 @@ Future<List<FrostyCollection>> _loadCollections(List<dynamic> files) async {
 Future<List<Mod>> _loadMods(List<dynamic> files) async {
   List<Mod> loadedMods = [];
   await Future.forEach(List<String>.from(files).where((element) => element.endsWith('.fbmod')), (String element) async {
-    try {
-      File file = File(element);
-      if (!file.existsSync()) {
-        return;
-      }
-      List<int> data = [];
-      await file.openRead(0, 1500).toList().then((value) => value.forEach((element) => element.forEach((element1) => data.add(element1))));
-      loadedMods.add(Mod.fromString(
-        element,
-        utf8.decode(
-          data.getRange(50, data.length).toList(),
-          allowMalformed: true,
-        ),
-      ));
-    } catch (e) {
-      Sentry.captureException(e);
-      Logger.root.info('Error loading mod: $e');
+    File file = File(element);
+    if (!file.existsSync()) {
+      return;
     }
+    List<int> data = [];
+    await file.openRead(0, 1500).toList().then((value) => value.forEach((element) => element.forEach((element1) => data.add(element1))));
+    loadedMods.add(Mod.fromBytes(element, data.getRange(50, data.length).toList()));
   });
   return loadedMods;
 }
