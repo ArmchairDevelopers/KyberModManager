@@ -13,6 +13,8 @@ abstract class FrostyMod {
   String get version;
 
   String get filename;
+
+  String? get description;
 }
 
 @HiveType(typeId: 6)
