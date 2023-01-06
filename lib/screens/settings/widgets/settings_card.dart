@@ -1,13 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 class SettingsCard extends StatelessWidget {
-  const SettingsCard(
-      {Key? key,
-      required this.icon,
-      required this.title,
-      required this.subtitle,
-      required this.child})
-      : super(key: key);
+  const SettingsCard({Key? key, required this.icon, required this.title, required this.subtitle, required this.child}) : super(key: key);
 
   final IconData icon;
   final Widget title;
@@ -17,6 +11,7 @@ class SettingsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.only(top: 4),
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: ListTile(
         title: Row(
@@ -30,11 +25,11 @@ class SettingsCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle(
-                    style: const TextStyle(fontSize: 17),
+                    style: FluentTheme.of(context).typography.body!.copyWith(fontSize: 17),
                     child: title,
                   ),
                   DefaultTextStyle(
-                    style: const TextStyle(fontSize: 13),
+                    style: FluentTheme.of(context).typography.body!.copyWith(fontSize: 12),
                     child: subtitle,
                   ),
                 ],
