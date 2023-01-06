@@ -20,7 +20,6 @@ import 'package:kyber_mod_manager/utils/types/mod_info.dart';
 import 'package:kyber_mod_manager/utils/types/pack_type.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 class ModService {
   static final List<String> _kyberCategories = ['gameplay', 'server host'];
@@ -289,6 +288,36 @@ class ModService {
       ),
     );
   }
+
+  static Future<Uint8List> getModCover(String filename) async {
+    return await compute(_getModCover, [box.get("frostyPath") + "/Mods/starwarsbattlefrontii/" + filename]);
+  }
+}
+
+Future<Uint8List> _getModCover(List<dynamic> args) async {
+  List<int> data = [];
+  File file = File(args[0]);
+  await file.openRead().toList().then((value) => value.forEach((element) => element.forEach((element1) => data.add(element1))));
+  int startIndex = 0;
+  int endIndex = 0;
+
+  for (int i = 0; i < data.length; i++) {
+    if (data[i] == 0x89 && data[i + 1] == 0x50 && data[i + 2] == 0x4E && data[i + 3] == 0x47) {
+      startIndex = i;
+    }
+
+    if (data[i] == 0x49 && data[i + 1] == 0x45 && data[i + 2] == 0x4E && data[i + 3] == 0x44) {
+      endIndex = i;
+      break;
+    }
+  }
+
+  if (startIndex == 0 || endIndex == 0) {
+    return Uint8List.fromList([]);
+  }
+
+  data.clear();
+  return Uint8List.fromList(data.getRange(startIndex, endIndex).toList());
 }
 
 Future<List<FrostyCollection>> _loadCollections(List<dynamic> files) async {

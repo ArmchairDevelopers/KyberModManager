@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:kyber_mod_manager/screens/dialogs/installed_mod_dialog.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
@@ -19,6 +20,7 @@ class InstalledMods extends StatefulWidget {
 class _InstalledModsState extends State<InstalledMods> {
   final String prefix = 'installed_mods';
   List<dynamic> _installedMods = [];
+  List<dynamic> _selectedMods = [];
   bool loaded = false;
   final TextEditingController _searchController = TextEditingController();
   String search = '';
@@ -35,6 +37,7 @@ class _InstalledModsState extends State<InstalledMods> {
       loaded = true;
     }
     if (mounted) {
+      _selectedMods = [];
       setState(() => _installedMods = [...ModService.mods, ...ModService.collections].where((element) => element.toString().toLowerCase().contains(search.toLowerCase())).toList()
         ..sort((dynamic a, dynamic b) => a.name.compareTo(b.name)));
     }
@@ -62,9 +65,12 @@ class _InstalledModsState extends State<InstalledMods> {
         ),
       ),
       content: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
+          Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
+            width: 400,
             child: TextBox(
               autofocus: true,
               onChanged: (String? value) {
@@ -72,22 +78,69 @@ class _InstalledModsState extends State<InstalledMods> {
                 loadMods();
               },
               controller: _searchController,
-              suffix: search.isEmpty ? Padding(
-                padding: const EdgeInsets.only(right: 5),
-                child: Icon(
-                  FluentIcons.search,
-                  color: FluentTheme.of(context).typography.body?.color?.withOpacity(.5),
-                ),
-              ) : IconButton(
-                icon: const Icon(FluentIcons.cancel),
-                onPressed: () {
-                  _searchController.clear();
-                  setState(() => search = '');
-                  loadMods();
-                },
-              ),
+              suffix: search.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: Icon(
+                        FluentIcons.search,
+                        color: FluentTheme.of(context).typography.body?.color?.withOpacity(.5),
+                      ),
+                    )
+                  : IconButton(
+                      icon: const Icon(FluentIcons.cancel),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() => search = '');
+                        loadMods();
+                      },
+                    ),
               placeholder: translate('search'),
             ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Checkbox(
+                      checked: _installedMods.length == _selectedMods.length && _installedMods.isNotEmpty
+                          ? true
+                          : _selectedMods.isNotEmpty && _installedMods.isNotEmpty
+                              ? null
+                              : false,
+                      onChanged: (checked) => setState(() => _selectedMods = checked ?? false ? List<dynamic>.from(_installedMods) : []),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text("Found ${_installedMods.length} mods")
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Button(
+                  child: ButtonText(
+                    icon: const Icon(FluentIcons.delete),
+                    text: Text(translate("delete")),
+                  ),
+                  onPressed: () {
+                    _selectedMods.forEach((element) {
+                      ModService.deleteMod(element);
+                    });
+                    loadMods();
+                  },
+                ),
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 5,
           ),
           Expanded(
             child: ConstrainedBox(
@@ -101,10 +154,22 @@ class _InstalledModsState extends State<InstalledMods> {
                       itemCount: _installedMods.length,
                       itemBuilder: (BuildContext context, int index) {
                         final mod = _installedMods[index];
-                        return Card(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: ListTile(
-                            title: Row(
+                        return ListTile.selectable(
+                          tileColor: ButtonState.resolveWith((states) {
+                            if (states.isPressing) {
+                              return FluentTheme.of(context).cardColor.withOpacity(.06);
+                            } else if (states.isHovering) {
+                              return FluentTheme.of(context).cardColor.withOpacity(.04);
+                            } else {
+                              return FluentTheme.of(context).cardColor;
+                            }
+                          }),
+                          selected: _selectedMods.contains(mod),
+                          selectionMode: ListTileSelectionMode.multiple,
+                          onSelectionChange: (b) => setState(() => b ? _selectedMods.add(mod) : _selectedMods.remove(mod)),
+                          title: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
@@ -149,6 +214,12 @@ class _InstalledModsState extends State<InstalledMods> {
                                     backgroundColor: ButtonState.resolveWith((states) => states.isNone ? Colors.transparent : null),
                                   ),
                                   items: [
+                                    MenuFlyoutItem(
+                                      text: Text("Description"),
+                                      onPressed: () {
+                                        showDialog(context: context, builder: (context) => InstalledModDialog(mod: mod));
+                                      },
+                                    ),
                                     MenuFlyoutItem(
                                       text: Text(translate('delete')),
                                       onPressed: () {

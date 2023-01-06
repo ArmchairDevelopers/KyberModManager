@@ -24,6 +24,7 @@ class Mod with _$Mod {
     @HiveField(2) required String category,
     @HiveField(3) required String version,
     @HiveField(4) String? author,
+    @HiveField(5) String? description,
   }) = _Mod;
 
   @Implements<FrostyMod>()
@@ -31,13 +32,14 @@ class Mod with _$Mod {
 
   @Implements<FrostyMod>()
   factory Mod.fromString(String filename, [String? data]) {
-    List<String> formatted = data != null ? Uri.encodeComponent(data).split('%00') : ['Invalid', 'Unknown', 'Unknown', 'Unknown'];
+    List<String> formatted = data != null ? Uri.encodeComponent(data).split('%00') : ['Invalid', 'Unknown', 'Unknown', 'Unknown', 'Unknown'];
     return Mod(
       name: Uri.decodeComponent(formatted[0]),
       author: Uri.decodeComponent(formatted[1]),
       filename: filename.split('\\').last,
       category: Uri.decodeComponent(formatted[2]),
       version: Uri.decodeComponent(formatted[3]),
+      description: Uri.decodeComponent(formatted[4]),
     );
   }
 
@@ -46,7 +48,7 @@ class Mod with _$Mod {
     List<String> modData = [];
     int lastIndex = 0;
     for (int i = 0; i != data?.length; i++) {
-      if (modData.length > 3) break;
+      if (modData.length > 5) break;
       if (data?[i] != 0x00) continue;
       modData.add(utf8.decode(data?.getRange(lastIndex == 0 ? 0 : lastIndex + 1, i).toList() ?? [], allowMalformed: true));
       lastIndex = i;
@@ -57,6 +59,7 @@ class Mod with _$Mod {
       filename: filename.split('\\').last,
       category: modData[2],
       version: modData[3],
+      description: modData.length > 4 ? modData[4] : null,
     );
   }
 }
