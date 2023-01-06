@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:linkable/linkable.dart';
 import 'package:kyber_mod_manager/logic/event_cubic.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -66,7 +67,12 @@ class _DiscordEventsState extends State<DiscordEvents> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(state.events[index].description ?? ''),
+                        Linkable(
+                          text: state.events[index].description ?? '',
+                          linkColor: FluentTheme.of(context).accentColor.normal,
+                          style: FluentTheme.of(context).typography.body,
+                          textColor: FluentTheme.of(context).typography.body?.color,
+                        ),
                         Row(
                           children: [
                             Text(
