@@ -24,18 +24,6 @@ class _DiscordEventsState extends State<DiscordEvents> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('events.title')),
-        commandBar: CommandBar(
-          mainAxisAlignment: MainAxisAlignment.end,
-          primaryItems: [
-            CommandBarButton(
-              icon: const Icon(FluentIcons.add),
-              label: Text(translate('events.subscribe')),
-              onPressed: () {
-                // TODO: Add subscribe
-              },
-            ),
-          ],
-        ),
       ),
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
