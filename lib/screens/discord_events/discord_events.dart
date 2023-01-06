@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/event_cubic.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DiscordEvents extends StatefulWidget {
   const DiscordEvents({Key? key}) : super(key: key);
@@ -50,6 +51,16 @@ class _DiscordEventsState extends State<DiscordEvents> {
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
+                    trailing: Row(
+                      children: [
+                        Button(
+                          onPressed: () {
+                            launchUrlString("discord://-/events/305338604316655616/${state.events[index].id!}");
+                          },
+                          child: const Text("Open In Discord"),
+                        )
+                      ],
+                    ),
                     title: Text(state.events[index].name ?? ''),
                     subtitle: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
