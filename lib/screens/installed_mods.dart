@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/dialogs/installed_mod_dialog.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
-import 'package:kyber_mod_manager/widgets/custom_button.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class InstalledMods extends StatefulWidget {

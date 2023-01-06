@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/logic/event_cubic.dart';
+import 'package:kyber_mod_manager/logic/frosty_cubic.dart';
 import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
@@ -96,7 +97,7 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     final botToastBuilder = BotToastInit();
-    var localizationDelegate = LocalizedApp.of(context).delegate;
+    final localizationDelegate = LocalizedApp.of(context).delegate;
 
     return FluentApp(
       title: 'Kyber Mod Manager',
@@ -126,6 +127,9 @@ class _AppState extends State<App> {
             ),
             BlocProvider<EventCubic>(
               create: (BuildContext context) => EventCubic(),
+            ),
+            BlocProvider<FrostyCubic>(
+              create: (BuildContext context) => FrostyCubic(),
             ),
           ],
           child: child ?? const SizedBox(height: 0),

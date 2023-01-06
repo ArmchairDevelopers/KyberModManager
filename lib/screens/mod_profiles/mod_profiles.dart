@@ -9,7 +9,6 @@ import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/export_profile_dialog.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
-import 'package:kyber_mod_manager/widgets/custom_button.dart';
 
 class ModProfiles extends StatefulWidget {
   const ModProfiles({Key? key}) : super(key: key);
