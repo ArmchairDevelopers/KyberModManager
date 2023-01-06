@@ -128,7 +128,7 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
       await showDialog(context: context, builder: (_) => UpdateDialog(versionInfo: versionInfo));
     }
 
-    bool outdatedFrosty = await FrostyService.isOutdated();
+    bool outdatedFrosty = await BlocProvider.of<FrostyCubic>(context).checkForUpdates();
     if (outdatedFrosty) {
       if (box.get('skipFrostyVersionCheck', defaultValue: false)) {
         await Future.delayed(const Duration(seconds: 2));

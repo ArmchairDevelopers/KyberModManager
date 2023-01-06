@@ -1,15 +1,15 @@
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:archive/archive_io.dart';
-import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kyber_mod_manager/logic/frosty_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/helpers/path_helper.dart';
-import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_version.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/github_asset.dart';
 import 'package:logging/logging.dart';
 
 class OutdatedFrostyDialog extends StatefulWidget {
@@ -20,17 +20,14 @@ class OutdatedFrostyDialog extends StatefulWidget {
 }
 
 class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
-  final CancelToken _cancelToken = CancelToken();
-  FrostyVersion? installedVersion;
-  GitHubAsset? latestVersion;
   int index = 0;
   int total = 0;
   int current = 0;
+  int totalFiles = 0;
+  int currentFile = 0;
 
   @override
   void initState() {
-    FrostyService.getFrostyVersion().then((value) => setState(() => installedVersion = value));
-    PathHelper.getFrostyVersions().then((value) => latestVersion = value.first);
     super.initState();
   }
 
@@ -54,18 +51,27 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
     }
 
     Logger.root.info('Generating backup of FrostyModManager...');
-    await compute(_createZip, [path, installedVersion, box.get('frostyConfigPath', defaultValue: '')]);
+    ReceivePort port = ReceivePort();
+    var x = port.listen((message) {
+      setState(() {
+        currentFile = message[0];
+        totalFiles = message[1];
+      });
+    });
+    await compute(_createZip, [path, BlocProvider.of<FrostyCubic>(context).state.currentVersion!, box.get('frostyConfigPath', defaultValue: ''), port.sendPort]);
+    x.cancel();
     Logger.root.info('Generated backup.');
     Logger.root.info('Starting download...');
     setState(() => index = 2);
     await PathHelper.downloadFrosty(
       Directory(path),
-      latestVersion!,
+      BlocProvider.of<FrostyCubic>(context).state.latestVersion!,
       (current, total) => setState(() {
         this.current = current;
         this.total = total;
       }),
     );
+    await BlocProvider.of<FrostyCubic>(context).checkForUpdates();
     setState(() => index = 3);
   }
 
@@ -110,9 +116,9 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
               Text.rich(
                 TextSpan(children: [
                   const TextSpan(text: 'You currently have FrostyModManager version '),
-                  TextSpan(text: installedVersion?.version, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: BlocProvider.of<FrostyCubic>(context).state.currentVersion?.version, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const TextSpan(text: ' installed. The latest version is '),
-                  TextSpan(text: "${latestVersion?.version}.", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: "${BlocProvider.of<FrostyCubic>(context).state.latestVersion?.version}.", style: const TextStyle(fontWeight: FontWeight.bold)),
                 ]),
                 style: const TextStyle(fontSize: 16),
               ),
@@ -125,16 +131,16 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   height: 25,
                   width: 25,
                   child: ProgressRing(),
                 ),
-                SizedBox(width: 15),
+                const SizedBox(width: 15),
                 Text(
-                  'Generating backup...',
-                  style: TextStyle(fontSize: 16),
+                  'Generating backup...  (${currentFile.toString()}/${totalFiles.toString()})',
+                  style: const TextStyle(fontSize: 16),
                 )
               ],
             ),
@@ -146,7 +152,7 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               Text(
-                "Downloading Frosty ${latestVersion?.version}",
+                "Downloading Frosty ${BlocProvider.of<FrostyCubic>(context).state.latestVersion?.version}",
                 style: const TextStyle(fontSize: 15),
               ),
               const SizedBox(height: 5),
@@ -158,9 +164,9 @@ class _OutdatedFrostyDialogState extends State<OutdatedFrostyDialog> {
                 ),
               ),
               const SizedBox(height: 5),
-              Text('${formatBytes(current, 1)} / ${formatBytes(latestVersion?.size ?? 0, 1)}', style: const TextStyle(fontSize: 14)),
+              Text('${formatBytes(current, 1)} / ${formatBytes(BlocProvider.of<FrostyCubic>(context).state.latestVersion?.size ?? 0, 1)}', style: const TextStyle(fontSize: 14)),
               const SizedBox(height: 10),
-              Text('Version: ${latestVersion?.version}', style: const TextStyle(fontSize: 14)),
+              Text('Version: ${BlocProvider.of<FrostyCubic>(context).state.latestVersion?.version}', style: const TextStyle(fontSize: 14)),
             ],
           ),
           const Center(
@@ -192,18 +198,19 @@ void _createZip(List<dynamic> args) async {
   }
 
   encoder.create('$path/Backups/${installedVersion.version}.zip');
-  for (FileSystemEntity entity in Directory(path).listSync()) {
-    if (entity.path.endsWith('Mods') || entity.path.endsWith('Backups') || entity.path.endsWith('Caches')) {
-      Logger.root.info('Skipping: ${entity.path}');
-      continue;
-    }
-
+  int i = 0;
+  List<FileSystemEntity> files = Directory(path).listSync();
+  files = files.where((entity) => !entity.path.endsWith('Mods') && !entity.path.endsWith('Backups') && !entity.path.endsWith('Caches')).toList();
+  (args[3] as SendPort).send([i, files.length]);
+  for (FileSystemEntity entity in files) {
     Logger.root.info('Found: ${entity.path}');
     if (entity is File) {
       encoder.addFile(entity);
     } else if (entity is Directory) {
       encoder.addDirectory(entity);
     }
+    i++;
+    (args[3] as SendPort).send([i, files.length]);
   }
   String configPath = args[2];
   if (configPath.isNotEmpty) {

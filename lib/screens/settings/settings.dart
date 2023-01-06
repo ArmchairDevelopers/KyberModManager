@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:influxdb_client/api.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:kyber_mod_manager/logic/frosty_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/dialogs/kyber_release_channel_dialog.dart';
@@ -24,6 +25,7 @@ import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/frosty_cubic_state.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
 import 'package:kyber_mod_manager/widgets/custom_button.dart';
 import 'package:kyber_mod_manager/screens/settings/widgets/settings_card.dart';
@@ -181,24 +183,30 @@ class _SettingsState extends State<Settings> {
           ),
           const SizedBox(height: 20),
           InfoLabel(label: translate('Frosty')),
-          SettingsCard(
-            icon: FluentIcons.refresh,
-            title: const Text("Check for Frosty updates"),
-            subtitle: const Text("Check for Frosty updates and download them automatically"),
-            child: Button(
-              child: const ButtonText(
-                text: Text("Check for updates"),
-                icon: Icon(FluentIcons.refresh),
-              ),
-              onPressed: () async {
-                var outdated = await FrostyService.isOutdated();
-                if (!outdated) {
-                  NotificationService.showNotification(message: "You already have the latest version of Frosty Mod Manager installed.");
-                  return;
-                }
-                showDialog(context: context, builder: (c) => OutdatedFrostyDialog());
-              },
-            ),
+          BlocBuilder<FrostyCubic, FrostyCubicState>(
+            bloc: BlocProvider.of<FrostyCubic>(context),
+            builder: (context, state) {
+              return InfoBar(
+                title: Text(state.isOutdated ? 'New Frosty Version Available' : 'Frosty Is Up To Date'),
+                content: Text(state.isOutdated ? 'There is a new version of Frosty Mod Manager available: ${state.latestVersion?.version}' : 'You already have the latest version of Frosty Mod Manager installed. (${state.currentVersion?.version})'),
+                severity: state.isOutdated ? InfoBarSeverity.warning : InfoBarSeverity.success,
+                isLong: true,
+                action: Button(
+                  child: ButtonText(
+                    text: state.isOutdated ? const Text("Install Update") : const Text("Check For Updates"),
+                    icon: Icon(state.isOutdated ? FluentIcons.installation : FluentIcons.refresh),
+                  ),
+                  onPressed: () async {
+                    var outdated = await BlocProvider.of<FrostyCubic>(context).checkForUpdates();
+                    if (!outdated) {
+                      return;
+                    }
+                    await Future.delayed(const Duration(milliseconds: 500));
+                    showDialog(context: context, builder: (c) => OutdatedFrostyDialog());
+                  },
+                ),
+              );
+            },
           ),
           SettingsCard(
             icon: FluentIcons.game,

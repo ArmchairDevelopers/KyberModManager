@@ -40,7 +40,10 @@ class ApiService {
         Uri.parse('$BACKEND_API_BASE_URL/frosty/hashes'),
         headers: {'Accept': 'application/json'},
       );
-      return (json.decode(response.body) as List<dynamic>).map((e) => FrostyVersion.fromJson(e)).toList();
+      return (json.decode(response.body) as List<dynamic>).map((e) {
+        e['plugins'] = [];
+        return FrostyVersion.fromJson(e);
+      }).toList();
     } catch (e) {
       return [];
     }
