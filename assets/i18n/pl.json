@@ -36,6 +36,7 @@
         "items": {
             "server_browser": "Przeglądarka serwerów",
             "host": "Hostowanie serwera",
+            "events": "Events",
             "mod_profiles": "Zestawy modyfikacji",
             "saved_profiles": "Zestawy z serwerów",
             "installed_mods": "Zainstalowane modyfikacje",
@@ -212,7 +213,7 @@
                 "header": "Proxy"
             },
             "max_players": {
-                "header": "maksymalna liczba graczy ({0})",
+                "header": "Max Players ({0})",
                 "tooltip": "Wybierz maksymalną liczbę graczy, dla których ma być Twój serwer.\nPamiętaj: Szybkie połączenie internetowe jest niezbędne, aby wielu graczy mogło grać na Twoim serwerze bez opóźnień."
             },
             "cosmetic_mods": {
@@ -223,6 +224,18 @@
                 "tooltip": "Kiedy włączone, gracze nie będą mogli wybrać preferowanej przez nich drużyny - zostaną przydzieleni do losowej drużyny, zależnie od liczby graczy obecnie w grze."
             }
         }
+    },
+    "events": {
+        "title": "Events",
+        "no_events": "There are currently no events.",
+        "subscribe": "Subscribe",
+        "unsubscribe": "Unsubscribe",
+        "subscribe_dialog": {
+            "title": "Subscribe to event",
+            "text": "Are you sure you want to subscribe to events and get push notifications?"
+        },
+        "interested": "{count} interested",
+        "view_on_discord": "View on Discord"
     },
     "mod_profiles": {
         "title": "Zestawy modyfikacji",
