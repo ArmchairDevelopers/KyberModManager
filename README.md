@@ -60,10 +60,10 @@
 
 | <p style="width: 30vw;">Pages</p> |                         <p></p>                     |
 |:---------------------------------:|:--------------------------------------------:|
-|          Server Browser           | <img src="https://img.reax.at/VSzJ07QzwUSn/direct"> |
-|           Hosting Page            | <img src="https://img.reax.at/ZHiyAxskfVdq/direct"> |
-|       Mod Profile Edit Page       | <img src="https://img.reax.at/yYrXdNUyVKK9/direct"> |
-|       Settings                    | <img src="https://img.reax.at/Y16h0N2Y8LDc/direct"> |
+|          Server Browser           | <img src="https://img.reax.at/OLnCWSdrHA7R/direct"> |
+|           Hosting Page            | <img src="https://img.reax.at/qDfdeiyGV3yc/direct"> |
+|       Mod Profile Edit Page       | <img src="https://img.reax.at/kdnJbYs3RP0d/direct"> |
+|       Settings                    | <img src="https://img.reax.at/bsIEkrSSxQfQ/direct"> |
 
 ## For developers: How to modify the Mod Manager
 
