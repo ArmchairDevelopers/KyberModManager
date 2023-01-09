@@ -88,7 +88,7 @@ class _HostingDialogState extends State<HostingDialog> {
   void setServer(KyberServer server) => setState(() {
         state = 3;
         _server = server;
-        link = 'https://kyber.gg/servers/#id=' + server.id.toString();
+        link = 'https://kyber.gg/servers/#id=${server.id}';
       });
 
   Future<void> createProfile() async {

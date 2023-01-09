@@ -512,6 +512,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.5.4"
+  linkable:
+    dependency: "direct main"
+    description:
+      name: linkable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   lints:
     dependency: transitive
     description:
