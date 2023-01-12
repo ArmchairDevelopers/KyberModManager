@@ -1,4 +1,14 @@
-## [1.0.8] - [-/-/-]
+## [1.0.9] - [-/-/-]
+
+- Fixed the Dynamic Environment Plugin so that FrostyFix is no longer needed.
+- Fix transparent background on Windows 11.
+- Added Buttons to Discord Rich Presence.
+- Added missing translations.
+- Performance improvements.
+- Added a new events tab for Kyber Discord events.
+- Redesigned the settings & installed mods page.
+
+## [1.0.8] - [21/10/22]
 
 - Added a selection menu for Kyber release channels.
 - Faster loading of saved profile through symlinks.
