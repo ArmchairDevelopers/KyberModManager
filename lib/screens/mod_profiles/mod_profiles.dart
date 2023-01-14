@@ -54,7 +54,7 @@ class _ModProfilesState extends State<ModProfiles> {
         ),
       ),
       content: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
           children: profiles
               .map(

@@ -62,89 +62,88 @@ class _InstalledModsState extends State<InstalledMods> {
           ],
         ),
       ),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            width: 400,
-            child: TextBox(
-              autofocus: true,
-              onChanged: (String? value) {
-                setState(() => search = value ?? '');
-                loadMods();
-              },
-              controller: _searchController,
-              suffix: search.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: Icon(
-                        FluentIcons.search,
-                        color: FluentTheme.of(context).typography.body?.color?.withOpacity(.5),
+      content: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 400,
+              child: TextBox(
+                autofocus: true,
+                onChanged: (String? value) {
+                  setState(() => search = value ?? '');
+                  loadMods();
+                },
+                controller: _searchController,
+                suffix: search.isEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: Icon(
+                          FluentIcons.search,
+                          color: FluentTheme.of(context).typography.body?.color?.withOpacity(.5),
+                        ),
+                      )
+                    : IconButton(
+                        icon: const Icon(FluentIcons.cancel),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() => search = '');
+                          loadMods();
+                        },
                       ),
-                    )
-                  : IconButton(
-                      icon: const Icon(FluentIcons.cancel),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() => search = '');
-                        loadMods();
-                      },
-                    ),
-              placeholder: translate('search'),
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Checkbox(
-                      checked: _installedMods.length == _selectedMods.length && _installedMods.isNotEmpty
-                          ? true
-                          : _selectedMods.isNotEmpty && _installedMods.isNotEmpty
-                              ? null
-                              : false,
-                      onChanged: (checked) => setState(() => _selectedMods = checked ?? false ? List<dynamic>.from(_installedMods) : []),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text("Found ${_installedMods.length} mods")
-                ],
+                placeholder: translate('search'),
               ),
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Button(
-                  child: ButtonText(
-                    icon: const Icon(FluentIcons.delete),
-                    text: Text(translate("delete")),
-                  ),
-                  onPressed: () {
-                    _selectedMods.forEach((element) {
-                      ModService.deleteMod(element);
-                    });
-                    loadMods();
-                  },
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Checkbox(
+                        checked: _installedMods.length == _selectedMods.length && _installedMods.isNotEmpty
+                            ? true
+                            : _selectedMods.isNotEmpty && _installedMods.isNotEmpty
+                                ? null
+                                : false,
+                        onChanged: (checked) => setState(() => _selectedMods = checked ?? false ? List<dynamic>.from(_installedMods) : []),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text("Found ${_installedMods.length} mods")
+                  ],
                 ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Expanded(
-            child: ConstrainedBox(
-              constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Button(
+                    child: ButtonText(
+                      icon: const Icon(FluentIcons.delete),
+                      text: Text(translate("delete")),
+                    ),
+                    onPressed: () {
+                      _selectedMods.forEach((element) {
+                        ModService.deleteMod(element);
+                      });
+                      loadMods();
+                    },
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Expanded(
+              child: ConstrainedBox(
+                constraints: BoxConstraints.expand(width: MediaQuery.of(context).size.width),
                 child: Stack(
                   children: [
                     ListView.builder(
@@ -248,8 +247,8 @@ class _InstalledModsState extends State<InstalledMods> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
