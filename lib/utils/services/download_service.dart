@@ -164,6 +164,7 @@ class DownloadService {
         outputStream.close();
       }
       archive.clear();
+      inputStream.close();
     } else {
       await Future.delayed(const Duration(seconds: 1));
       await UnzipHelper.unrar(File('$downloadFolder$filename'), Directory(downloadFolder)).catchError((error) {
@@ -171,7 +172,7 @@ class DownloadService {
         Logger.root.severe('Could not unrar $filename. $error');
       });
     }
-    await File('$downloadFolder\\$filename').delete();
+    await File('$downloadFolder$filename').delete();
   }
 }
 
