@@ -52,7 +52,7 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
     await _controller.initialize();
 
     _subscription = _controller.url.listen((url) async {
-      if (url == "https://users.nexusmods.com/account/profile/edit") {
+      if (url.startsWith("https://users.nexusmods.com/account/profile")) {
         setState(() => showOverlay = true);
         await _controller.loadUrl(
             'https://users.nexusmods.com/oauth/authorize?client_id=nexus&redirect_uri=https://www.nexusmods.com/oauth/callback&response_type=code&referrer=$_mainPage');
