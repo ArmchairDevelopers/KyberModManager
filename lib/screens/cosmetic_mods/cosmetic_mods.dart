@@ -28,7 +28,7 @@ class _CosmeticModsState extends State<CosmeticMods> {
 
   @override
   void dispose() {
-    box.put('cosmetics', activeMods);
+    save();
     super.dispose();
   }
 
@@ -62,6 +62,7 @@ class _CosmeticModsState extends State<CosmeticMods> {
                 context: context,
                 builder: (c) => FrostyProfileSelector(onSelected: (s) {
                   setState(() => activeMods = s.where((element) => !kyber_mod_categories.contains(element.category)).toList());
+                  save();
                 }),
               ),
             ),
@@ -79,7 +80,10 @@ class _CosmeticModsState extends State<CosmeticMods> {
                 child: InstalledMods(
                   activeMods: activeMods,
                   excludedCategories: kyber_mod_categories,
-                  onAdd: (m) => setState(() => activeMods.add(m)),
+                  onAdd: (m) {
+                    setState(() => activeMods.add(m));
+                    save();
+                  },
                 ),
               ),
               Flexible(
@@ -95,6 +99,7 @@ class _CosmeticModsState extends State<CosmeticMods> {
                       final Mod movedMod = activeMods.removeAt(oldIndex);
                       activeMods.insert(newIndex, movedMod);
                     });
+                    save();
                   },
                 ),
               ),
@@ -104,4 +109,6 @@ class _CosmeticModsState extends State<CosmeticMods> {
       ),
     );
   }
+
+  void save() => box.put('cosmetics', activeMods);
 }
