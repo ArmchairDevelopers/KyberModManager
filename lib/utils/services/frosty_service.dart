@@ -6,7 +6,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
-import 'package:kyber_mod_manager/utils/services/frosty_troubleshoot_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_version.dart';
