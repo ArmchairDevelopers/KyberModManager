@@ -134,9 +134,9 @@ class _HostingDialogState extends State<HostingDialog> {
 
     if (startFrosty) {
       setState(() => content = translate('$dialog_prefix.joining_states.frosty'));
-      await FrostyService.startFrosty();
+      await FrostyService.startFrosty(profile: profile);
       if (dynamicEnvEnabled) {
-        BlocProvider.of<GameStatusCubic>(context).setProfile(ProfileService.getProfilePath("KyberModManager"));
+        BlocProvider.of<GameStatusCubic>(context).setProfile(ProfileService.getProfilePath(packType == PackType.FROSTY_PACK ? profile : "KyberModManager"));
       }
     } else {
       PlatformHelper.startBattlefront();
@@ -173,10 +173,12 @@ class _HostingDialogState extends State<HostingDialog> {
     if (state == 3) {
       return Column(
         children: [
-          TextFormBox(
-            header: translate('$prefix.server_link'),
-            readOnly: true,
-            controller: TextEditingController(text: link!),
+          InfoLabel(
+            label: translate('$prefix.server_link'),
+            child: TextFormBox(
+              readOnly: true,
+              controller: TextEditingController(text: link!),
+            ),
           ),
           const SizedBox(height: 10),
           Button(

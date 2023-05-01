@@ -15,6 +15,7 @@ class StorageHelper {
     'saveProfiles': true,
     'enableCosmetics': false,
     'beta': false,
+    'enableDynamicEnv': true,
   };
 
   static Future<void> initializeHive() async {
@@ -30,5 +31,6 @@ class StorageHelper {
       exit(1);
     });
     _defaultValues.keys.where((key) => !box.containsKey(key)).forEach((key) => box.put(key, _defaultValues[key]));
+    dynamicEnvEnabled = box.get('enableDynamicEnv') as bool;
   }
 }

@@ -89,6 +89,16 @@ class _SettingsState extends State<Settings> {
           ],
           secondaryItems: [
             CommandBarButton(
+              icon: Icon(!box.get("enableDynamicEnv") ? FluentIcons.unlock : FluentIcons.lock),
+              label: Text(box.get("enableDynamicEnv") ? "Disable Env Injection" : "Enable Env Injection"),
+              onPressed: () async {
+                await box.put("enableDynamicEnv", !box.get("enableDynamicEnv"));
+                dynamicEnvEnabled = box.get("enableDynamicEnv");
+                Navigator.of(context).pop();
+                setState(() => null);
+              },
+            ),
+            CommandBarButton(
               icon: const Icon(FluentIcons.empty_recycle_bin),
               label: const Text("Clear cache"),
               onPressed: () async {
@@ -188,7 +198,9 @@ class _SettingsState extends State<Settings> {
             builder: (context, state) {
               return InfoBar(
                 title: Text(state.isOutdated ? 'New Frosty Version Available' : 'Frosty Is Up To Date'),
-                content: Text(state.isOutdated ? 'There is a new version of Frosty Mod Manager available: ${state.latestVersion?.version}' : 'You already have the latest version of Frosty Mod Manager installed. (${state.currentVersion?.version})'),
+                content: Text(state.isOutdated
+                    ? 'There is a new version of Frosty Mod Manager available: ${state.latestVersion?.version}'
+                    : 'You already have the latest version of Frosty Mod Manager installed. (${state.currentVersion?.version})'),
                 severity: state.isOutdated ? InfoBarSeverity.warning : InfoBarSeverity.success,
                 isLong: true,
                 action: Button(

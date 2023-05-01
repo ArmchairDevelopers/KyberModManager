@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dynamic_env/dynamic_env.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/game_status.dart';
@@ -9,7 +12,9 @@ import 'package:logging/logging.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class GameStatusCubic extends Cubit<GameStatus> {
-  GameStatusCubic() : super(GameStatus(injected: false, running: false));
+  GameStatusCubic() : super(GameStatus(injected: false, running: false)) {
+    _profile = box.get('GAME_DATA_DIR') as String?;
+  }
 
   String? _serverId;
   String? _profile;
@@ -21,7 +26,11 @@ class GameStatusCubic extends Cubit<GameStatus> {
     check();
   }
 
-  void setProfile(String? profile) => _profile = profile;
+  void setProfile(String? profile) {
+    box.put("GAME_DATA_DIR", profile);
+    _profile = profile;
+  }
+
   String? get profile => _profile;
 
   void check() async {
@@ -38,7 +47,7 @@ class GameStatusCubic extends Cubit<GameStatus> {
       server = await _getServer();
     }
     if (!state.running && running) {
-      if (_profile != null) {
+      if (dynamicEnvEnabled && _profile != null && _profile!.isNotEmpty && Directory(_profile!).existsSync()) {
         Logger.root.info("Game started with profile: $_profile");
         DynamicEnv().setEnv(DllInjector.battlefrontPID, "GAME_DATA_DIR", _profile!);
       }

@@ -34,6 +34,35 @@ class ApiService {
     }
   }
 
+  static Future<FrostyVersion> getFrostyVersion(String hash) async {
+    try {
+      final response = await get(
+        Uri.parse('$BACKEND_API_BASE_URL/frosty/$hash'),
+        headers: {'Accept': 'application/json'},
+      );
+      var version = json.decode(response.body);
+      var plugins = [];
+      version['plugins'].split(',').forEach((e) {
+        plugins.add({
+          'name': e.split(':')[0],
+          'hash': e.split(':')[1],
+        });
+      });
+      version['plugins'] = plugins;
+      return FrostyVersion.fromJson(version);
+    } catch (e) {
+      return const FrostyVersion(version: '', hash: '');
+    }
+  }
+
+  static Future<List<DiscordEvent>> getEvents() async {
+    final response = await get(
+      Uri.parse('$BACKEND_API_BASE_URL/events'),
+      headers: {'Accept': 'application/json'},
+    );
+    return (json.decode(response.body) as List<dynamic>).map((e) => DiscordEvent.fromJson(e)).toList();
+  }
+
   static Future<List<FrostyVersion>> versionHashes() async {
     try {
       final response = await get(
@@ -83,9 +112,9 @@ class ApiService {
   }
 
   static HiveCacheStore get cacheStore => HiveCacheStore(
-    applicationDocumentsDirectory,
-    hiveBoxName: 'cache',
-  );
+        applicationDocumentsDirectory,
+        hiveBoxName: 'cache',
+      );
 
   static Dio dio({Duration? maxCacheStale, CachePolicy? cachePolicy}) {
     var cacheOptions = CacheOptions(
