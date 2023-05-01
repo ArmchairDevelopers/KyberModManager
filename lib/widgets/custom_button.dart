@@ -12,17 +12,19 @@ class CustomFilledButton extends StatelessWidget {
     return FilledButton(
       onPressed: disabled ? null : onPressed,
       style: ButtonStyle(
-        backgroundColor: color != null ? ButtonState.resolveWith((states) {
-          var accentColor = color!.toAccentColor();
-          if (states.isDisabled) {
-            return FluentTheme.of(context).disabledColor;
-          } else if (states.isPressing) {
-            return accentColor.darker;
-          } else if (states.isHovering) {
-            return accentColor.dark;
-          }
-          return color;
-        }) : null,
+        backgroundColor: color != null
+            ? ButtonState.resolveWith((states) {
+                var accentColor = color!.toAccentColor();
+                if (states.isDisabled) {
+                  return FluentTheme.of(context).disabledColor;
+                } else if (states.isPressing) {
+                  return accentColor.darker;
+                } else if (states.isHovering) {
+                  return accentColor.dark;
+                }
+                return color;
+              })
+            : null,
       ),
       child: child,
     );

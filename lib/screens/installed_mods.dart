@@ -199,32 +199,39 @@ class _InstalledModsState extends State<InstalledMods> {
                                     ),
                                   ],
                                 ),
-                                DropDownButton(
-                                  title: const Icon(FluentIcons.more),
-                                  closeAfterClick: true,
-                                  leading: const SizedBox(
-                                    height: 30,
-                                  ),
-                                  trailing: const SizedBox(),
-                                  buttonStyle: ButtonStyle(
-                                    border: ButtonState.all(BorderSide.none),
-                                    backgroundColor: ButtonState.resolveWith((states) => states.isNone ? Colors.transparent : null),
-                                  ),
-                                  items: [
-                                    MenuFlyoutItem(
-                                      text: Text("Description"),
-                                      onPressed: () {
-                                        showDialog(context: context, builder: (context) => InstalledModDialog(mod: mod));
-                                      },
+                                FluentTheme(
+                                  data: FluentTheme.of(context).copyWith(
+                                    buttonTheme: ButtonThemeData(
+                                      defaultButtonStyle: ButtonStyle(
+                                        border: ButtonState.all(BorderSide.none),
+                                        backgroundColor: ButtonState.resolveWith((states) => states.isNone ? Colors.transparent : null),
+                                        padding: ButtonState.all(const EdgeInsets.all(0)),
+                                      ),
                                     ),
-                                    MenuFlyoutItem(
-                                      text: Text(translate('delete')),
-                                      onPressed: () {
-                                        ModService.deleteMod(mod);
-                                        loadMods();
-                                      },
+                                  ),
+                                  child: DropDownButton(
+                                    title: const Icon(FluentIcons.more),
+                                    closeAfterClick: true,
+                                    leading: const SizedBox(
+                                      height: 30,
                                     ),
-                                  ],
+                                    trailing: const SizedBox(),
+                                    items: [
+                                      MenuFlyoutItem(
+                                        text: Text("Description"),
+                                        onPressed: () {
+                                          showDialog(context: context, builder: (context) => InstalledModDialog(mod: mod));
+                                        },
+                                      ),
+                                      MenuFlyoutItem(
+                                        text: Text(translate('delete')),
+                                        onPressed: () {
+                                          ModService.deleteMod(mod);
+                                          loadMods();
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

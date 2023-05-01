@@ -69,9 +69,11 @@ class _ExportProfileDialogState extends State<ExportProfileDialog> {
             ),
           ),
           const SizedBox(height: 15),
-          TextBox(
-            controller: _controller,
-            header: translate('$prefix.export_type'),
+          InfoLabel(
+            label: translate('$prefix.export_type'),
+            child: TextBox(
+              controller: _controller,
+            ),
           ),
           if (widget.enableCosmetics) ...[
             const SizedBox(height: 15),

@@ -199,10 +199,12 @@ class _WalkThroughState extends State<WalkThrough> {
             Row(
               children: [
                 Expanded(
-                  child: TextBox(
-                    header: 'Destination Folder',
-                    enabled: false,
-                    controller: TextEditingController(text: _directory?.path ?? ''),
+                  child: InfoLabel(
+                    label: "Destination Folder",
+                    child: TextBox(
+                      enabled: false,
+                      controller: TextEditingController(text: _directory?.path ?? ''),
+                    ),
                   ),
                 ),
               ],

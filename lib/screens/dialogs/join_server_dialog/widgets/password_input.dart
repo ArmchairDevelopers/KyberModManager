@@ -23,13 +23,15 @@ class _PasswordInputState extends State<PasswordInput> {
 
   @override
   Widget build(BuildContext context) {
-    return TextBox(
-      controller: controller,
-      header: translate('enter_password'),
-      autofocus: true,
-      placeholder: translate('password'),
-      focusNode: widget.focusNode,
-      onSubmitted: widget.checkPassword,
+    return InfoLabel(
+      label: translate("enter_password"),
+      child: TextBox(
+        controller: controller,
+        autofocus: true,
+        placeholder: translate('password'),
+        focusNode: widget.focusNode,
+        onSubmitted: widget.checkPassword,
+      ),
     );
   }
 }

@@ -296,29 +296,34 @@ class _ServerHostState extends State<ServerHost> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFormBox(
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return translate('$prefix.forms.name.error');
-                    }
-                    return null;
-                  },
-                  onChanged: (String? value) => _formKey.currentState?.validate(),
-                  controller: _hostController,
-                  placeholder: translate('$prefix.forms.name.placeholder'),
-                  header: translate('$prefix.forms.name.header'),
+                InfoLabel(
+                  label: translate('$prefix.forms.name.header'),
+                  child: TextFormBox(
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return translate('$prefix.forms.name.error');
+                      }
+                      return null;
+                    },
+                    onChanged: (String? value) => _formKey.currentState?.validate(),
+                    controller: _hostController,
+                    placeholder: translate('$prefix.forms.name.placeholder'),
+                  ),
                 ),
                 const SizedBox(height: 8),
-                TextFormBox(
-                  validator: (String? value) {
-                    if (value == null) {
-                      return translate('$prefix.forms.password.error');
-                    }
-                    return null;
-                  },
-                  controller: _passwordController,
-                  placeholder: translate('$prefix.forms.password.placeholder'),
-                  header: translate('$prefix.forms.password.header'),
+                InfoLabel(
+                  label: translate('$prefix.forms.password.header'),
+                  child: TextFormBox(
+                    validator: (String? value) {
+                      if (value == null) {
+                        return translate('$prefix.forms.password.error');
+                      }
+                      return null;
+                    },
+                    controller: _passwordController,
+                    placeholder: translate('$prefix.forms.password.placeholder'),
+                    //header: translate('$prefix.forms.password.header'),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 InfoLabel(
@@ -348,7 +353,6 @@ class _ServerHostState extends State<ServerHost> {
                       return null;
                     },
                     placeholder: translate('$prefix.forms.map.placeholder'),
-                    // items: MapHelper.getMapsForMode(mode).map((e) => e.name).toList(),
                     items: MapHelper.getMapsForMode(mode).map((e) => AutoSuggestBoxItem(value: e.name, label: e.name)).toList(),
                     onSelected: (text) {
                       FocusScope.of(context).unfocus();

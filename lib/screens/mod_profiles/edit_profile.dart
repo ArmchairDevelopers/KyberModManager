@@ -98,23 +98,27 @@ class _EditProfileState extends State<EditProfile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFormBox(
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return translate('$prefix.forms.name.error');
-                      }
-                      return null;
-                    },
-                    onChanged: (String? value) => _formKey.currentState?.validate(),
-                    placeholder: translate('$prefix.forms.name.placeholder'),
-                    controller: _nameController,
-                    header: translate('$prefix.forms.name.header'),
+                  InfoLabel(
+                    label: translate('$prefix.forms.name.header'),
+                    child: TextFormBox(
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return translate('$prefix.forms.name.error');
+                        }
+                        return null;
+                      },
+                      onChanged: (String? value) => _formKey.currentState?.validate(),
+                      placeholder: translate('$prefix.forms.name.placeholder'),
+                      controller: _nameController,
+                    ),
                   ),
                   const SizedBox(height: 8),
-                  TextFormBox(
-                    controller: _descriptionController,
-                    placeholder: translate('$prefix.forms.description.placeholder'),
-                    header: translate('$prefix.forms.description.header'),
+                  InfoLabel(
+                    label: translate('$prefix.forms.description.header'),
+                    child: TextFormBox(
+                      controller: _descriptionController,
+                      placeholder: translate('$prefix.forms.description.placeholder'),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(

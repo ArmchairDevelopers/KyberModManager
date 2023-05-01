@@ -319,15 +319,7 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
             startFrom: .015,
             child: child,
           ),
-          paneBodyBuilder: (selectedPaneItemBody) {
-            return DropTarget(
-              onDragDone: (details) {
-                ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
-              },
-              // TODO: fix animation for sub-pages
-              child: fakeIndex != index ? widget.values.first : selectedPaneItemBody,
-            );
-          },
+          paneBodyBuilder: fakeIndex != index ? (_, __) => widget?.values.first : null,
         ),
       );
     });
