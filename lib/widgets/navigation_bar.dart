@@ -60,7 +60,7 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
   @override
   void initState() {
     protocolHandler.addListener(this);
-    Jiffy.locale(supportedLocales.contains(AppLocale().getLocale().languageCode) ? AppLocale().getLocale().languageCode : 'en');
+    Jiffy.setLocale(supportedLocales.contains(AppLocale().getLocale().languageCode) ? AppLocale().getLocale().languageCode : 'en');
     ProfileService.generateFiles();
     Timer.run(() async {
       ProfileService.generateFiles();
@@ -171,6 +171,13 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
       setState(() {
         index = !isFake ? state : 9;
         fakeIndex = !isFake ? state : state.keys.toList().first;
+      });
+
+      Future.delayed(Duration(milliseconds: 1), () {
+        setState(() {
+          index = !isFake ? state : 9;
+          fakeIndex = !isFake ? state : state.keys.toList().first;
+        });
       });
     }, builder: (context, widget) {
       return RawKeyboardListener(

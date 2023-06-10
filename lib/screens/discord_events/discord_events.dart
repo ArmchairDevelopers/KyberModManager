@@ -64,7 +64,7 @@ class _DiscordEventsState extends State<DiscordEvents> {
                         Row(
                           children: [
                             Text(
-                              Jiffy(state.events[index].scheduledStartTime).fromNow(),
+                              Jiffy.parseFromDateTime(state.events[index].scheduledStartTime!).fromNow(),
                               style: FluentTheme.of(context).typography.body?.copyWith(
                                     fontSize: 12,
                                     color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),

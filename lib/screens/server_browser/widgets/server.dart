@@ -63,7 +63,7 @@ material.DataRow Server(BuildContext context, KyberServer server) {
         material.DataCell(SizedBox(
           width: MediaQuery.of(context).size.width * .07,
           child: AutoSizeText(
-            Jiffy.unixFromMillisecondsSinceEpoch(server.startedAt).fromNow(),
+            Jiffy.parseFromMillisecondsSinceEpoch(server.startedAt).fromNow(),
             maxLines: 1,
           ),
         )),

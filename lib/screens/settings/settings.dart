@@ -123,7 +123,7 @@ class _SettingsState extends State<Settings> {
                 onChanged: (dynamic value) async {
                   changeLocale(context, value);
                   await box.put('locale', value);
-                  Jiffy.locale(AppLocale().getLocale().languageCode);
+                  Jiffy.setLocale(AppLocale().getLocale().languageCode);
                   var cubit = BlocProvider.of<WidgetCubit>(context);
                   cubit.toIndex(8);
                   cubit.toIndex(9);

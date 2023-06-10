@@ -13,7 +13,7 @@ class TranslatePreferences extends ITranslatePreferences {
 
   @override
   Future savePreferredLocale(Locale locale) async {
-    await Jiffy.locale(locale.languageCode);
+    await Jiffy.setLocale(locale.languageCode);
     await box.put('locale', locale.toString());
   }
 }

@@ -11,23 +11,23 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  flutter_svg: ^1.1.5
+  flutter_svg: ^2.0.6
   dio: ^5.0.2
   uuid: ^3.0.5
-  process_run: ^0.12.3+2
-  sentry_flutter: ^6.7.0
+  process_run: ^0.13.0
+  sentry_flutter: ^7.7.0
   crypto: ^3.0.2
   window_manager: ^0.3.1
   windows_taskbar: ^1.1.0
   flutter_fadein: ^2.0.0
   url_launcher: ^6.1.5
   html: ^0.15.0
-  intl: ^0.17.0
-  flutter_platform_alert: ^0.3.0
+  intl: ^0.18.0
+  flutter_platform_alert: ^0.4.0
   dio_cache_interceptor: ^3.2.7
   dio_cache_interceptor_hive_store: ^3.1.1
   package_info_plus: ^3.0.3
-  system_info2: ^3.0.2
+  system_info2: ^4.0.0
   auto_update: ^0.0.4
   flutter_markdown: ^0.6.10+3
   logging: ^1.0.2
@@ -48,13 +48,13 @@ dependencies:
   hive_flutter:
   json_annotation:
   flutter_acrylic: ^1.0.0+2
-  puppeteer: ^2.12.0
-  jiffy: ^5.0.0
+  puppeteer: ^3.0.0
+  jiffy: ^6.2.1
   win32: ^3.0.1
   quiver: ^3.1.0
   ffi: ^1.0.0
   freezed_annotation:
-  syncfusion_flutter_charts: ^20.2.39
+  syncfusion_flutter_charts: ^21.2.9
   influxdb_client: ^2.5.0
   protocol_handler: ^0.1.4
   dynamic_env:
