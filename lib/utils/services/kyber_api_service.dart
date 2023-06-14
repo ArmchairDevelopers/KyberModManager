@@ -52,6 +52,7 @@ class KyberApiService {
         'map': map,
         'maxPlayers': maxPlayers,
         'autoBalanceTeams': autoBalance,
+        'displayInBrowser': true,
       }),
     ).then((response) => jsonDecode(response.body));
   }
