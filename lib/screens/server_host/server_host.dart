@@ -400,9 +400,11 @@ class _ServerHostState extends State<ServerHost> {
                       );
                     }).toList(),
                     value: faction,
-                    onChanged: (value) {
-                      setState(() => faction = value ?? 0);
-                    },
+                    onChanged: autoBalance
+                        ? null
+                        : (value) {
+                            setState(() => faction = value ?? 0);
+                          },
                   ),
                 ),
                 const SizedBox(height: 16),
