@@ -310,7 +310,7 @@ class _ServerHostState extends State<ServerHost> {
                     placeholder: translate('$prefix.forms.name.placeholder'),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 InfoLabel(
                   label: translate('$prefix.forms.password.header'),
                   child: TextFormBox(
@@ -325,7 +325,7 @@ class _ServerHostState extends State<ServerHost> {
                     //header: translate('$prefix.forms.password.header'),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 InfoLabel(
                   label: translate('$prefix.forms.game_mode.header'),
                   child: ComboBox<String>(
