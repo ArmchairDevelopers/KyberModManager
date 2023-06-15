@@ -433,7 +433,13 @@ class _ServerHostState extends State<ServerHost> {
                     Checkbox(
                       checked: autoBalance,
                       content: Text(translate('$prefix.forms.auto_balance.header')),
-                      onChanged: (value) => setState(() => autoBalance = value!),
+                      onChanged: (value) {
+                        if (value! == true) {
+                          faction = 0;
+                        }
+
+                        setState(() => autoBalance = value!);
+                      },
                     ),
                     CustomTooltip(message: translate('$prefix.forms.auto_balance.tooltip'))
                   ],
