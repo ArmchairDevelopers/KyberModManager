@@ -95,15 +95,6 @@ class _ServerDialogState extends State<ServerDialog> {
   }
 
   void onButtonPressed() async {
-    state = 0;
-    disabled = true;
-    loading = true;
-    setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': 2, 'total': 25}));
-    Timer.run(() async {
-      await Future.delayed(const Duration(seconds: 10));
-      setState(() => slowProfileLoading = true);
-    });
-    return;
     if (unsupportedMods) {
       return Navigator.pop(context);
     }
@@ -141,17 +132,18 @@ class _ServerDialogState extends State<ServerDialog> {
           mods.addAll(List<String>.from(cosmeticMods.map((e) => e.toKyberString()).toList()));
         }
 
+        _profileCopyTimer = Timer(const Duration(minutes: 5), () async {
+          setState(() => slowProfileLoading = true);
+        });
+
         //await ProfileService.enableProfile(ProfileService.getProfilePath("KyberModManager"));
         path = await ProfileService.searchProfile(mods, (copied, total) {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         }).catchError((e) {
           NotificationService.showNotification(message: e.toString(), color: Colors.red);
         });
-
-        Timer.run(() async {
-          await Future.delayed(const Duration(minutes: 10));
-          setState(() => slowProfileLoading = true);
-        });
+        _profileCopyTimer?.cancel();
+        setState(() => slowProfileLoading = false);
       }
       /* else {
         final String path = OriginHelper.getBattlefrontPath();
