@@ -153,6 +153,7 @@
             "buttons": {
                 "open_mods": "Otwórz modyfikacje w przeglądarce",
                 "view_mods": "Zobacz modyfikacje",
+                "view_info": "View server info",
                 "downloading": "Pobieranie...",
                 "download": "Pobierz"
             },
@@ -247,7 +248,10 @@
     },
     "installed_mods": {
         "title": "Zainstalowane modyfikacje",
-        "open_directory": "Otwórz folder"
+        "open_directory": "Otwórz folder",
+        "contents": {
+            "mods_count": "Found {mods} mods"
+        }
     },
     "export_profile_dialog": {
         "title": "Eksportuj zestaw",
@@ -327,6 +331,20 @@
             "title": "Wybierz swoją platformę",
             "subtitle": "Platforma",
             "enable": "Włącz"
+        },
+        "frosty_updater": {
+            "titles": {
+                "up_to_date": "Frosty Is Up To Date",
+                "new_version_available": "New Frosty Version Available"
+            },
+            "contents": {
+                "up_to_date": "You already have the latest version of Frosty Mod Manager installed. ({version})",
+                "new_version_available": "There is a new version of Frosty Mod Manager available: {version}"
+            },
+            "buttons": {
+                "check_for_updates": "Check For Updates",
+                "install_update": "Install Update"
+            }
         },
         "frosty_profile": {
             "title": "Aktywuj modyfikacje",
