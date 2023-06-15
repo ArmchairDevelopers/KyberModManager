@@ -122,18 +122,20 @@ class _InstalledModsState extends State<InstalledMods> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 10),
+                  padding: const EdgeInsets.only(right: 10),
                   child: Button(
                     child: ButtonText(
                       icon: const Icon(FluentIcons.delete),
                       text: Text(translate("delete")),
                     ),
-                    onPressed: () {
-                      _selectedMods.forEach((element) {
-                        ModService.deleteMod(element);
-                      });
-                      loadMods();
-                    },
+                    onPressed: _selectedMods.isEmpty
+                        ? null
+                        : () {
+                            _selectedMods.forEach((element) {
+                              ModService.deleteMod(element);
+                            });
+                            loadMods();
+                          },
                   ),
                 )
               ],
@@ -165,7 +167,7 @@ class _InstalledModsState extends State<InstalledMods> {
                           selectionMode: ListTileSelectionMode.multiple,
                           onSelectionChange: (b) => setState(() => b ? _selectedMods.add(mod) : _selectedMods.remove(mod)),
                           title: Padding(
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
