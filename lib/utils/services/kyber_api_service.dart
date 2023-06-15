@@ -73,7 +73,7 @@ class KyberApiService {
     proxies = await Future.wait(proxies.map((proxy) async {
       final start = DateTime.now();
       DateTime? end;
-      await Socket.connect(proxy.ip, 25200, timeout: const Duration(seconds: 2)).then((socket) {
+      await Socket.connect(proxy.ip, 25200, timeout: const Duration(seconds: 1)).then((socket) {
         socket.destroy();
         end = DateTime.now();
       }).catchError((error) {
