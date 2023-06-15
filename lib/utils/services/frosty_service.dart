@@ -73,7 +73,12 @@ class FrostyService {
       return false;
     }
 
-    return Version.parse(version.version.replaceAll('v', '')) < Version.parse(await ApiService.getLatestFrostyVersion());
+    String correctedVersion = version.version.substring(1, version.version.lastIndexOf(".")) + version.version.substring(version.version.lastIndexOf(".") + 1);
+
+    String latestVersion = await ApiService.getLatestFrostyVersion();
+    String correctedLatestVersion = latestVersion.substring(0, latestVersion.lastIndexOf(".")) + latestVersion.substring(latestVersion.lastIndexOf(".") + 1);
+
+    return Version.parse(correctedVersion) < Version.parse(correctedLatestVersion);
   }
 
   static FrostyConfig getFrostyConfig([String? path, bool force = false]) {
@@ -82,7 +87,7 @@ class FrostyService {
       return FrostyConfig.fromJson({'Games': [], 'GlobalOptions': Map<String, dynamic>.from({})});
     }
 
-    if (_config != null &&! force) {
+    if (_config != null && !force) {
       return _config!;
     }
 
