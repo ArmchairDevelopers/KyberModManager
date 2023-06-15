@@ -37,7 +37,7 @@ class PathHelper {
     final inputStream = InputFileStream('${path.path}.zip');
     final archive = ZipDecoder().decodeBuffer(inputStream, verify: false);
     for (var file in archive.files) {
-      String filepath = '${path.path}/${file.name}';
+      String filepath = '${path.path}/${file.name.replaceFirst("FrostyModManager/", "")}';
       if (!file.isFile) {
         continue;
       }
