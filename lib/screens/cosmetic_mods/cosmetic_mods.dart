@@ -42,7 +42,7 @@ class _CosmeticModsState extends State<CosmeticMods> {
           primaryItems: [
             if (activeMods.isNotEmpty)
               CommandBarButton(
-                label: const Text("Export"),
+                label: Text(translate("export_profile_dialog.export")),
                 icon: const Icon(FluentIcons.share),
                 onPressed: () => showDialog(
                   context: context,

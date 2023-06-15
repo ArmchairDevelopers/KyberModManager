@@ -197,15 +197,15 @@ class _SettingsState extends State<Settings> {
             bloc: BlocProvider.of<FrostyCubic>(context),
             builder: (context, state) {
               return InfoBar(
-                title: Text(state.isOutdated ? 'New Frosty Version Available' : 'Frosty Is Up To Date'),
+                title: Text(translate("$prefix.frosty_updater.titles.${state.isOutdated ? 'new_version_available' : 'up_to_date'}")),
                 content: Text(state.isOutdated
-                    ? 'There is a new version of Frosty Mod Manager available: ${state.latestVersion?.version}'
-                    : 'You already have the latest version of Frosty Mod Manager installed. (${state.currentVersion?.version})'),
+                    ? translate("$prefix.frosty_updater.contents.new_version_available", args: {"version": state.latestVersion?.version})
+                    : translate("$prefix.frosty_updater.contents.up_to_date", args: {"version": state.currentVersion?.version})),
                 severity: state.isOutdated ? InfoBarSeverity.warning : InfoBarSeverity.success,
                 isLong: true,
                 action: Button(
                   child: ButtonText(
-                    text: state.isOutdated ? const Text("Install Update") : const Text("Check For Updates"),
+                    text: state.isOutdated ? Text(translate("$prefix.frosty_updater.buttons.install_update")) : Text(translate("$prefix.frosty_updater.buttons.check_for_updates")),
                     icon: Icon(state.isOutdated ? FluentIcons.installation : FluentIcons.refresh),
                   ),
                   onPressed: () async {

@@ -118,16 +118,12 @@ class _InstalledModsState extends State<InstalledMods> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text("Found ${_installedMods.length} mods")
+                    Text(translate("$prefix.contents.mods_count", args: {"mods": _installedMods.length.toString()})),
                   ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: Button(
-                    child: ButtonText(
-                      icon: const Icon(FluentIcons.delete),
-                      text: Text(translate("delete")),
-                    ),
                     onPressed: _selectedMods.isEmpty
                         ? null
                         : () {
@@ -136,6 +132,10 @@ class _InstalledModsState extends State<InstalledMods> {
                             });
                             loadMods();
                           },
+                    child: ButtonText(
+                      icon: const Icon(FluentIcons.delete),
+                      text: Text(translate("delete")),
+                    ),
                   ),
                 )
               ],
@@ -220,7 +220,7 @@ class _InstalledModsState extends State<InstalledMods> {
                                     trailing: const SizedBox(),
                                     items: [
                                       MenuFlyoutItem(
-                                        text: Text("Description"),
+                                        text: Text(translate("description")),
                                         onPressed: () {
                                           showDialog(context: context, builder: (context) => InstalledModDialog(mod: mod));
                                         },

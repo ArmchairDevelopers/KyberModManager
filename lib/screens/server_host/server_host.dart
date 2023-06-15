@@ -396,7 +396,7 @@ class _ServerHostState extends State<ServerHost> {
                     items: [0, 1].map((e) {
                       return ComboBoxItem<int>(
                         value: e,
-                        child: Text(e == 0 ? 'Light Side' : 'Dark Side'),
+                        child: Text(translate("server_browser.join_dialog.team_selector.${e == 0 ? 'light_side' : 'dark_side'}")),
                       );
                     }).toList(),
                     value: faction,

@@ -302,7 +302,7 @@ class _ServerDialogState extends State<ServerDialog> {
         ),
         Button(
           onPressed: downloading || unsupportedMods ? null : () => setState(() => state = state == 1 ? 0 : 1),
-          child: Text(state == 1 ? translate('back') : translate('$prefix.buttons.view_mods')),
+          child: Text(state == 1 ? translate('$prefix.buttons.view_info') : translate('$prefix.buttons.view_mods')),
         ),
         if (correctPassword && !unsupportedMods && modsInstalled)
           SplitButtonBar(
