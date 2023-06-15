@@ -53,10 +53,13 @@ class _ServerDialogState extends State<ServerDialog> {
 
   FocusNode passwordFocusNode = FocusNode();
   Timer? timer;
+  Timer? _profileCopyTimer;
+
   String preferredTeam = '0';
   String password = '';
   String? profile;
   String? content;
+
   bool downloading = false;
   bool cosmetics = false;
   bool disabled = false;
@@ -64,6 +67,8 @@ class _ServerDialogState extends State<ServerDialog> {
   bool unsupportedMods = false;
   bool modsInstalled = false;
   bool loading = false;
+  bool slowProfileLoading = false;
+
   int startingState = 0;
   int state = 0;
 
@@ -90,6 +95,15 @@ class _ServerDialogState extends State<ServerDialog> {
   }
 
   void onButtonPressed() async {
+    state = 0;
+    disabled = true;
+    loading = true;
+    setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': 2, 'total': 25}));
+    Timer.run(() async {
+      await Future.delayed(const Duration(seconds: 10));
+      setState(() => slowProfileLoading = true);
+    });
+    return;
     if (unsupportedMods) {
       return Navigator.pop(context);
     }
@@ -132,6 +146,11 @@ class _ServerDialogState extends State<ServerDialog> {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         }).catchError((e) {
           NotificationService.showNotification(message: e.toString(), color: Colors.red);
+        });
+
+        Timer.run(() async {
+          await Future.delayed(const Duration(minutes: 10));
+          setState(() => slowProfileLoading = true);
         });
       }
       /* else {
@@ -269,7 +288,7 @@ class _ServerDialogState extends State<ServerDialog> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   BlocProvider.of<WidgetCubit>(context).navigate(
-                    3 ,
+                    3,
                     EditProfile(
                       profile: ModProfile(name: '', description: '', mods: server.mods.map((e) => ModService.convertToFrostyMod(e)).toList()),
                     ),
@@ -452,27 +471,49 @@ class _ServerDialogState extends State<ServerDialog> {
     }
 
     if (loading) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
+      return Container(
+        child: Center(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 20,
-                width: 20,
-                child: ProgressRing(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: ProgressRing(),
+                  ),
+                  const SizedBox(width: 15),
+                  Text(
+                    content != null ? content! : translate('$prefix.joining_states.${startingText()}'),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
               ),
-              const SizedBox(width: 15),
-              Text(
-                content != null ? content! : translate('$prefix.joining_states.${startingText()}'),
-                style: const TextStyle(fontSize: 16),
-              ),
+              const SizedBox(height: 10),
+              if (startingState == 4) Text(translate('$prefix.joining_states.battlefront_2')),
+              if (slowProfileLoading && content != null && startingState == 0)
+                const InfoBar(
+                  severity: InfoBarSeverity.warning,
+                  title: Text("Slow profile loading"),
+                  content: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "It seems like your profile is taking a long time to load. This can be caused by a large amount of mods.",
+                      ),
+                      Text(
+                        "You can disbale this feature in the settings under \"Saved Profiles\".",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                ),
             ],
           ),
-          const SizedBox(height: 10),
-          if (startingState == 4) Text(translate('$prefix.joining_states.battlefront_2')),
-        ],
+        ),
       );
     }
 
