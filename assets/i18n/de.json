@@ -153,6 +153,7 @@
             "buttons": {
                 "open_mods": "Mods im Browser öffnen",
                 "view_mods": "Mods ansehen",
+                "view_info": "Zeige Server Info",
                 "downloading": "Lädt runter...",
                 "download": "Herunterladen"
             },
@@ -247,7 +248,10 @@
     },
     "installed_mods": {
         "title": "Installierte Mods",
-        "open_directory": "Verzeichnis öffnen"
+        "open_directory": "Verzeichnis öffnen",
+        "contents": {
+            "mods_count": "{mods} Mods gefunden"
+        }
     },
     "export_profile_dialog": {
         "title": "Profil exportieren",
@@ -327,6 +331,20 @@
             "title": "Wähle deine Plattform",
             "subtitle": "Plattform",
             "enable": "Aktivieren"
+        },
+        "frosty_updater": {
+            "titles": {
+                "up_to_date": "Frosty Is Up To Date",
+                "new_version_available": "Neue Version verfügbar"
+            },
+            "contents": {
+                "up_to_date": "Du hast bereits die neueste Version des Frosty Mod Managers installiert. ({version})",
+                "new_version_available": "Es ist eine neue Version des Frosty Mod Managers verfügbar: {version}"
+            },
+            "buttons": {
+                "check_for_updates": "Nach Updates suchen",
+                "install_update": "Update installieren"
+            }
         },
         "frosty_profile": {
             "title": "Frosty Profil",
