@@ -73,12 +73,44 @@ class FrostyService {
       return false;
     }
 
-    String correctedVersion = version.version.substring(1, version.version.lastIndexOf(".")) + version.version.substring(version.version.lastIndexOf(".") + 1);
+    String correctedVersion = _parseFrostyVersion(version.version);
 
     String latestVersion = await ApiService.getLatestFrostyVersion();
-    String correctedLatestVersion = latestVersion.substring(0, latestVersion.lastIndexOf(".")) + latestVersion.substring(latestVersion.lastIndexOf(".") + 1);
-
+    String correctedLatestVersion = _parseFrostyVersion(latestVersion);
+    
     return Version.parse(correctedVersion) < Version.parse(correctedLatestVersion);
+  }
+
+  static String _parseFrostyVersion(String rawVersion) {
+    if (rawVersion.toLowerCase().startsWith("v")) {
+      rawVersion = rawVersion.substring(1);
+    }
+
+    late String formattedVersion;
+    List<String> preRelease = [""];
+
+    if (rawVersion.allMatches(".").length == 2) {
+      formattedVersion = rawVersion.contains("-") ? rawVersion.substring(0, rawVersion.lastIndexOf("-")) : rawVersion;
+    } else {
+      formattedVersion = rawVersion.substring(0, rawVersion.lastIndexOf(".")) + rawVersion.substring(rawVersion.lastIndexOf(".") + 1);
+      if (formattedVersion.contains("-")) {
+        formattedVersion = formattedVersion.substring(0, formattedVersion.lastIndexOf("-"));
+      }
+    }
+
+    if (rawVersion.contains("-")) {
+      String preReleaseString = rawVersion.substring(rawVersion.lastIndexOf("-") + 1);
+      if (preReleaseString.toLowerCase().contains("alpha")) {
+        preRelease.add("alpha");
+      } else {
+        preRelease.add("beta");
+      }
+
+      int preReleaseVersion = int.tryParse(preReleaseString.substring(preReleaseString.lastIndexOf(".") + 1)) ?? 0;
+      preRelease.add((preReleaseVersion * (preReleaseString.toLowerCase().contains("alpha") ? 1 : 2)).toString());
+    }
+
+    return rawVersion.substring(0, rawVersion.lastIndexOf(".")) + rawVersion.substring(rawVersion.lastIndexOf(".") + 1);
   }
 
   static FrostyConfig getFrostyConfig([String? path, bool force = false]) {
