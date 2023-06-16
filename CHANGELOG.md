@@ -1,4 +1,22 @@
-## [1.0.9] - [-/-/-]
+## [1.0.10] - [-/-/-]
+- **Fixed Nexusmods Login**.
+- Minor UI changes and improvements.
+- Fixed auto-save for cosmetic mods.
+- Upgraded fluent_ui.
+- Updated dependencies.
+- Disabled selector for "Server Host Faction" if auto balance is enabled.
+- Reduced timeout for proxy checking.
+- Added warning message for slow "saved profiles" loading.
+- Reset faction selector when auto balance gets enabled.
+- Fixed frosty auto updater not parsing the frosty version.
+- Fixed path for installing/updating frosty.
+- Disabled delete button if no mods are selected.
+- Added missing translations.
+
+**Known Issues**:
+- Sometimes even if a preferred "Server Host Faction" is selected, the game will still put you on the other team.
+
+## [1.0.9] - [12/01/23]
 
 - Fixed the Dynamic Environment Plugin so that FrostyFix is no longer needed.
 - Fix transparent background on Windows 11.
