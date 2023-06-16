@@ -77,7 +77,7 @@ class FrostyService {
 
     String latestVersion = await ApiService.getLatestFrostyVersion();
     String correctedLatestVersion = _parseFrostyVersion(latestVersion);
-    
+
     return Version.parse(correctedVersion) < Version.parse(correctedLatestVersion);
   }
 
@@ -89,7 +89,7 @@ class FrostyService {
     late String formattedVersion;
     List<String> preRelease = [""];
 
-    if (rawVersion.allMatches(".").length == 2) {
+    if (rawVersion.split(".").length - 1 == 2) {
       formattedVersion = rawVersion.contains("-") ? rawVersion.substring(0, rawVersion.lastIndexOf("-")) : rawVersion;
     } else {
       formattedVersion = rawVersion.substring(0, rawVersion.lastIndexOf(".")) + rawVersion.substring(rawVersion.lastIndexOf(".") + 1);
@@ -110,7 +110,7 @@ class FrostyService {
       preRelease.add((preReleaseVersion * (preReleaseString.toLowerCase().contains("alpha") ? 1 : 2)).toString());
     }
 
-    return rawVersion.substring(0, rawVersion.lastIndexOf(".")) + rawVersion.substring(rawVersion.lastIndexOf(".") + 1);
+    return formattedVersion;
   }
 
   static FrostyConfig getFrostyConfig([String? path, bool force = false]) {
