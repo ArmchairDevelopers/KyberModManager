@@ -164,6 +164,7 @@ class _ServerHostState extends State<ServerHost> {
     for (int i = 0; i != randomNumber; i++) {
       hostname += " ";
     }
+
     return server!.name == hostname ? getHostname() : hostname;
   }
 
@@ -227,6 +228,7 @@ class _ServerHostState extends State<ServerHost> {
       await FrostyProfileService.createProfile([]);
     }
 
+    if (!mounted) return;
     setState(() => disabled = false);
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
     showDialog(
@@ -388,7 +390,7 @@ class _ServerHostState extends State<ServerHost> {
                     FocusScope.of(context).unfocus();
                   },
                 ),
-                const SizedBox(height: 21),
+                const SizedBox(height: 16),
                 InfoLabel(
                   label: 'Server Host Faction',
                   child: ComboBox<int>(
