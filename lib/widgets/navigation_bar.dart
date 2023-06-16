@@ -173,7 +173,7 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
         fakeIndex = !isFake ? state : state.keys.toList().first;
       });
 
-      Future.delayed(Duration(milliseconds: 1), () {
+      Future.delayed(const Duration(milliseconds: 10), () {
         setState(() {
           index = !isFake ? state : 9;
           fakeIndex = !isFake ? state : state.keys.toList().first;
@@ -209,10 +209,10 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
                   }()
                 : null,
             actions: !micaSupported
-                ? SizedBox(
+                ? const SizedBox(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [Spacer(), WindowButtons()],
+                      children: [Spacer(), WindowButtons()],
                     ),
                   )
                 : null,
