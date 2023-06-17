@@ -127,6 +127,7 @@ class _HostingDialogState extends State<HostingDialog> {
           startFrosty = true;
         }
       } else if (packType == PackType.NO_MODS) {
+        BlocProvider.of<GameStatusCubic>(context).setProfile(null);
         Logger.root.info("No mods, starting Frosty");
         startFrosty = true;
       }
@@ -134,7 +135,7 @@ class _HostingDialogState extends State<HostingDialog> {
 
     if (startFrosty) {
       setState(() => content = translate('$dialog_prefix.joining_states.frosty'));
-      await FrostyService.startFrosty(profile: profile);
+      await FrostyService.startFrosty(profile: packType == PackType.FROSTY_PACK ? profile : "KyberModManager");
       if (dynamicEnvEnabled) {
         BlocProvider.of<GameStatusCubic>(context).setProfile(ProfileService.getProfilePath(packType == PackType.FROSTY_PACK ? profile : "KyberModManager"));
       }
