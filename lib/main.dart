@@ -36,9 +36,9 @@ Box box = Hive.box('data');
 String applicationDocumentsDirectory = '';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
   runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await windowManager.ensureInitialized();
     var started = DateTime.now();
     await SentryFlutter.init(
       (options) {
