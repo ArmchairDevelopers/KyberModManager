@@ -51,7 +51,7 @@ class ModInstallerService {
         NotificationService.showNotification(message: 'Installed mod: ${file.path.split('\\').last}');
       } else {
         await UnzipHelper.unrar(file, _installDir!).catchError((error) {
-          NotificationService.showNotification(message: error.toString(), color: Colors.red);
+          NotificationService.showNotification(message: error.toString(), severity: InfoBarSeverity.error);
           Logger.root.severe('Could not unrar ${file.path}. $error');
         });
         Logger.root.info('Installed mod: ${file.path.split('\\').last}');

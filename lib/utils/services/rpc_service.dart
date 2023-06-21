@@ -79,8 +79,7 @@ class RPCService {
 
         rpc.updatePresence(DiscordPresence(
           details: _gameStatus.server!.name,
-          state:
-              '${config['KYBER_MODE'] == 'CLIENT' ? 'Playing' : 'Hosting'} ${mode.name} on ${map['name']} (${_gameStatus.server!.users}/${_gameStatus.server!.maxPlayers})',
+          state: '${config['KYBER_MODE'] == 'CLIENT' ? 'Playing' : 'Hosting'} ${mode.name} on ${map['name']} (${_gameStatus.server!.users}/${_gameStatus.server!.maxPlayers})',
           startTimeStamp: _gameStatus.started?.millisecondsSinceEpoch,
           largeImageText: 'Star Wars: Battlefront II',
           largeImageKey: 'bf2',

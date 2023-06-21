@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:archive/archive_io.dart';
-import 'package:fluent_ui/fluent_ui.dart' show Colors, BuildContext;
+import 'package:fluent_ui/fluent_ui.dart' show Colors, BuildContext, InfoBarSeverity;
 import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/api/backend/download_info.dart';
 import 'package:kyber_mod_manager/main.dart';
@@ -50,9 +50,7 @@ class DownloadService {
       _progressController?.close();
       _progressSubscription?.cancel();
     }
-    _browser
-        .close()
-        .then((value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
+    _browser.close().then((value) => Directory(_downloadFolder).listSync().where((element) => element.path.endsWith('.crdownload')).forEach((element) => element.deleteSync()));
   }
 
   Future<void> startDownload({
@@ -123,10 +121,8 @@ class DownloadService {
       downloadCompleter.complete(value.headers['content-length']);
     });
     await _page.click(isPremium ? 'button[id\$="startDownloadButton"]' : 'button[id\$="slowDownloadButton"]').onError((error, stackTrace) async {
-      await _page
-          .screenshot(fullPage: true)
-          .then((value) => File('$applicationDocumentsDirectory\\${DateTime.now().toString().replaceAll(':', '-')}.png').writeAsBytesSync(value));
-      NotificationService.showNotification(message: 'Download button not found! Please try again!', color: Colors.red);
+      await _page.screenshot(fullPage: true).then((value) => File('$applicationDocumentsDirectory\\${DateTime.now().toString().replaceAll(':', '-')}.png').writeAsBytesSync(value));
+      NotificationService.showNotification(message: 'Download button not found! Please try again!', severity: InfoBarSeverity.error);
       close();
       onClose();
       Sentry.captureException(
@@ -168,7 +164,7 @@ class DownloadService {
     } else {
       await Future.delayed(const Duration(seconds: 1));
       await UnzipHelper.unrar(File('$downloadFolder$filename'), Directory(downloadFolder)).catchError((error) {
-        NotificationService.showNotification(message: error.toString(), color: Colors.red);
+        NotificationService.showNotification(message: error.toString(), severity: InfoBarSeverity.error);
         Logger.root.severe('Could not unrar $filename. $error');
       });
     }

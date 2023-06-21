@@ -108,7 +108,7 @@ class _HostingDialogState extends State<HostingDialog> {
       onProgress: onCopied,
       setContent: (content) => setState(() => this.content = content),
     ).catchError((error) {
-      NotificationService.showNotification(message: error.toString(), color: Colors.red);
+      NotificationService.showNotification(message: error.toString(), severity: InfoBarSeverity.error);
     });
     if (!mounted) return;
     bool startFrosty = (!dynamicEnvEnabled);

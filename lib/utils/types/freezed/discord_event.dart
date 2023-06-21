@@ -7,33 +7,22 @@ part 'discord_event.g.dart';
 class DiscordEvent with _$DiscordEvent {
   const factory DiscordEvent({
     String? id,
-    @JsonKey(name: 'guild_id')
-    String? guildId,
-    @JsonKey(name: 'channel_id')
-    dynamic? channelId,
-    @JsonKey(name: 'creator_id')
-    String? creatorId,
+    @JsonKey(name: 'guild_id') String? guildId,
+    @JsonKey(name: 'channel_id') dynamic? channelId,
+    @JsonKey(name: 'creator_id') String? creatorId,
     String? name,
     String? description,
     dynamic? image,
-    @JsonKey(name: 'scheduled_start_time')
-    DateTime? scheduledStartTime,
-    @JsonKey(name: 'scheduled_end_time')
-    DateTime? scheduledEndTime,
-    @JsonKey(name: 'privacy_level')
-    int? privacyLevel,
+    @JsonKey(name: 'scheduled_start_time') DateTime? scheduledStartTime,
+    @JsonKey(name: 'scheduled_end_time') DateTime? scheduledEndTime,
+    @JsonKey(name: 'privacy_level') int? privacyLevel,
     int? status,
-    @JsonKey(name: 'entity_type')
-    int? entityType,
-    @JsonKey(name: 'entity_id')
-    dynamic? entityId,
-    @JsonKey(name: 'pentity_metadata')
-    EntityMetadata? entityMetadata,
-    @JsonKey(name: 'sku_ids')
-    List<dynamic>? skuIds,
+    @JsonKey(name: 'entity_type') int? entityType,
+    @JsonKey(name: 'entity_id') dynamic? entityId,
+    @JsonKey(name: 'pentity_metadata') EntityMetadata? entityMetadata,
+    @JsonKey(name: 'sku_ids') List<dynamic>? skuIds,
     Creator? creator,
-    @JsonKey(name: 'user_count')
-    int? userCount,
+    @JsonKey(name: 'user_count') int? userCount,
   }) = _DiscordEvent;
 
   factory DiscordEvent.fromJson(Map<String, dynamic> json) => _$DiscordEventFromJson(json);
@@ -45,11 +34,9 @@ class Creator with _$Creator {
     String? id,
     String? username,
     String? avatar,
-    @JsonKey(name: 'avatar_decoration')
-    dynamic? avatarDecoration,
+    @JsonKey(name: 'avatar_decoration') dynamic? avatarDecoration,
     String? discriminator,
-    @JsonKey(name: 'public_flags')
-    int? publicFlags,
+    @JsonKey(name: 'public_flags') int? publicFlags,
   }) = _Creator;
 
   factory Creator.fromJson(Map<String, dynamic> json) => _$CreatorFromJson(json);

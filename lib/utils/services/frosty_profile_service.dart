@@ -10,7 +10,6 @@ import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:logging/logging.dart';
 
@@ -22,8 +21,7 @@ class FrostyProfileService {
     packs: {'Default': '', 'KyberModManager': ''},
   );
 
-  static Future<void> createProfile(List<String> list,
-      [String profile = 'KyberModManager']) async {
+  static Future<void> createProfile(List<String> list, [String profile = 'KyberModManager']) async {
     try {
       List mods = list.map((e) => ModService.convertToFrostyMod(e)).toList();
       FrostyConfig config = FrostyService.getFrostyConfig();
@@ -32,17 +30,12 @@ class FrostyProfileService {
       }
       config.globalOptions.defaultProfile = 'starwarsbattlefrontii';
       config.globalOptions.useDefaultProfile = true;
-      config.games['starwarsbattlefrontii']?.options.selectedPack =
-          'KyberModManager';
-      config.games['starwarsbattlefrontii']?.packs?[profile] = mods
-          .where((element) => element.filename.isNotEmpty)
-          .map((e) =>
-              '${e.filename.substring(e.filename.lastIndexOf('\\') + 1)}:True')
-          .join('|');
+      config.games['starwarsbattlefrontii']?.options.selectedPack = 'KyberModManager';
+      config.games['starwarsbattlefrontii']?.packs?[profile] =
+          mods.where((element) => element.filename.isNotEmpty).map((e) => '${e.filename.substring(e.filename.lastIndexOf('\\') + 1)}:True').join('|');
       await FrostyService.saveFrostyConfig(config);
     } catch (e) {
-      NotificationService.showNotification(
-          message: e.toString(), color: Colors.red);
+      NotificationService.showNotification(message: e.toString(), severity: InfoBarSeverity.error);
       Logger.root.severe(e.toString());
     }
   }
@@ -68,8 +61,7 @@ class FrostyProfileService {
   }
 
   static Future<void> createFrostyConfig() async {
-    String path = applicationDocumentsDirectory.replaceAll(
-        r'Roaming\Kyber Mod Manager', r'Local\Frosty');
+    String path = applicationDocumentsDirectory.replaceAll(r'Roaming\Kyber Mod Manager', r'Local\Frosty');
     if (!Directory(path).existsSync()) {
       Directory(path).createSync(recursive: true);
     }
@@ -106,8 +98,7 @@ class FrostyProfileService {
       }
 
       Logger.root.info('Copying profile data for $name');
-      await ProfileService.copyProfileData(
-          d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress, true);
+      await ProfileService.copyProfileData(d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress, true);
     }
   }
 
@@ -116,11 +107,7 @@ class FrostyProfileService {
     if (config.games['starwarsbattlefrontii']?.packs?[profile] == null) {
       return [];
     }
-    List<String> modList = config
-        .games['starwarsbattlefrontii']!.packs![profile]!
-        .split('|')
-        .map((e) => e.split(':')[0])
-        .toList();
+    List<String> modList = config.games['starwarsbattlefrontii']!.packs![profile]!.split('|').map((e) => e.split(':')[0]).toList();
     return modList.map((e) => ModService.fromFilename(e)).toList();
   }
 
@@ -130,22 +117,13 @@ class FrostyProfileService {
     File file = File('$path\\ModData\\$profile\\patch\\mods.json');
     if (oldFile.existsSync() && !file.existsSync()) {
       Logger.root.info("Converting old mods.txt to mods.json");
-      var mods = oldFile
-          .readAsStringSync()
-          .split('\n')
-          .where((element) => element.contains(':') && element.contains("' '"))
-          .map((element) {
+      var mods = oldFile.readAsStringSync().split('\n').where((element) => element.contains(':') && element.contains("' '")).map((element) {
         String filename = element.split(':')[0];
         return ModService.getFrostyMod(filename);
       }).toList();
       await file.writeAsString(jsonEncode(
         mods.map(
-              (e) => ({
-            'name': e.name,
-            'version': e.version,
-            'category': e.category,
-            'file_name': e.filename
-          }),
+          (e) => ({'name': e.name, 'version': e.version, 'category': e.category, 'file_name': e.filename}),
         ),
       ));
     }
@@ -164,22 +142,13 @@ class FrostyProfileService {
 
     if (oldFile.existsSync() && !file.existsSync()) {
       Logger.root.info("Converting old mods.txt to mods.json");
-      var mods = oldFile
-          .readAsStringSync()
-          .split('\n')
-          .where((element) => element.contains(':') && element.contains("' '"))
-          .map((element) {
+      var mods = oldFile.readAsStringSync().split('\n').where((element) => element.contains(':') && element.contains("' '")).map((element) {
         String filename = element.split(':')[0];
         return ModService.getFrostyMod(filename);
       }).toList();
       await file.writeAsString(jsonEncode(
         mods.map(
-          (e) => ({
-                  'name': e.name,
-                  'version': e.version,
-                  'category': e.category,
-                  'file_name': e.filename
-                }),
+          (e) => ({'name': e.name, 'version': e.version, 'category': e.category, 'file_name': e.filename}),
         ),
       ));
       return mods;
@@ -204,14 +173,7 @@ class FrostyProfileService {
       (key, value) => profiles.add(
         FrostyProfile(
           name: key,
-          mods: value.isNotEmpty
-              ? value
-                  .split('|')
-                  .map((element) => element.split(':')[0])
-                  .toList()
-                  .map((e) => ModService.getFrostyMod(e))
-                  .toList()
-              : [],
+          mods: value.isNotEmpty ? value.split('|').map((element) => element.split(':')[0]).toList().map((e) => ModService.getFrostyMod(e)).toList() : [],
         ),
       ),
     );

@@ -2,7 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 part 'mod_profile.freezed.dart';
-
 part 'mod_profile.g.dart';
 
 @HiveType(typeId: 1)

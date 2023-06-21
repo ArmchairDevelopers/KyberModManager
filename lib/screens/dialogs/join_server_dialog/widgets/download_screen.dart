@@ -170,7 +170,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
       if (e.toString() == 'LoginError') {
         Navigator.of(context).pop();
         close();
-        NotificationService.showNotification(message: 'Login expired. Please login again!', color: Colors.red);
+        NotificationService.showNotification(message: 'Login expired. Please login again!', severity: InfoBarSeverity.error);
         await showDialog(context: context, builder: (c) => const NexusmodsLogin());
         showDialog(context: navigatorKey.currentContext!, builder: (context) => ServerDialog(server: widget.server));
       }

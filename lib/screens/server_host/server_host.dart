@@ -194,7 +194,7 @@ class _ServerHostState extends State<ServerHost> {
     if (foundMaps.isEmpty) {
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
       setState(() => disabled = false);
-      NotificationService.showNotification(message: translate('$prefix.forms.map.map_not_found'), color: Colors.red);
+      NotificationService.showNotification(message: translate('$prefix.forms.map.map_not_found'), severity: InfoBarSeverity.error);
       return;
     }
 
@@ -211,14 +211,14 @@ class _ServerHostState extends State<ServerHost> {
     );
     if (data['message'] != 'Success, start your game to host this server!') {
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
-      NotificationService.showNotification(message: data['message'], color: Colors.red);
+      NotificationService.showNotification(message: data['message'], severity: InfoBarSeverity.error);
       setState(() => disabled = false);
       return;
     }
 
     if (update) {
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
-      NotificationService.showNotification(message: translate('$prefix.server_updated'), duration: 10);
+      NotificationService.showNotification(message: translate('$prefix.server_updated'));
       setState(() => disabled = false);
       return;
     }
@@ -417,16 +417,17 @@ class _ServerHostState extends State<ServerHost> {
                     items: proxies?.map((e) {
                           return ComboBoxItem<String>(
                             value: e.ip,
-                            child: Text('${e.name} (${e.ping ?? '-1'} ms)'),
+                            child: Text('${e.name} (${e.ping} ms)'),
                           );
                         }).toList() ??
-                        [],
+                        [const ComboBoxItem(value: null, child: Text(""))],
                     value: proxy,
-                    // comboBoxColor: Colors.white,
-                    onChanged: (value) {
-                      box.put('proxy', value);
-                      setState(() => proxy = value ?? '');
-                    },
+                    onChanged: proxies == null
+                        ? null
+                        : (value) {
+                            box.put('proxy', value);
+                            setState(() => proxy = value ?? '');
+                          },
                   ),
                 ),
                 const SizedBox(height: 16),

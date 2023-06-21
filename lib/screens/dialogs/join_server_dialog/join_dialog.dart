@@ -8,17 +8,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
-import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/dialogs/join_server_dialog/widgets/download_screen.dart';
 import 'package:kyber_mod_manager/screens/dialogs/join_server_dialog/widgets/password_input.dart';
 import 'package:kyber_mod_manager/screens/dialogs/join_server_dialog/widgets/required_mods.dart';
 import 'package:kyber_mod_manager/screens/dialogs/join_server_dialog/widgets/team_selector.dart';
 import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
-import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/frosty_profile.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
-import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
@@ -30,7 +27,6 @@ import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/profile_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
-import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/widgets/unordered_list.dart';
 import 'package:logging/logging.dart';
@@ -106,7 +102,7 @@ class _ServerDialogState extends State<ServerDialog> {
       }
       dynamic resp = await KyberApiService.joinServer(server.id, faction: 0, password: password).catchError((e) => null);
       if (resp['message'] != "Success, start your game to join this server!") {
-        NotificationService.showNotification(message: resp['message'], color: Colors.red);
+        NotificationService.showNotification(message: resp['message'], severity: InfoBarSeverity.error);
         return;
       }
       setState(() => correctPassword = true);
@@ -114,7 +110,7 @@ class _ServerDialogState extends State<ServerDialog> {
     }
     if (modsInstalled) {
       if (DllInjector.battlefrontPID != -1) {
-        NotificationService.showNotification(message: translate('run_battlefront.notifications.battlefront_already_running'), color: Colors.red);
+        NotificationService.showNotification(message: translate('run_battlefront.notifications.battlefront_already_running'), severity: InfoBarSeverity.error);
         return;
       }
       setState(() {
@@ -140,7 +136,7 @@ class _ServerDialogState extends State<ServerDialog> {
         path = await ProfileService.searchProfile(mods, (copied, total) {
           setState(() => content = translate('run_battlefront.copying_profile', args: {'copied': copied, 'total': total}));
         }).catchError((e) {
-          NotificationService.showNotification(message: e.toString(), color: Colors.red);
+          NotificationService.showNotification(message: e.toString(), severity: InfoBarSeverity.error);
         });
         _profileCopyTimer?.cancel();
         setState(() => slowProfileLoading = false);
@@ -164,7 +160,7 @@ class _ServerDialogState extends State<ServerDialog> {
       dynamic resp = await KyberApiService.joinServer(server.id, faction: int.parse(preferredTeam), password: password);
       if (resp['message'] != "Success, start your game to join this server!") {
         WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
-        NotificationService.showNotification(message: resp['message'], color: Colors.red);
+        NotificationService.showNotification(message: resp['message'], severity: InfoBarSeverity.error);
         setState(() {
           disabled = false;
           loading = false;
@@ -184,7 +180,7 @@ class _ServerDialogState extends State<ServerDialog> {
       if (!listEquals(profile == null ? appliedMods : appliedMods.where((element) => element.category.toString().toLowerCase() == "gameplay").toList(), serverMods)) {
         Logger.root.info("Applying Frosty mods...");
         await FrostyService.startFrosty(profile: profile).catchError((error) {
-          NotificationService.showNotification(message: error, color: Colors.red);
+          NotificationService.showNotification(message: error, severity: InfoBarSeverity.error);
           NavigatorService.pushErrorPage(const MissingPermissions());
         });
       } else {
@@ -205,7 +201,7 @@ class _ServerDialogState extends State<ServerDialog> {
       if (!box.get('nexusmods_login', defaultValue: false)) {
         var links = await ApiService.getDownloadLinks(server.mods);
         if (links.unavailable.isNotEmpty) {
-          NotificationService.showNotification(message: translate('$prefix.required_mods.not_in_database'), color: Colors.red);
+          NotificationService.showNotification(message: translate('$prefix.required_mods.not_in_database'), severity: InfoBarSeverity.error);
           await Future.delayed(const Duration(seconds: 1));
         }
         links.links.toSet().toList().forEach((element) => launchUrlString(element));
@@ -247,7 +243,7 @@ class _ServerDialogState extends State<ServerDialog> {
         return checkInjection(true);
       }
 
-      NotificationService.showNotification(message: translate('$prefix.failed_injection.notification'), color: Colors.red);
+      NotificationService.showNotification(message: translate('$prefix.failed_injection.notification'), severity: InfoBarSeverity.error);
       Process.killPid(DllInjector.battlefrontPID);
       setState(() {
         failedInjection = true;
@@ -277,14 +273,12 @@ class _ServerDialogState extends State<ServerDialog> {
               MenuFlyoutItem(
                 text: Text(translate('$prefix.options.import_mods')),
                 leading: const Icon(FluentIcons.copy),
-                onPressed: () {
+                onPressed: () async {
                   Navigator.of(context).pop();
-                  BlocProvider.of<WidgetCubit>(context).navigate(
-                    3,
-                    EditProfile(
-                      profile: ModProfile(name: '', description: '', mods: server.mods.map((e) => ModService.convertToFrostyMod(e)).toList()),
-                    ),
-                  );
+                  List<ModProfile> profiles = List<ModProfile>.from(box.get('profiles') ?? []);
+                  profiles.add(ModProfile(name: server.name, mods: server.mods.map((e) => ModService.convertToFrostyMod(e)).toList()));
+                  await box.put('profiles', profiles);
+                  router.goNamed("profile", queryParameters: {"profile": server.name});
                 },
               ),
             MenuFlyoutItem(
@@ -354,7 +348,7 @@ class _ServerDialogState extends State<ServerDialog> {
                                 if (!listEquals(mods, server.mods.map((mod) => ModService.convertToFrostyMod(mod)).toList())) {
                                   NotificationService.showNotification(
                                     message: 'Please select a Frosty pack that contains the server mods in the correct order!',
-                                    color: Colors.red,
+                                    severity: InfoBarSeverity.error,
                                   );
                                   return;
                                 }
@@ -463,48 +457,46 @@ class _ServerDialogState extends State<ServerDialog> {
     }
 
     if (loading) {
-      return Container(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: ProgressRing(),
-                  ),
-                  const SizedBox(width: 15),
-                  Text(
-                    content != null ? content! : translate('$prefix.joining_states.${startingText()}'),
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              if (startingState == 4) Text(translate('$prefix.joining_states.battlefront_2')),
-              if (slowProfileLoading && content != null && startingState == 0)
-                const InfoBar(
-                  severity: InfoBarSeverity.warning,
-                  title: Text("Slow profile loading"),
-                  content: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "It seems like your profile is taking a long time to load. This can be caused by a large amount of mods.",
-                      ),
-                      Text(
-                        "You can disbale this feature in the settings under \"Saved Profiles\".",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: ProgressRing(),
                 ),
-            ],
-          ),
+                const SizedBox(width: 15),
+                Text(
+                  content != null ? content! : translate('$prefix.joining_states.${startingText()}'),
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            if (startingState == 4) Text(translate('$prefix.joining_states.battlefront_2')),
+            if (slowProfileLoading && content != null && startingState == 0)
+              const InfoBar(
+                severity: InfoBarSeverity.warning,
+                title: Text("Slow profile loading"),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "It seems like your profile is taking a long time to load. This can be caused by a large amount of mods.",
+                    ),
+                    Text(
+                      "You can disbale this feature in the settings under \"Saved Profiles\".",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+          ],
         ),
       );
     }

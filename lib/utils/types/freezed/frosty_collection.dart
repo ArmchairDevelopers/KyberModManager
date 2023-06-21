@@ -4,7 +4,6 @@ import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 
 part 'frosty_collection.freezed.dart';
-
 part 'frosty_collection.g.dart';
 
 abstract class FrostyMod {

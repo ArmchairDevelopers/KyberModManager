@@ -30,12 +30,12 @@ class AutoUpdater {
   }
 
   Future<VersionInfo?> getLatestVersion() async {
-    var response = await ApiService.dio(cachePolicy: CachePolicy.forceCache, maxCacheStale: const Duration(hours: 1))
-        .get('https://api.github.com/repos/7reax/kyber-mod-manager/releases');
+    var response =
+        await ApiService.dio(cachePolicy: CachePolicy.forceCache, maxCacheStale: const Duration(hours: 1)).get('https://api.github.com/repos/7reax/kyber-mod-manager/releases');
     List<GitHubAsset> releases = [];
     response.data.forEach((release) {
-      releases.add(GitHubAsset.fromJson(
-          {...release['assets'].where((asset) => asset['name'].toString().endsWith('.exe')).first, 'version': release['tag_name'], 'id': release['id']}));
+      releases
+          .add(GitHubAsset.fromJson({...release['assets'].where((asset) => asset['name'].toString().endsWith('.exe')).first, 'version': release['tag_name'], 'id': release['id']}));
     });
     var version = box.get('beta') ? releases.first : releases.firstWhere((element) => !Version.parse(element.version).isPreRelease);
     var versionInfo = await Dio().get('https://api.github.com/repos/7reax/kyber-mod-manager/releases/${version.id}');

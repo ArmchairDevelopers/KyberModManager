@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+
 class InstalledModDialog extends StatefulWidget {
   const InstalledModDialog({Key? key, required this.mod}) : super(key: key);
 
@@ -29,9 +30,7 @@ class _InstalledModDialogState extends State<InstalledModDialog> {
         leading: SizedBox(
           height: 60,
           width: 60,
-          child: image != null && image!.isNotEmpty
-              ? Image.memory(image!)
-              : const Icon(FluentIcons.blocked, size: 50),
+          child: image != null && image!.isNotEmpty ? Image.memory(image!) : const Icon(FluentIcons.blocked, size: 50),
         ),
         title: Text(widget.mod.name),
         subtitle: Text(widget.mod.description ?? ''),

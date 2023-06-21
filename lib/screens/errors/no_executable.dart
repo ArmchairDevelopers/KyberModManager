@@ -26,7 +26,7 @@ class _NoExecutableState extends State<NoExecutable> {
             onPressed: () {
               var executable = UnzipHelper.getExecutable();
               if (executable == null) {
-                NotificationService.showNotification(message: 'No executable found.', color: Colors.red);
+                NotificationService.showNotification(message: 'No executable found.', severity: InfoBarSeverity.error);
                 return;
               }
 

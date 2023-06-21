@@ -4,13 +4,7 @@ import 'package:kyber_mod_manager/utils/types/freezed/frosty_collection.dart';
 
 class InstalledModCategory extends StatefulWidget {
   const InstalledModCategory(
-      {Key? key,
-      required this.index,
-      required this.onAdd,
-      required this.kyberCategories,
-      required this.search,
-      required this.excludedCategories,
-      required this.activeMods})
+      {Key? key, required this.index, required this.onAdd, required this.kyberCategories, required this.search, required this.excludedCategories, required this.activeMods})
       : super(key: key);
 
   final int index;

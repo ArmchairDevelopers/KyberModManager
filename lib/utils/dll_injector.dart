@@ -17,8 +17,7 @@ class DllInjector {
 
   static File get _file => File('$applicationDocumentsDirectory\\Kyber.dll');
 
-  static Future<Version> getLatestKyberVersion() =>
-      Dio().get<String>('$KYBER_API_BASE_URL/version/launcher').then((value) => Version.parse(value.data!.replaceAll('\n', '')));
+  static Future<Version> getLatestKyberVersion() => Dio().get<String>('$KYBER_API_BASE_URL/version/launcher').then((value) => Version.parse(value.data!.replaceAll('\n', '')));
 
   static get battlefrontPID => _battlefrontPID;
 
@@ -82,8 +81,7 @@ class DllInjector {
       throw Exception('Failed to get kernel32.dll handle');
     }
 
-    final pfnVirtualAllocEx =
-        _kernel32.lookupFunction<Pointer Function(IntPtr, Pointer, IntPtr, Uint32, Uint32), Pointer Function(int, Pointer, int, int, int)>('VirtualAllocEx');
+    final pfnVirtualAllocEx = _kernel32.lookupFunction<Pointer Function(IntPtr, Pointer, IntPtr, Uint32, Uint32), Pointer Function(int, Pointer, int, int, int)>('VirtualAllocEx');
     final allocMemSize = (injectedModule.length + 1) * sizeOf<Uint8>();
     final allocMemAddress = pfnVirtualAllocEx(targetHandle, nullptr, allocMemSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 

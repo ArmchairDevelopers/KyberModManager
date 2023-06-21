@@ -54,8 +54,8 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
     _subscription = _controller.url.listen((url) async {
       if (url.startsWith("https://users.nexusmods.com/account/profile")) {
         setState(() => showOverlay = true);
-        await _controller.loadUrl(
-            'https://users.nexusmods.com/oauth/authorize?client_id=nexus&redirect_uri=https://www.nexusmods.com/oauth/callback&response_type=code&referrer=$_mainPage');
+        await _controller
+            .loadUrl('https://users.nexusmods.com/oauth/authorize?client_id=nexus&redirect_uri=https://www.nexusmods.com/oauth/callback&response_type=code&referrer=$_mainPage');
         _browser?.close();
         if (!mounted) return;
         await Future.delayed(const Duration(seconds: 3));
@@ -68,7 +68,7 @@ class _NexusmodsLoginState extends State<NexusmodsLogin> {
         await box.put('nexusmods_login', true);
         if (!mounted) return;
         Navigator.of(context).pop();
-      } else if (!url.contains('nexusmods') ||! url.startsWith("https://users.nexusmods.com") &&! showOverlay) {
+      } else if (!url.contains('nexusmods') || !url.startsWith("https://users.nexusmods.com") && !showOverlay) {
         _controller.loadUrl('https://users.nexusmods.com/auth/sign_in');
       }
     });

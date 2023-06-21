@@ -241,7 +241,7 @@ class _WalkThroughState extends State<WalkThrough> {
         String? configPath = FrostyService.getFrostyConfigPath();
         if (configPath == null) {
           Logger.root.severe('No config found.');
-          NotificationService.showNotification(message: 'No config found.', color: Colors.red);
+          NotificationService.showNotification(message: 'No config found.', severity: InfoBarSeverity.error);
           return;
         }
         box.put('frostyConfigPath', configPath);
@@ -249,7 +249,7 @@ class _WalkThroughState extends State<WalkThrough> {
         if (valid != null) {
           NotificationService.showNotification(
             message: translate('$prefix.select_frosty_path.error_messages.$valid'),
-            color: Colors.red,
+            severity: InfoBarSeverity.error,
           );
           await box.delete('frostyPath');
           await box.delete('frostyConfigPath');
@@ -270,7 +270,7 @@ class _WalkThroughState extends State<WalkThrough> {
         Future.delayed(const Duration(seconds: 4), () => setState(() => disabled = false));
       } else {
         Logger.root.severe('Failed to select Frosty directory');
-        NotificationService.showNotification(message: 'Failed to select Frosty path', color: Colors.red);
+        NotificationService.showNotification(message: 'Failed to select Frosty path', severity: InfoBarSeverity.error);
       }
     } else if (index == 3) {
       setState(() {

@@ -9,8 +9,7 @@ class KyberReleaseChannelDialog extends StatefulWidget {
   const KyberReleaseChannelDialog({Key? key}) : super(key: key);
 
   @override
-  State<KyberReleaseChannelDialog> createState() =>
-      _KyberReleaseChannelDialogState();
+  State<KyberReleaseChannelDialog> createState() => _KyberReleaseChannelDialogState();
 }
 
 class _KyberReleaseChannelDialogState extends State<KyberReleaseChannelDialog> {
@@ -45,7 +44,7 @@ class _KyberReleaseChannelDialogState extends State<KyberReleaseChannelDialog> {
                   if (controller.text.isEmpty) {
                     NotificationService.showNotification(
                       message: translate("$prefix.error.no_channel_selected"),
-                      color: Colors.red,
+                      severity: InfoBarSeverity.error,
                     );
                     return;
                   }
@@ -60,12 +59,12 @@ class _KyberReleaseChannelDialogState extends State<KyberReleaseChannelDialog> {
                     if (e is DioError) {
                       NotificationService.showNotification(
                         message: translate("$prefix.errors.channel_not_found"),
-                        color: Colors.red,
+                        severity: InfoBarSeverity.error,
                       );
                     } else {
                       NotificationService.showNotification(
                         message: translate("$prefix.errors.failed_to_download"),
-                        color: Colors.red,
+                        severity: InfoBarSeverity.error,
                       );
                     }
                     await DllInjector.downloadDll();
@@ -96,8 +95,7 @@ class _KyberReleaseChannelDialogState extends State<KyberReleaseChannelDialog> {
                           ),
                           SizedBox(width: 20),
                           Text(
-                            translate(
-                                "server_browser.join_dialog.buttons.downloading"),
+                            translate("server_browser.join_dialog.buttons.downloading"),
                             style: TextStyle(fontSize: 17),
                           ),
                         ],

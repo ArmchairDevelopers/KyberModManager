@@ -72,12 +72,12 @@ class _RunBattlefrontState extends State<RunBattlefront> {
   void launchFrosty() async {
     setState(() => disabled = true);
     if (_controller.text.isEmpty || !profiles!.contains(_controller.text)) {
-      NotificationService.showNotification(message: translate('$prefix.notifications.no_profile_selected'), color: Colors.red);
+      NotificationService.showNotification(message: translate('$prefix.notifications.no_profile_selected'), severity: InfoBarSeverity.error);
       return;
     }
 
     if (DllInjector.battlefrontPID != -1) {
-      NotificationService.showNotification(message: translate('$prefix.notifications.battlefront_already_running'), color: Colors.red);
+      NotificationService.showNotification(message: translate('$prefix.notifications.battlefront_already_running'), severity: InfoBarSeverity.error);
       return;
     }
 

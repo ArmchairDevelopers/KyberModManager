@@ -5,7 +5,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_collection.dart';
 
 part 'mod.freezed.dart';
-
 part 'mod.g.dart';
 
 @HiveType(typeId: 2)

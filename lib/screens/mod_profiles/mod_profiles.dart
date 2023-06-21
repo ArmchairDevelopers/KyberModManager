@@ -1,11 +1,7 @@
-import 'dart:ui';
-
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:kyber_mod_manager/logic/widget_cubic.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kyber_mod_manager/main.dart';
-import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/export_profile_dialog.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
@@ -46,8 +42,10 @@ class _ModProfilesState extends State<ModProfiles> {
             CommandBarButton(
               icon: const Icon(FluentIcons.add),
               label: Text(translate('mod_profiles.create_profile')),
-              onPressed: () {
-                BlocProvider.of<WidgetCubit>(context).navigate(3, const EditProfile());
+              onPressed: () async {
+                Router.neglect(context, () {
+                  context.goNamed('profile');
+                });
               },
             ),
           ],
@@ -80,7 +78,9 @@ class _ModProfilesState extends State<ModProfiles> {
                           text: Text(translate('edit')),
                           icon: const Icon(FluentIcons.edit),
                         ),
-                        onPressed: () => BlocProvider.of<WidgetCubit>(context).navigate(3, EditProfile(profile: e)),
+                        onPressed: () {
+                          router.goNamed("profile", queryParameters: {"profile": e.name});
+                        },
                       ),
                       const SizedBox(width: 8),
                       DropDownButton(

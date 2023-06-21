@@ -36,7 +36,7 @@ class _BattlefrontNotFoundState extends State<BattlefrontNotFound> {
                   }
                   Directory path = Directory(dir);
                   if (path.listSync().whereType<File>().where((element) => element.path.endsWith('starwarsbattlefrontii.exe')).isEmpty) {
-                    NotificationService.showNotification(message: 'Could not find Battlefront 2 executable.', color: Colors.red);
+                    NotificationService.showNotification(message: 'Could not find Battlefront 2 executable.', severity: InfoBarSeverity.error);
                     return;
                   }
 
@@ -53,7 +53,7 @@ class _BattlefrontNotFoundState extends State<BattlefrontNotFound> {
                 onPressed: () {
                   var path = OriginHelper.getBattlefrontPath();
                   if (path.isEmpty) {
-                    NotificationService.showNotification(message: 'No executable found.', color: Colors.red);
+                    NotificationService.showNotification(message: 'No executable found.', severity: InfoBarSeverity.error);
                     return;
                   }
 

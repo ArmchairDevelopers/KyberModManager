@@ -5,7 +5,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:influxdb_client/api.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/frosty_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
@@ -16,20 +15,17 @@ import 'package:kyber_mod_manager/screens/dialogs/update_dialog/update_dialog.da
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/walk_through.dart';
 import 'package:kyber_mod_manager/screens/dialogs/walk_through/widgets/nexusmods_login.dart';
 import 'package:kyber_mod_manager/screens/settings/widgets/platform_selector.dart';
+import 'package:kyber_mod_manager/screens/settings/widgets/settings_card.dart';
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
-import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_cubic_state.dart';
 import 'package:kyber_mod_manager/widgets/button_text.dart';
-import 'package:kyber_mod_manager/widgets/custom_button.dart';
-import 'package:kyber_mod_manager/screens/settings/widgets/settings_card.dart';
-import 'package:system_theme/system_theme.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);

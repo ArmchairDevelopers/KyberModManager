@@ -5,11 +5,23 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/logic/event_cubic.dart';
 import 'package:kyber_mod_manager/logic/frosty_cubic.dart';
 import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
+import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
+import 'package:kyber_mod_manager/screens/discord_events/discord_events.dart';
+import 'package:kyber_mod_manager/screens/feedback.dart' as fb;
+import 'package:kyber_mod_manager/screens/installed_mods.dart';
+import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
+import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
+import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
+import 'package:kyber_mod_manager/screens/saved_profiles.dart';
+import 'package:kyber_mod_manager/screens/server_browser/server_browser.dart';
+import 'package:kyber_mod_manager/screens/server_host/server_host.dart';
+import 'package:kyber_mod_manager/screens/settings/settings.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/puppeteer_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
@@ -99,7 +111,7 @@ class _AppState extends State<App> {
     final botToastBuilder = BotToastInit();
     final localizationDelegate = LocalizedApp.of(context).delegate;
 
-    return FluentApp(
+    return FluentApp.router(
       title: 'Kyber Mod Manager',
       color: SystemTheme.accentColor.accent.toAccentColor(),
       theme: ThemeData(
@@ -115,7 +127,6 @@ class _AppState extends State<App> {
       ],
       supportedLocales: localizationDelegate.supportedLocales,
       locale: localizationDelegate.currentLocale,
-      navigatorKey: navigatorKey,
       builder: (context, child) {
         child = MultiBlocProvider(
           providers: [
@@ -149,11 +160,114 @@ class _AppState extends State<App> {
           ),
         );
       },
-      navigatorObservers: [
-        BotToastNavigatorObserver(),
-        SentryNavigatorObserver(),
-      ],
-      home: const NavigationBar(),
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
+      routeInformationProvider: router.routeInformationProvider,
     );
   }
 }
+
+final shellNavigatorKey = GlobalKey<NavigatorState>();
+final router = GoRouter(
+  navigatorKey: navigatorKey,
+  initialLocation: "/server_browser",
+  errorBuilder: (context, state) {
+    return SafeArea(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'Page Not Found',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            Text(state.error?.toString() ?? 'page not found'),
+            const SizedBox(height: 16),
+            Button(
+              onPressed: () => context.go('/'),
+              child: const Text(
+                'Go to home page',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  },
+  routes: [
+    ShellRoute(
+      navigatorKey: shellNavigatorKey,
+      builder: (context, state, child) {
+        return NavigationBar(
+          shellContext: shellNavigatorKey.currentContext,
+          state: state,
+          child: child,
+        );
+      },
+      routes: [
+        GoRoute(path: "/", redirect: (context, state) => "/server_browser"),
+        GoRoute(
+          path: '/server_browser',
+          name: 'server_browser',
+          builder: (context, state) => const ServerBrowser(),
+        ),
+        GoRoute(
+          path: '/server_host',
+          name: 'server_host',
+          builder: (context, state) => const ServerHost(),
+        ),
+        GoRoute(
+          path: '/events',
+          name: 'events',
+          builder: (context, state) => const DiscordEvents(),
+        ),
+        GoRoute(
+          path: '/mod_profiles',
+          name: 'mod_profiles',
+          builder: (context, state) => const ModProfiles(),
+          routes: [
+            GoRoute(
+              parentNavigatorKey: shellNavigatorKey,
+              path: 'profile',
+              name: 'profile',
+              builder: (context, state) => EditProfile(
+                profile: state.queryParameters['profile'],
+              ),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: '/saved_profiles',
+          name: 'saved_profiles',
+          builder: (context, state) => const SavedProfiles(),
+        ),
+        GoRoute(
+          path: '/cosmetic_mods',
+          name: 'cosmetic_mods',
+          builder: (context, state) => const CosmeticMods(),
+        ),
+        GoRoute(
+          path: '/installed_mods',
+          name: 'installed_mods',
+          builder: (context, state) => const InstalledMods(),
+        ),
+        GoRoute(
+          path: '/run_bf2',
+          name: 'run_bf2',
+          builder: (context, state) => const RunBattlefront(),
+        ),
+        GoRoute(
+          path: '/feedback',
+          name: 'feedback',
+          builder: (context, state) => const fb.Feedback(),
+        ),
+        GoRoute(
+          path: '/settings',
+          name: 'settings',
+          builder: (context, state) => const Settings(),
+        ),
+      ],
+    ),
+  ],
+);

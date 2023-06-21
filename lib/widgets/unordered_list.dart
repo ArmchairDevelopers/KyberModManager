@@ -12,8 +12,7 @@ class UnorderedList extends StatelessWidget {
   Widget build(BuildContext context) {
     var widgetList = <Widget>[];
     for (var text in texts) {
-      widgetList
-          .add(_UnorderedListItem(text, textStyle ?? const TextStyle(), crossAxisAlignment ?? CrossAxisAlignment.start, mainAxisAlignment ?? MainAxisAlignment.start));
+      widgetList.add(_UnorderedListItem(text, textStyle ?? const TextStyle(), crossAxisAlignment ?? CrossAxisAlignment.start, mainAxisAlignment ?? MainAxisAlignment.start));
       widgetList.add(const SizedBox(height: 5.0));
     }
 

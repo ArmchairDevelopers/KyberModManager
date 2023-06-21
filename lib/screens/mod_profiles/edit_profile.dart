@@ -1,20 +1,16 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/constants/mod_categories.dart';
-import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/frosty_profile.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/active_mods.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/widgets/installed_mods.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod_profile.dart';
-import 'package:kyber_mod_manager/widgets/button_text.dart';
-import 'package:kyber_mod_manager/widgets/custom_tooltip.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key, this.profile}) : super(key: key);
 
-  final ModProfile? profile;
+  final String? profile;
 
   @override
   _EditProfileState createState() => _EditProfileState();
@@ -29,10 +25,25 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   void initState() {
-    _profile = widget.profile ?? ModProfile(name: '', mods: []);
+    try {
+      if (widget.profile!.isNotEmpty) {
+        _profile = List<ModProfile>.from(box.get('profiles', defaultValue: [])).where((x) => x.name == widget.profile).first;
+      } else {
+        _profile = ModProfile(name: '', mods: []);
+      }
+    } catch (e) {
+      _profile = ModProfile(name: '', mods: []);
+    }
     _nameController.text = _profile.name;
     _descriptionController.text = _profile.description ?? '';
     super.initState();
+  }
+
+  @override
+  dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
   }
 
   save() async {
@@ -44,7 +55,7 @@ class _EditProfileState extends State<EditProfile> {
         description: _descriptionController.text,
       ));
       await box.put('profiles', profiles);
-      BlocProvider.of<WidgetCubit>(context).toIndex(3);
+      router.pop();
     }
   }
 
@@ -59,7 +70,7 @@ class _EditProfileState extends State<EditProfile> {
           padding: const EdgeInsets.only(right: 15, left: 15),
           child: IconButton(
             icon: const Icon(FluentIcons.back),
-            onPressed: () => BlocProvider.of<WidgetCubit>(context).toIndex(3),
+            onPressed: () => router.pop(),
           ),
         ),
         commandBar: CommandBar(
