@@ -229,44 +229,7 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
       child: NavigationView(
         key: const Key('navigation_view'),
         appBar: NavigationAppBar(
-          leading: () {
-            final enabled = widget.shellContext != null && router.canPop();
-
-            final onPressed = enabled
-                ? () {
-                    if (router.canPop()) {
-                      context.pop();
-                      setState(() {});
-                    }
-                  }
-                : null;
-            return NavigationPaneTheme(
-              data: NavigationPaneTheme.of(context).merge(NavigationPaneThemeData(
-                unselectedIconColor: ButtonState.resolveWith((states) {
-                  if (states.isDisabled) {
-                    return ButtonThemeData.buttonColor(context, states);
-                  }
-                  return ButtonThemeData.uncheckedInputColor(
-                    FluentTheme.of(context),
-                    states,
-                  ).basedOnLuminance();
-                }),
-              )),
-              child: Builder(
-                builder: (context) => PaneItem(
-                  icon: const Center(child: Icon(FluentIcons.back, size: 12.0)),
-                  title: Text("Backs"),
-                  body: const SizedBox.shrink(),
-                  enabled: enabled,
-                ).build(
-                  context,
-                  false,
-                  onPressed,
-                  displayMode: PaneDisplayMode.compact,
-                ),
-              ),
-            );
-          }(),
+          leading: const SizedBox.shrink(),
           height: micaSupported ? 0 : 30,
           title: !micaSupported
               ? () {
