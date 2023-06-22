@@ -58,7 +58,7 @@ void main() async {
         options.dsn = 'https://1d0ce9262dcb416e8404c51e396297e4@o1117951.ingest.sentry.io/6233409';
         options.tracesSampleRate = 1.0;
         options.attachThreads = true;
-        options.release = "kyber-mod-manager@1.0.9";
+        options.release = "kyber-mod-manager@1.0.10";
       },
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
