@@ -11,6 +11,12 @@ class NotificationService {
           icon: const Icon(FluentIcons.clear),
           onPressed: close,
         ),
+        style: InfoBarThemeData(
+          decoration: (severity) {
+            if (severity == InfoBarSeverity.info) return const BoxDecoration(color: Color(0xFF202020));
+            return null;
+          },
+        ),
         severity: severity ?? InfoBarSeverity.info,
       );
     });
