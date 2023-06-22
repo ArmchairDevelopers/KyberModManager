@@ -1,11 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_dialog.dart';
 import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/frosty_profile.dart';
+import 'package:kyber_mod_manager/utils/types/freezed/game_status.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/mod.dart';
 import 'package:kyber_mod_manager/widgets/unordered_list.dart';
 
@@ -117,20 +120,22 @@ class _RunBattlefrontState extends State<RunBattlefront> {
     return ScaffoldPage(
       header: PageHeader(
         title: Text(translate('run_battlefront.title')),
-        commandBar: CommandBar(
-          mainAxisAlignment: MainAxisAlignment.end,
-          primaryItems: [
-            CommandBarButton(
-              onPressed: _controller.text.isNotEmpty && profiles!.contains(_controller.text) ? () => showMods() : null,
-              icon: const Icon(FluentIcons.view_list),
-              label: Text(translate('server_browser.join_dialog.buttons.view_mods')),
-            ),
-            CommandBarButton(
-              onPressed: () => launchFrosty(),
-              icon: const Icon(FluentIcons.play),
-              label: Text(translate('start')),
-            ),
-          ],
+        commandBar: BlocBuilder<GameStatusCubic, GameStatus>(
+          bloc: context.read<GameStatusCubic>(),
+          builder: (context, state) {
+            return CommandBar(mainAxisAlignment: MainAxisAlignment.end, primaryItems: [
+              CommandBarButton(
+                onPressed: _controller.text.isNotEmpty && profiles!.contains(_controller.text) ? () => showMods() : null,
+                icon: const Icon(FluentIcons.view_list),
+                label: Text(translate('server_browser.join_dialog.buttons.view_mods')),
+              ),
+              CommandBarButton(
+                onPressed: state.running ? null : () => launchFrosty(),
+                icon: const Icon(FluentIcons.play),
+                label: Text(translate('start')),
+              ),
+            ]);
+          },
         ),
       ),
       content: Container(

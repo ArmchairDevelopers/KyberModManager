@@ -13,7 +13,7 @@ class NotificationService {
         ),
         style: InfoBarThemeData(
           decoration: (severity) {
-            if (severity == InfoBarSeverity.info) return const BoxDecoration(color: Color(0xFF202020));
+            if (severity == InfoBarSeverity.info) return BoxDecoration(color: FluentTheme.of(context).resources.solidBackgroundFillColorBase);
             return null;
           },
         ),
