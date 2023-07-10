@@ -10,6 +10,7 @@
 #include <dart_discord_rpc/dart_discord_rpc_plugin.h>
 #include <desktop_drop/desktop_drop_plugin.h>
 #include <dynamic_env/dynamic_env_plugin_c_api.h>
+#include <file_selector_windows/file_selector_windows.h>
 #include <flutter_acrylic/flutter_acrylic_plugin.h>
 #include <flutter_platform_alert/flutter_platform_alert_plugin.h>
 #include <protocol_handler/protocol_handler_plugin.h>
@@ -31,6 +32,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("DesktopDropPlugin"));
   DynamicEnvPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("DynamicEnvPluginCApi"));
+  FileSelectorWindowsRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("FileSelectorWindows"));
   FlutterAcrylicPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterAcrylicPlugin"));
   FlutterPlatformAlertPluginRegisterWithRegistrar(

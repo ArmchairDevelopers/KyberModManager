@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -68,13 +68,7 @@ class _SettingsState extends State<Settings> {
               icon: const Icon(FluentIcons.export),
               label: Text(translate('$prefix.export_log_file')),
               onPressed: () async {
-                String? path = await FilePicker.platform.saveFile(
-                  type: FileType.custom,
-                  allowedExtensions: ['txt'],
-                  fileName: 'log.txt',
-                  dialogTitle: translate('$prefix.export_log_file'),
-                  lockParentWindow: true,
-                );
+                String? path = (await getSaveLocation(suggestedName: "log.txt", acceptedTypeGroups: [const XTypeGroup(extensions: [".txt"], label: "Text")]))?.path;
                 if (path == null) {
                   return;
                 }

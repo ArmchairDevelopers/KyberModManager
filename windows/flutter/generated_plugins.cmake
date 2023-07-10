@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   dart_discord_rpc
   desktop_drop
   dynamic_env
+  file_selector_windows
   flutter_acrylic
   flutter_platform_alert
   protocol_handler

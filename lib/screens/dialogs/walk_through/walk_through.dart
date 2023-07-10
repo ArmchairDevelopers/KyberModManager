@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:kyber_mod_manager/main.dart';
@@ -213,7 +213,7 @@ class _WalkThroughState extends State<WalkThrough> {
             Button(
               child: const Text('Change Folder'),
               onPressed: () async {
-                String? path = await FilePicker.platform.getDirectoryPath(dialogTitle: 'Select Folder');
+                String? path = await getDirectoryPath();
                 if (path == null) {
                   return;
                 }
@@ -234,7 +234,7 @@ class _WalkThroughState extends State<WalkThrough> {
       if (installed) {
         selectedDirectory = _directory!.path;
       } else {
-        selectedDirectory = await FilePicker.platform.getDirectoryPath(lockParentWindow: true, dialogTitle: 'Select Frosty Path');
+        selectedDirectory = await getDirectoryPath();
       }
       if (selectedDirectory != null) {
         box.put('frostyPath', selectedDirectory);
@@ -372,13 +372,7 @@ class _WalkThroughState extends State<WalkThrough> {
               text: Text(translate('settings.export_log_file')),
               leading: const Icon(FluentIcons.paste),
               onPressed: () async {
-                String? path = await FilePicker.platform.saveFile(
-                  type: FileType.custom,
-                  allowedExtensions: ['txt'],
-                  fileName: 'log.txt',
-                  dialogTitle: translate('settings.export_log_file'),
-                  lockParentWindow: true,
-                );
+                String? path = (await getSaveLocation(suggestedName: "log.txt", acceptedTypeGroups: [const XTypeGroup(extensions: [".txt"], label: "Text")]))?.path;
                 if (path == null) {
                   return;
                 }
