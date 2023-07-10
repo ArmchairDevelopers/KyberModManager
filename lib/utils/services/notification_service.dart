@@ -11,12 +11,8 @@ class NotificationService {
           icon: const Icon(FluentIcons.clear),
           onPressed: close,
         ),
-        style: InfoBarThemeData(
-          decoration: (severity) {
-            if (severity == InfoBarSeverity.info) return BoxDecoration(color: FluentTheme.of(context).resources.solidBackgroundFillColorBase);
-            return null;
-          },
-        ),
+
+        style: InfoBarThemeData.standard(FluentTheme.of(context).copyWith(resources: ResourceDictionary.dark(systemFillColorAttentionBackground: FluentTheme.of(context).resources.solidBackgroundFillColorBase))),
         severity: severity ?? InfoBarSeverity.info,
       );
     });
