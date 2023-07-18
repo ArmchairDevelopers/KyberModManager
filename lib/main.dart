@@ -169,6 +169,9 @@ class _AppState extends State<App> {
 
 final shellNavigatorKey = GlobalKey<NavigatorState>();
 final router = GoRouter(
+  observers: [
+    SentryNavigatorObserver(),
+  ],
   navigatorKey: navigatorKey,
   initialLocation: "/server_browser",
   errorBuilder: (context, state) {
@@ -205,6 +208,9 @@ final router = GoRouter(
           child: child,
         );
       },
+      observers: [
+        SentryNavigatorObserver(),
+      ],
       routes: [
         GoRoute(path: "/", redirect: (context, state) => "/server_browser"),
         GoRoute(
