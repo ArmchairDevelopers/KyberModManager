@@ -194,6 +194,10 @@
                 "placeholder": "Пароль к серверу",
                 "error": "Пожалуйста, введите правильный пароль."
             },
+            "description": {
+                "header": "Server Description",
+                "placeholder": "A server description..."
+            },
             "game_mode": {
                 "header": "Режим игры",
                 "placeholder": "Выбери режим игры..."

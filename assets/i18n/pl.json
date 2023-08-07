@@ -194,6 +194,10 @@
                 "placeholder": "Hasło",
                 "error": "Wpisz poprawne hasło."
             },
+            "description": {
+                "header": "Server Description",
+                "placeholder": "A server description..."
+            },
             "game_mode": {
                 "header": "Tryb gry",
                 "placeholder": "Wybierz tryb gry..."

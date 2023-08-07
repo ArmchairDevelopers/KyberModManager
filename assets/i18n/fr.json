@@ -194,6 +194,10 @@
                 "placeholder": "Server Password",
                 "error": "Please enter a valid password."
             },
+            "description": {
+                "header": "Server Description",
+                "placeholder": "A server description..."
+            },
             "game_mode": {
                 "header": "Game mode",
                 "placeholder": "Select a game mode..."
