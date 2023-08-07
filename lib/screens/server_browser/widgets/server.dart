@@ -11,6 +11,7 @@ import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:kyber_mod_manager/utils/types/mode.dart';
 
 material.DataRow Server(BuildContext context, KyberServer server) {
+  var dataAutoSizeGroup = AutoSizeGroup();
   final double width = MediaQuery.of(context).size.width;
   final bool showColumn = !(width > 700 && width < 1270);
   final Mode mode = modes.where((element) => element.mode == server.mode).first;
@@ -45,11 +46,41 @@ material.DataRow Server(BuildContext context, KyberServer server) {
             SizedBox(
               width: MediaQuery.of(context).size.width * (showColumn ? 0.22 : 0.3),
               height: 20,
-              child: AutoSizeText(
-                '${mode.name} - ${map['name']} - ${server.host.isNotEmpty ? server.host : 'Unknown'}',
-                minFontSize: 10,
+              child: Row(
+                children: [
+                  if (server.official) ...[
+                    AutoSizeText(
+                      '${mode.name} - ${map['name']} - ',
+                      minFontSize: 10,
+                      group: dataAutoSizeGroup,
+                    ),
+                    SvgPicture.network("https://kyber.gg/logo.svg", width: 15, height: 15),
+                    const SizedBox(width: 4),
+                    AutoSizeText(
+                      'Kyber',
+                      minFontSize: 10,
+                      group: dataAutoSizeGroup,
+                      style: const TextStyle(
+                        color: Color(0xfffbb10a),
+                        fontWeight: FontWeight.bold,
+                        shadows: <Shadow>[
+                          Shadow(
+                            offset: Offset(0.5, 0.5),
+                            blurRadius: 8.0,
+                            color: Color(0xfff2c35a),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  if (!server.official)
+                    AutoSizeText(
+                      '${mode.name} - ${map['name']} - ${server.host.isNotEmpty ? server.host : 'Unknown'}',
+                      minFontSize: 10,
+                    ),
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),

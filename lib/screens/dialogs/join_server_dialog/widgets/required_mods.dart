@@ -22,7 +22,7 @@ class RequiredMods extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: server.mods.map((mod) {
-            final installed = ModService.isInstalled(mod);
+            final installed = ModService.isInstalled(mod.name);
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 2),
               child: Row(
@@ -37,7 +37,7 @@ class RequiredMods extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(mod, style: const TextStyle(fontSize: 15), overflow: TextOverflow.ellipsis),
+                    child: Text(mod.name, style: const TextStyle(fontSize: 15), overflow: TextOverflow.ellipsis),
                   )
                 ],
               ),

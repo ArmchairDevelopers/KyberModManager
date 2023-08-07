@@ -74,7 +74,7 @@ class _ServerDialogState extends State<ServerDialog> {
   @override
   void initState() {
     server = widget.server;
-    modsInstalled = server.mods.every((element) => ModService.isInstalled(element));
+    modsInstalled = server.mods.every((element) => ModService.isInstalled(element.name));
     correctPassword = !(server.requiresPassword);
     cosmetics = server.mods.length < 10 ? box.get('enableCosmetics', defaultValue: false) : false;
     if (widget.join) {
@@ -176,7 +176,7 @@ class _ServerDialogState extends State<ServerDialog> {
       setState(() => startingState = 3);
 
       var appliedMods = await FrostyProfileService.getModsFromProfile(path ?? profile ?? "KyberModManager", isPath: path != null);
-      var serverMods = profile != null ? server.mods.map((mod) => ModService.convertToFrostyMod(mod)).toList() : mods.map((e) => ModService.convertToFrostyMod(e)).toList();
+      var serverMods = profile != null ? server.mods.map((mod) => ModService.convertToFrostyMod(mod.name)).toList() : mods.map((e) => ModService.convertToFrostyMod(e)).toList();
       if (!listEquals(profile == null ? appliedMods : appliedMods.where((element) => element.category.toString().toLowerCase() == "gameplay").toList(), serverMods)) {
         Logger.root.info("Applying Frosty mods...");
         await FrostyService.startFrosty(profile: profile).catchError((error) {
@@ -199,7 +199,7 @@ class _ServerDialogState extends State<ServerDialog> {
       WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
     } else if (!downloading) {
       if (!box.get('nexusmods_login', defaultValue: false)) {
-        var links = await ApiService.getDownloadLinks(server.mods);
+        var links = await ApiService.getDownloadLinks(server.mods.map((e) => e.name).toList());
         if (links.unavailable.isNotEmpty) {
           NotificationService.showNotification(message: translate('$prefix.required_mods.not_in_database'), severity: InfoBarSeverity.error);
           await Future.delayed(const Duration(seconds: 1));
@@ -276,7 +276,7 @@ class _ServerDialogState extends State<ServerDialog> {
                 onPressed: () async {
                   Navigator.of(context).pop();
                   List<ModProfile> profiles = List<ModProfile>.from(box.get('profiles') ?? []);
-                  profiles.add(ModProfile(name: server.name, mods: server.mods.map((e) => ModService.convertToFrostyMod(e)).toList()));
+                  profiles.add(ModProfile(name: server.name, mods: server.mods.map((e) => ModService.convertToFrostyMod(e.name)).toList()));
                   await box.put('profiles', profiles);
                   router.goNamed("profile", queryParameters: {"profile": server.name});
                 },
@@ -345,7 +345,7 @@ class _ServerDialogState extends State<ServerDialog> {
                                 );
                                 if (profile == null) return;
                                 List<dynamic> mods = profile.mods.where((e) => e.category.toLowerCase() == "gameplay").toList();
-                                if (!listEquals(mods, server.mods.map((mod) => ModService.convertToFrostyMod(mod)).toList())) {
+                                if (!listEquals(mods, server.mods.map((mod) => ModService.convertToFrostyMod(mod.name)).toList())) {
                                   NotificationService.showNotification(
                                     message: 'Please select a Frosty pack that contains the server mods in the correct order!',
                                     severity: InfoBarSeverity.error,
@@ -503,6 +503,10 @@ class _ServerDialogState extends State<ServerDialog> {
 
     return Column(
       children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30),
+          child: Text(server.description),
+        ),
         TeamSelector(
           server: server,
           value: preferredTeam,

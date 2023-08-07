@@ -47,7 +47,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
 
   @override
   void initState() {
-    mods = widget.server.mods.where((element) => !ModService.isInstalled(element)).map((e) => ModService.convertToModInfo(e)).toList();
+    mods = widget.server.mods.where((element) => !ModService.isInstalled(element.name)).map((e) => ModService.convertToModInfo(e.name)).toList();
     Logger.root.info('Downloading mods for ${widget.server.name}');
     Timer.run(() => init());
     super.initState();
