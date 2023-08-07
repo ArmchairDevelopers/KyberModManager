@@ -194,6 +194,10 @@
                 "placeholder": "Server Passwort",
                 "error": "Bitte gebe ein gültiges Passwort ein."
             },
+            "description": {
+                "header": "Server Description",
+                "placeholder": "A server description..."
+            },
             "game_mode": {
                 "header": "Modus",
                 "placeholder": "Wähle einen Modus..."
