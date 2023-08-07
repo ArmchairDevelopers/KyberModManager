@@ -33,6 +33,7 @@ class _ServerHostState extends State<ServerHost> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _hostController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _mapController = TextEditingController();
   final TextEditingController _profileController = TextEditingController();
 
@@ -62,7 +63,11 @@ class _ServerHostState extends State<ServerHost> {
 
   @override
   void initState() {
-    _mapController.text = '';
+    _hostController.text = box.get("host_cache_name", defaultValue: "");
+    _passwordController.text = box.get("host_cache_password", defaultValue: "");
+    _descriptionController.text = box.get("host_cache_description", defaultValue: "");
+    _mapController.text = box.get("host_cache_map", defaultValue: "");
+    mode = box.get("host_cache_mode", defaultValue: modes[0].mode);
     _profiles = List<ModProfile>.from(box.get('profiles') ?? []);
     cosmetics = box.get('enableCosmetics', defaultValue: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -114,7 +119,7 @@ class _ServerHostState extends State<ServerHost> {
     checkWarnings();
   }
 
-  void checkWarnings() async {
+  void checkWarnings() {
     var mods = ModService.getModsFromModPack(_profileController.text);
     if (mods.length > 20 || mods.where((element) => element.name.contains('BF2022')).isNotEmpty) {
       setState(() => warning = true);
@@ -126,9 +131,21 @@ class _ServerHostState extends State<ServerHost> {
 
   @override
   void dispose() {
+    saveData();
     WindowsTaskbar.setProgressMode(TaskbarProgressMode.noProgress);
     _subscription?.cancel();
     super.dispose();
+  }
+
+  void saveData() async {
+    if (mounted) {
+      _formKey.currentState?.validate();
+    }
+    await box.put("host_cache_name", _hostController.text);
+    await box.put("host_cache_password", _passwordController.text);
+    await box.put("host_cache_description", _descriptionController.text);
+    await box.put("host_cache_map", _mapController.text);
+    await box.put("host_cache_mode", mode);
   }
 
   void checkServerStatus(GameStatus status) async {
@@ -202,6 +219,7 @@ class _ServerHostState extends State<ServerHost> {
     dynamic data = await KyberApiService.host(
       name: formattedServerName,
       proxy: proxy ?? '',
+      description: _descriptionController.text,
       password: _passwordController.text,
       mode: mode,
       faction: faction,
@@ -307,7 +325,7 @@ class _ServerHostState extends State<ServerHost> {
                       }
                       return null;
                     },
-                    onChanged: (String? value) => _formKey.currentState?.validate(),
+                    onChanged: (String? value) => saveData(),
                     controller: _hostController,
                     placeholder: translate('$prefix.forms.name.placeholder'),
                   ),
@@ -322,9 +340,21 @@ class _ServerHostState extends State<ServerHost> {
                       }
                       return null;
                     },
+                    onChanged: (String? value) => saveData(),
                     controller: _passwordController,
                     placeholder: translate('$prefix.forms.password.placeholder'),
                     //header: translate('$prefix.forms.password.header'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                InfoLabel(
+                  label: translate('$prefix.forms.description.header'),
+                  child: TextFormBox(
+                    minLines: 3,
+                    maxLines: 6,
+                    onChanged: (String? value) => saveData(),
+                    controller: _descriptionController,
+                    placeholder: translate('$prefix.forms.description.placeholder'),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -335,6 +365,7 @@ class _ServerHostState extends State<ServerHost> {
                     items: modes.map((e) => ComboBoxItem<String>(value: e.mode, child: Text(e.name))).toList(),
                     value: mode,
                     onChanged: (value) {
+                      saveData();
                       setState(() {
                         mode = value ?? '';
                         _mapController.text = '';
@@ -355,6 +386,7 @@ class _ServerHostState extends State<ServerHost> {
                       return null;
                     },
                     placeholder: translate('$prefix.forms.map.placeholder'),
+                    onChanged: (text, reason) => saveData(),
                     items: MapHelper.getMapsForMode(mode).map((e) => AutoSuggestBoxItem(value: e.name, label: e.name)).toList(),
                     onSelected: (text) {
                       FocusScope.of(context).unfocus();

@@ -33,6 +33,7 @@ class KyberApiService {
       {required String name,
       required String proxy,
       required String password,
+      required String description,
       required String mode,
       required String map,
       required int maxPlayers,
@@ -46,6 +47,7 @@ class KyberApiService {
       body: jsonEncode({
         'faction': faction,
         'kyberProxy': proxy,
+        'description': description,
         'name': name,
         'password': password,
         'mode': mode,
