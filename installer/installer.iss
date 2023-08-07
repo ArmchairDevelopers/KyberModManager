@@ -1,7 +1,7 @@
 #pragma include __INCLUDE__ + ";" + ReadReg(HKLM, "Software\Mitrich Software\Inno Download Plugin", "InstallDir")
 
 #define MyAppName "Kyber Mod Manager"
-#define MyAppVersion "1.0.10"
+#define MyAppVersion "1.0.11"
 #define MyAppPublisher "liam"
 #define MyAppURL "https://reax.at"
 #define AppId "Kyber Mod Manager"

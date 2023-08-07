@@ -1,4 +1,13 @@
-## [1.0.10] - [-/-/-]
+## [1.0.11] - [08/08/23]
+- Added input saving for the Host page.
+    - So if you leave the page and come back, your inputs will still be there.
+- Fixed connection issues with the Kyber API.
+
+**Known Issues**:
+- Sometimes even if a preferred "Server Host Faction" is selected, the game will still put you on the other team.
+
+
+## [1.0.10] - [22/06/23]
 - **Fixed Nexusmods Login**.
 - Minor UI changes and improvements.
 - Fixed auto-save for cosmetic mods.

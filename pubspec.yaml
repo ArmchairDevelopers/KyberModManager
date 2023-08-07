@@ -1,7 +1,7 @@
 name: kyber_mod_manager
 description: Kyber Mod Manager
 publish_to: 'none'
-version: 1.0.10
+version: 1.0.11
 
 environment:
   sdk: '>=3.0.3 <4.0.0'
