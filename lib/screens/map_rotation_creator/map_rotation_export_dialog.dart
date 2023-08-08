@@ -20,6 +20,12 @@ class _MapRotationExportDialogState extends State<MapRotationExportDialog> {
 
   String generateMapRotationString() {
     String mapRotationString = "";
+
+    var localList = widget.selectedMaps;
+    if (shuffle) {
+      localList.shuffle();
+    }
+
     for (MapRotationMap map in widget.selectedMaps) {
       mapRotationString += "${map.map} ${map.mode}\n";
     }
