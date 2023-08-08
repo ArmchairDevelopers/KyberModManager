@@ -322,6 +322,13 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
         title: Text(translate('$prefix.items.events')),
         onTap: () => _goto('events'),
       ),
+      PaneItem(
+        key: const ValueKey('/map_rotation_creator'),
+        icon: const Icon(FluentIcons.edit_create),
+        body: const SizedBox.shrink(),
+        title: Text(translate('$prefix.items.map_rotation_creator')),
+        onTap: () => _goto('map_rotation_creator'),
+      ),
       PaneItemSeparator(),
       PaneItemHeader(header: Text(translate('navigation_bar.items.mod_profiles'))),
       PaneItem(

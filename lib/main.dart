@@ -15,6 +15,7 @@ import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
 import 'package:kyber_mod_manager/screens/discord_events/discord_events.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as fb;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
+import 'package:kyber_mod_manager/screens/map_rotation_creator/map_rotation_creator.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/edit_profile.dart';
 import 'package:kyber_mod_manager/screens/mod_profiles/mod_profiles.dart';
 import 'package:kyber_mod_manager/screens/run_battlefront/run_battlefront.dart';
@@ -227,6 +228,11 @@ final router = GoRouter(
           path: '/events',
           name: 'events',
           builder: (context, state) => const DiscordEvents(),
+        ),
+        GoRoute(
+          path: '/map_rotation_creator',
+          name: 'map_rotation_creator',
+          builder: (context, state) => const MapRotationCreator(),
         ),
         GoRoute(
           path: '/mod_profiles',

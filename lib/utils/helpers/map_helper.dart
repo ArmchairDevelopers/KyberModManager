@@ -14,4 +14,12 @@ class MapHelper {
       return KyberMap(map: e, name: maps.firstWhere((element) => element['map'] == e)['name']);
     }).toList();
   }
+
+  static String getMapName(Mode mode, String map) {
+    if (mode.mapOverrides != null && mode.mapOverrides!.where((x) => x.map == map).isNotEmpty) {
+       return mode.mapOverrides!.firstWhere((x) => x.map == map).name;
+    }
+
+    return maps.firstWhere((x) => x["map"] == map)["name"]!;
+  }
 }
