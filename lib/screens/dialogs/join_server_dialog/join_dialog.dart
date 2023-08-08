@@ -122,7 +122,7 @@ class _ServerDialogState extends State<ServerDialog> {
       List<String> mods = [];
       String? path;
       if (profile == null) {
-        mods = List.from(server.mods);
+        mods = List.from(server.mods.map((e) => e.name).toList());
         List<dynamic> cosmeticMods = List<dynamic>.from(box.get('cosmetics'));
         if (cosmetics) {
           mods.addAll(List<String>.from(cosmeticMods.map((e) => e.toKyberString()).toList()));

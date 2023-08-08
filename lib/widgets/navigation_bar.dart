@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -268,9 +269,14 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
         ),
         paneBodyBuilder: (item, child) {
           final name = item?.key is ValueKey ? (item!.key as ValueKey).value : null;
-          return FocusTraversalGroup(
-            key: ValueKey('body$name'),
-            child: widget.child,
+          return DropTarget(
+            onDragDone: (details) {
+              ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
+            },
+            child: FocusTraversalGroup(
+              key: ValueKey('body$name'),
+              child: widget.child,
+            ),
           );
         },
       ),
@@ -322,13 +328,13 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
         title: Text(translate('$prefix.items.events')),
         onTap: () => _goto('events'),
       ),
-      PaneItem(
-        key: const ValueKey('/map_rotation_creator'),
-        icon: const Icon(FluentIcons.edit_create),
-        body: const SizedBox.shrink(),
-        title: Text(translate('$prefix.items.map_rotation_creator')),
-        onTap: () => _goto('map_rotation_creator'),
-      ),
+      //PaneItem(
+      //  key: const ValueKey('/map_rotation_creator'),
+      //  icon: const Icon(FluentIcons.edit_create),
+      //  body: const SizedBox.shrink(),
+      //  title: Text(translate('$prefix.items.map_rotation_creator')),
+      //  onTap: () => _goto('map_rotation_creator'),
+      //),
       PaneItemSeparator(),
       PaneItemHeader(header: Text(translate('navigation_bar.items.mod_profiles'))),
       PaneItem(
