@@ -116,7 +116,7 @@ class ProfileService {
         await PlatformHelper.restartPlatform('EA Desktop');
       }
 
-      int pid = DllInjector.getPid(PlatformHelper.platforms[Platform.EA_Desktop]['exe'].toString().toLowerCase());
+      int pid = await DllInjector.getPid(PlatformHelper.platforms[Platform.EA_Desktop]['exe'].toString().toLowerCase());
       await DynamicEnv().setEnv(pid, 'GAME_DATA_DIR', path);
       return;
     } else {
@@ -124,7 +124,7 @@ class ProfileService {
         await PlatformHelper.restartPlatform('origin');
       }
 
-      int pid = DllInjector.getPid(PlatformHelper.platforms[Platform.Origin]['exe'].toString().toLowerCase());
+      int pid = await DllInjector.getPid(PlatformHelper.platforms[Platform.Origin]['exe'].toString().toLowerCase());
       await DynamicEnv().setEnv(pid, 'GAME_DATA_DIR', path);
     }
   }

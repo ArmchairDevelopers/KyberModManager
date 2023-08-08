@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:crypto/crypto.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/errors/missing_permissions.dart';
+import 'package:kyber_mod_manager/utils/dll_injector.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
@@ -12,13 +15,19 @@ import 'package:kyber_mod_manager/utils/types/freezed/frosty_version.dart';
 import 'package:kyber_mod_manager/utils/types/frosty_config.dart';
 import 'package:logging/logging.dart';
 import 'package:version/version.dart';
+import 'package:window_manager/window_manager.dart';
 
 class FrostyService {
   static FrostyConfig? _config;
 
   static Future<ProcessResult> startFrosty({bool launch = true, String? frostyPath, String? profile}) async {
     String path = frostyPath ?? box.get('frostyPath');
-    var r = await Process.run(
+    File crashlogFile = File("$path/crashlog.txt");
+    if (await crashlogFile.exists()) {
+      await crashlogFile.delete();
+    }
+
+    var c = CancelableOperation.fromFuture(Process.run(
       '$path/FrostyModManager.exe',
       launch ? ['-launch', dynamicEnvEnabled ? (profile ?? 'KyberModManager') : 'KyberModManager'] : [],
       workingDirectory: path,
@@ -26,12 +35,33 @@ class FrostyService {
       runInShell: true,
     ).catchError((error, stackTrace) {
       NotificationService.showNotification(message: error.toString(), severity: InfoBarSeverity.error);
+    }));
+
+    var directoryChangeStream = Directory(path).watch(events: FileSystemEvent.create).listen((event) async {
+      if (event.path.endsWith("crashlog.txt")) {
+        await c.cancel();
+
+        var pid = await DllInjector.getPid("frostymodmanager.exe");
+        Process.killPid(pid);
+        await WindowManager.instance.setAlwaysOnTop(true);
+        await WindowManager.instance.focus();
+        await WindowManager.instance.setAlwaysOnTop(false);
+
+        print("Frosty crashed");
+      }
     });
-    if (r.stderr.toString().isNotEmpty && !r.stderr.toString().contains('Qt')) {
+
+    if (c.isCanceled) {
+      throw Exception("Frosty crashed");
+    }
+
+    var value = await c.value;
+    directoryChangeStream.cancel();
+    if (value.stderr.toString().isNotEmpty && !value.stderr.toString().contains('Qt')) {
       NavigatorService.pushErrorPage(const MissingPermissions());
     }
 
-    return r;
+    return value;
   }
 
   static Future<bool> checkDirectory() async {

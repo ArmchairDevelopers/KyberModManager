@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:ffi/ffi.dart';
+import 'package:flutter/foundation.dart';
 import 'package:kyber_mod_manager/constants/api_constants.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/types/process_details.dart';
@@ -142,7 +143,11 @@ class DllInjector {
     return ProcessModules(modulesLength: length, modules: modules);
   }
 
-  static int getPid(String processName) {
+  static Future<int> getPid(String processName) {
+    return compute(DllInjector._getPid, [processName]);
+  }
+
+  static int _getPid(List<dynamic> args) {
     final processes = <ProcessDetails>[];
 
     _withMemory<void, Uint32>(sizeOf<Uint32>() * 2048, (pProcesses) {
@@ -155,7 +160,7 @@ class DllInjector {
         for (var i = 0; i < cProcesses; i++) {
           final pid = pProcesses.elementAt(i).value;
           final name = getWindowsProcessName(pid);
-          if (pid != 0 && name.toLowerCase().contains(processName)) {
+          if (pid != 0 && name.toLowerCase().contains(args[0])) {
             processes.add(ProcessDetails(pid, name, '0K'));
           }
         }
@@ -165,8 +170,8 @@ class DllInjector {
     return processes.isEmpty ? -1 : processes.first.pid;
   }
 
-  static void updateBattlefrontPID() {
-    _battlefrontPID = getPid("starwarsbattlefrontii.exe");
+  static Future<void> updateBattlefrontPID() async {
+    _battlefrontPID = await getPid("starwarsbattlefrontii.exe");
   }
 
   static String getWindowsProcessName(int processID) {

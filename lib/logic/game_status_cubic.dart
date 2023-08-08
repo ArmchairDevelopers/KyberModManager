@@ -34,7 +34,7 @@ class GameStatusCubic extends Cubit<GameStatus> {
   String? get profile => _profile;
 
   void check() async {
-    DllInjector.updateBattlefrontPID();
+    await DllInjector.updateBattlefrontPID();
     bool running = DllInjector.battlefrontPID != -1;
     bool injected = running ? DllInjector.isInjected() : false;
     DateTime? started = state.started;
