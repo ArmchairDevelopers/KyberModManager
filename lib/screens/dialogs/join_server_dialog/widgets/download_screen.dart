@@ -130,7 +130,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
         progress = received / total * 100;
       });
       lastTotal = (received - lastChunk);
-      WindowsTaskbar.setProgress(received, total);
+      //WindowsTaskbar.setProgress(received, total);
     });
 
     downloadSpeedTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -141,6 +141,8 @@ class _DownloadScreenState extends State<DownloadScreen> {
       lastChunk += lastTotal;
       setState(() => speed = lastTotal);
     });
+    if (!mounted) return;
+
     await downloadService
         .startDownload(
       onWebsiteOpened: () {
