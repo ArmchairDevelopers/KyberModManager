@@ -299,75 +299,58 @@ class _ServerDialogState extends State<ServerDialog> {
           child: Text(state == 1 ? translate('$prefix.buttons.view_info') : translate('$prefix.buttons.view_mods')),
         ),
         if (correctPassword && !unsupportedMods && modsInstalled)
-          SplitButtonBar(
-            buttons: [
-              Expanded(
-                child: SizedBox(
-                  height: 30,
-                  child: FilledButton(
-                    onPressed: disabled ? null : onButtonPressed,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        translate(
-                          correctPassword && !unsupportedMods
-                              ? modsInstalled
-                                  ? 'join'
-                                  : downloading
-                                      ? '$prefix.buttons.downloading'
-                                      : !box.get('nexusmods_login', defaultValue: false)
-                                          ? '$prefix.buttons.open_mods'
-                                          : '$prefix.buttons.download'
-                              : 'continue',
-                        ),
-                      ),
-                    ),
-                  ),
+          SplitButton.toggle(
+            flyout: MenuFlyout(
+              constraints: BoxConstraints(maxWidth: 250.0),
+              items: [
+                MenuFlyoutItem(
+                  text: const Text('Manually select profile'),
+                  leading: const Icon(FluentIcons.copy),
+                  onPressed: !disabled
+                      ? () => Timer.run(() async {
+                            FrostyProfile? profile = await showDialog<FrostyProfile?>(
+                              context: navigatorKey.currentContext!,
+                              builder: (c) => FrostyProfileSelector(
+                                onSelected: (s) {
+                                  setState(() => null);
+                                },
+                              ),
+                            );
+                            if (profile == null) return;
+                            List<dynamic> mods = profile.mods.where((e) => e.category.toLowerCase() == "gameplay").toList();
+                            if (!listEquals(mods, server.mods.map((mod) => ModService.convertToFrostyMod(mod.name)).toList())) {
+                              NotificationService.showNotification(
+                                message: 'Please select a Frosty pack that contains the server mods in the correct order!',
+                                severity: InfoBarSeverity.error,
+                              );
+                              return;
+                            }
+                            this.profile = profile.name;
+                            onButtonPressed();
+                          })
+                      : null,
+                ),
+              ],
+            ),
+            checked: true,
+            onInvoked: disabled ? null : onButtonPressed,
+            enabled: !disabled,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 43),
+              child: Text(
+                translate(
+                  correctPassword && !unsupportedMods
+                      ? modsInstalled
+                          ? 'join'
+                          : downloading
+                              ? '$prefix.buttons.downloading'
+                              : !box.get('nexusmods_login', defaultValue: false)
+                                  ? '$prefix.buttons.open_mods'
+                                  : '$prefix.buttons.download'
+                      : 'continue',
                 ),
               ),
-              SizedBox(
-                height: 30,
-                child: DropDownButton(
-                  disabled: disabled,
-                  items: [
-                    MenuFlyoutItem(
-                      text: const Text('Manually select profile'),
-                      leading: const Icon(FluentIcons.copy),
-                      onPressed: !disabled
-                          ? () => Timer.run(() async {
-                                FrostyProfile? profile = await showDialog<FrostyProfile?>(
-                                  context: navigatorKey.currentContext!,
-                                  builder: (c) => FrostyProfileSelector(
-                                    onSelected: (s) {
-                                      setState(() => null);
-                                    },
-                                  ),
-                                );
-                                if (profile == null) return;
-                                List<dynamic> mods = profile.mods.where((e) => e.category.toLowerCase() == "gameplay").toList();
-                                if (!listEquals(mods, server.mods.map((mod) => ModService.convertToFrostyMod(mod.name)).toList())) {
-                                  NotificationService.showNotification(
-                                    message: 'Please select a Frosty pack that contains the server mods in the correct order!',
-                                    severity: InfoBarSeverity.error,
-                                  );
-                                  return;
-                                }
-                                this.profile = profile.name;
-                                onButtonPressed();
-                              })
-                          : null,
-                    ),
-                  ],
-                ),
-              ),
-              // IconButton(
-              //   icon: const SizedBox(
-              //     height: 22,
-              //     child: const Icon(FluentIcons.chevron_down, size: 10.0),
-              //   ),
-              //   onPressed: () {},
-              // ),
-            ],
+            ),
           ),
         if (!(correctPassword && !unsupportedMods && modsInstalled))
           FilledButton(

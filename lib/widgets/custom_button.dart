@@ -16,7 +16,7 @@ class CustomFilledButton extends StatelessWidget {
             ? ButtonState.resolveWith((states) {
                 var accentColor = color!.toAccentColor();
                 if (states.isDisabled) {
-                  return FluentTheme.of(context).disabledColor;
+                  return FluentTheme.of(context).inactiveColor;
                 } else if (states.isPressing) {
                   return accentColor.darker;
                 } else if (states.isHovering) {

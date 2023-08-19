@@ -13,7 +13,7 @@ class WindowHelper {
       await windowManager.setBackgroundColor(Colors.transparent);
     } else {
       await Window.setEffect(effect: WindowEffect.disabled, dark: true);
-      await windowManager.setBackgroundColor(ThemeData.dark().navigationPaneTheme.backgroundColor!);
+      await windowManager.setBackgroundColor(FluentThemeData.dark().navigationPaneTheme.backgroundColor!);
     }
   }
 
@@ -37,7 +37,7 @@ class WindowHelper {
         await windowManager.setMinimumSize(_minimumSize);
         await windowManager.center();
         await windowManager.show();
-        await windowManager.setBackgroundColor(enabled ? Colors.transparent : ThemeData.dark().navigationPaneTheme.backgroundColor!);
+        await windowManager.setBackgroundColor(enabled ? Colors.transparent : FluentThemeData.dark().navigationPaneTheme.backgroundColor!);
 
         if (enabled) {
           await Window.setEffect(effect: WindowEffect.mica, dark: true);
