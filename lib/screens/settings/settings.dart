@@ -21,6 +21,7 @@ import 'package:kyber_mod_manager/screens/settings/widgets/settings_card.dart';
 import 'package:kyber_mod_manager/utils/app_locale.dart';
 import 'package:kyber_mod_manager/utils/auto_updater.dart';
 import 'package:kyber_mod_manager/utils/custom_logger.dart';
+import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
@@ -80,6 +81,16 @@ class _SettingsState extends State<Settings> {
             )
           ],
           secondaryItems: [
+            CommandBarButton(
+              icon: const Icon(FluentIcons.update_restore),
+              label: const Text("Update Battlefront II Path", maxLines: 1,),
+              onPressed: () async {
+                String path = OriginHelper.getBattlefrontPath(force: true);
+                await box.put("battlefrontPath", path);
+                Navigator.of(context).pop();
+                setState(() => null);
+              },
+            ),
             CommandBarButton(
               icon: Icon(!box.get("enableDynamicEnv") ? FluentIcons.unlock : FluentIcons.lock),
               label: Text(box.get("enableDynamicEnv") ? "Disable Env Injection" : "Enable Env Injection"),

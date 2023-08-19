@@ -3,9 +3,9 @@ import 'package:logging/logging.dart';
 import 'package:win32_registry/win32_registry.dart';
 
 class OriginHelper {
-  static String getBattlefrontPath() {
+  static String getBattlefrontPath({bool force = false}) {
     try {
-      if (box.containsKey('battlefrontPath')) {
+      if (box.containsKey('battlefrontPath') &&! force) {
         return box.get('battlefrontPath');
       }
 
