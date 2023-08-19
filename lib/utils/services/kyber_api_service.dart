@@ -5,12 +5,40 @@ import 'package:http/http.dart';
 import 'package:kyber_mod_manager/api/kyber/proxy.dart';
 import 'package:kyber_mod_manager/api/kyber/server_response.dart';
 import 'package:kyber_mod_manager/constants/api_constants.dart';
+import 'package:kyber_mod_manager/constants/maps.dart';
+import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/utils/types/freezed/kyber_server.dart';
 import 'package:logging/logging.dart';
 
 class KyberApiService {
   static Future<ServerResponse> getServers([int page = 1]) async {
     return get(Uri.parse('$KYBER_API_BASE_URL/servers?page=$page')).then((response) => ServerResponse.fromJson(jsonDecode(response.body)));
+  }
+
+  static Future<bool> hasMissingMapPictures() async {
+    if (!Directory('$applicationDocumentsDirectory/maps').existsSync()) {
+      return false;
+    }
+
+    return maps.map((e) => e["map"].replaceAll("/", "-")).toList().where((map) => File('$applicationDocumentsDirectory/maps/$map.jpg').existsSync()).length == maps.length;
+  }
+
+  static Future<void> downloadRequiredMapPictures() async {
+    Logger.root.info("Finding missing map thumbnails...");
+    var allMaps = maps.map((e) => e["map"].replaceAll("/", "-")).toList();
+
+    if (!Directory('$applicationDocumentsDirectory/maps').existsSync()) {
+      Directory('$applicationDocumentsDirectory/maps').createSync();
+    }
+
+    var mapsToDownload = allMaps.where((map) => !File('$applicationDocumentsDirectory/maps/$map.jpg').existsSync()).toList();
+    Logger.root.info("Downloading ${mapsToDownload.length} missing map thumbnails...");
+    await Future.forEach(mapsToDownload, (map) async {
+      Logger.root.info("Downloading $map...");
+      var resp = await get(Uri.parse("$KYBER_STATIC_URL/images/maps/$map.jpg"));
+      await File('$applicationDocumentsDirectory/maps/$map.jpg').writeAsBytes(resp.bodyBytes);
+    });
+    Logger.root.info("Finished downloading missing map thumbnails!");
   }
 
   static Future<KyberServer?> searchServer(String name) async {

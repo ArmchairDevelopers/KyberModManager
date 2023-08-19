@@ -19,7 +19,7 @@ abstract class KyberServer with _$KyberServer {
     required int startedAt,
     required String startedAtPretty,
     required bool requiresPassword,
-    required bool official,
+    bool? official,
     required String region,
     required Proxy proxy,
   }) = _KyberServer;

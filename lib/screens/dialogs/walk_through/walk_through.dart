@@ -16,6 +16,7 @@ import 'package:kyber_mod_manager/utils/helpers/path_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_profile_service.dart';
 import 'package:kyber_mod_manager/utils/services/frosty_service.dart';
+import 'package:kyber_mod_manager/utils/services/kyber_api_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_installer_service.dart';
 import 'package:kyber_mod_manager/utils/services/mod_service.dart';
 import 'package:kyber_mod_manager/utils/services/navigator_service.dart';
@@ -62,12 +63,14 @@ class _WalkThroughState extends State<WalkThrough> {
       index = 1;
       disabled = false;
     } else {
-      DllInjector.checkForUpdates().then(
-        (value) => setState(() {
+      Timer.run(() async {
+        await DllInjector.checkForUpdates();
+        await KyberApiService.downloadRequiredMapPictures();
+        setState(() {
           index++;
           disabled = false;
-        }),
-      );
+        });
+      });
     }
     String path = OriginHelper.getBattlefrontPath();
     if (path.isEmpty) {
@@ -372,7 +375,10 @@ class _WalkThroughState extends State<WalkThrough> {
               text: Text(translate('settings.export_log_file')),
               leading: const Icon(FluentIcons.paste),
               onPressed: () async {
-                String? path = (await getSaveLocation(suggestedName: "log.txt", acceptedTypeGroups: [const XTypeGroup(extensions: [".txt"], label: "Text")]))?.path;
+                String? path = (await getSaveLocation(suggestedName: "log.txt", acceptedTypeGroups: [
+                  const XTypeGroup(extensions: [".txt"], label: "Text")
+                ]))
+                    ?.path;
                 if (path == null) {
                   return;
                 }
