@@ -84,11 +84,17 @@ class FrostyProfileService {
 
   static loadFrostyPack(String name, [Function? onProgress]) async {
     Logger.root.info('Loading Frosty pack: $name');
+
+    if (dynamicEnvEnabled) {
+      // TODO: load frosty pack
+    }
+
     String bf2path = OriginHelper.getBattlefrontPath();
     List<dynamic> mods = FrostyProfileService.getModsFromConfigProfile(name);
     await FrostyProfileService.createProfile(
       List<String>.from(mods.map((e) => e.toKyberString()).toList()),
     );
+
     Directory d = Directory('$bf2path\\ModData\\$name');
     if (d.existsSync()) {
       var appliedMods = await getModsFromProfile('KyberModManager');
@@ -98,7 +104,8 @@ class FrostyProfileService {
       }
 
       Logger.root.info('Copying profile data for $name');
-      await ProfileService.copyProfileData(d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress, true);
+      //await ProfileService.copyProfileData(d, Directory('$bf2path\\ModData\\KyberModManager'), onProgress, true);
+
     }
   }
 
