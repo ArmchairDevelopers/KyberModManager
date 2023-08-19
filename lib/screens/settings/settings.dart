@@ -5,8 +5,10 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/frosty_cubic.dart';
+import 'package:kyber_mod_manager/logic/status_cubit.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/dialogs/kyber_release_channel_dialog.dart';
@@ -340,7 +342,9 @@ class _SettingsState extends State<Settings> {
                 if (s.existsSync()) {
                   s.deleteSync(recursive: true);
                 }
-                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+
+                context.go("/server_browser");
+                BlocProvider.of<StatusCubit>(context).setInitialized(false);
               }),
               child: ButtonText(
                 text: Text(translate('$prefix.reset.title')),

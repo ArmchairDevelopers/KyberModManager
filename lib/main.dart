@@ -10,6 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kyber_mod_manager/logic/event_cubic.dart';
 import 'package:kyber_mod_manager/logic/frosty_cubic.dart';
 import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
+import 'package:kyber_mod_manager/logic/status_cubit.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
 import 'package:kyber_mod_manager/screens/discord_events/discord_events.dart';
@@ -115,7 +116,7 @@ class _AppState extends State<App> {
     return FluentApp.router(
       title: 'Kyber Mod Manager',
       color: SystemTheme.accentColor.accent.toAccentColor(),
-      theme: ThemeData(
+      theme: FluentThemeData(
         accentColor: SystemTheme.accentColor.accent.toAccentColor(),
         cardColor: micaSupported ? Colors.white.withOpacity(.025) : null,
         brightness: Brightness.dark,
@@ -142,6 +143,9 @@ class _AppState extends State<App> {
             ),
             BlocProvider<FrostyCubic>(
               create: (BuildContext context) => FrostyCubic(),
+            ),
+            BlocProvider<StatusCubit>(
+              create: (BuildContext context) => StatusCubit(),
             ),
           ],
           child: child ?? const SizedBox(height: 0),

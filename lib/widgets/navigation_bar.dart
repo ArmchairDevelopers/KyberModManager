@@ -10,6 +10,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/event_cubic.dart';
 import 'package:kyber_mod_manager/logic/frosty_cubic.dart';
 import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
+import 'package:kyber_mod_manager/logic/status_cubit.dart';
 import 'package:kyber_mod_manager/main.dart';
 import 'package:kyber_mod_manager/screens/dialogs/join_server_dialog/join_dialog.dart';
 import 'package:kyber_mod_manager/screens/dialogs/outdated_frosty_dialog.dart';
@@ -70,12 +71,16 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
         await showDialog(context: context, builder: (_) => const NexusmodsLogin());
       }
 
+      if (await KyberApiService.hasMissingMapPictures()) {
+        await KyberApiService.downloadRequiredMapPictures();
+      }
+
       ModInstallerService.initialize();
       DllInjector.downloadDll();
       RPCService.initialize();
       await checkFrostyInstallation();
       checkForUpdates();
-      Timer.periodic(const Duration(milliseconds: 500), checkKyberStatus);
+      Timer.periodic(const Duration(milliseconds: 250), checkKyberStatus);
 
       router.addListener(routerListener);
     });
@@ -213,72 +218,81 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
       }
     }
 
-    return RawKeyboardListener(
-      autofocus: true,
-      onKey: (event) {
-        if (event.runtimeType == RawKeyDownEvent && event.isAltPressed && event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyC && micaSupported) {
-          if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
-            box.put('micaEnabled', false);
-            WindowHelper.changeWindowEffect(false);
-          } else {
-            box.put('micaEnabled', true);
-            WindowHelper.changeWindowEffect(true);
-          }
+    return BlocListener<StatusCubit, ApplicationStatus>(
+      listener: (_, state) {
+        if (state.initialized) {
+          return;
         }
+
+        openDialog().then((value) => BlocProvider.of<StatusCubit>(context).setInitialized(true));
       },
-      focusNode: FocusNode(),
-      child: NavigationView(
-        key: const Key('navigation_view'),
-        appBar: NavigationAppBar(
-          leading: const SizedBox.shrink(),
-          height: micaSupported ? 0 : 30,
-          title: !micaSupported
-              ? () {
-                  return DragToMoveArea(
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: const Text('Kyber Mod Manager'),
-                    ),
-                  );
-                }()
-              : null,
-          actions: !micaSupported
-              ? const SizedBox(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Spacer(), WindowButtons()],
-                  ),
-                )
-              : null,
-        ),
-        pane: NavigationPane(
-          header: !micaSupported
-              ? null
-              : const SizedBox(
-                  height: 0,
-                ),
-          selected: _calculateSelectedIndex(),
-          items: originalItems,
-          footerItems: bottomListItems,
-          displayMode: PaneDisplayMode.auto,
-        ),
-        transitionBuilder: (child, animation) => EntrancePageTransition(
-          animation: animation,
-          startFrom: .015,
-          child: child,
-        ),
-        paneBodyBuilder: (item, child) {
-          final name = item?.key is ValueKey ? (item!.key as ValueKey).value : null;
-          return DropTarget(
-            onDragDone: (details) {
-              ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
-            },
-            child: FocusTraversalGroup(
-              key: ValueKey('body$name'),
-              child: widget.child,
-            ),
-          );
+      child: RawKeyboardListener(
+        autofocus: true,
+        onKey: (event) {
+          if (event.runtimeType == RawKeyDownEvent && event.isAltPressed && event.isControlPressed && event.logicalKey == LogicalKeyboardKey.keyC && micaSupported) {
+            if (!box.containsKey('micaEnabled') || box.get('micaEnabled')) {
+              box.put('micaEnabled', false);
+              WindowHelper.changeWindowEffect(false);
+            } else {
+              box.put('micaEnabled', true);
+              WindowHelper.changeWindowEffect(true);
+            }
+          }
         },
+        focusNode: FocusNode(),
+        child: DropTarget(
+          onDragDone: (details) {
+            ModInstallerService.handleDrop(details.files.map((e) => e.path).toList());
+          },
+          child: NavigationView(
+            key: const Key('navigation_view'),
+            appBar: NavigationAppBar(
+              leading: const SizedBox.shrink(),
+              height: micaSupported ? 0 : 30,
+              title: !micaSupported
+                  ? () {
+                      return DragToMoveArea(
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Kyber Mod Manager'),
+                        ),
+                      );
+                    }()
+                  : null,
+              actions: !micaSupported
+                  ? const SizedBox(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [Spacer(), WindowButtons()],
+                      ),
+                    )
+                  : null,
+            ),
+            pane: NavigationPane(
+              header: !micaSupported
+                  ? null
+                  : const SizedBox(
+                      height: 0,
+                    ),
+              selected: _calculateSelectedIndex(),
+              items: originalItems,
+              footerItems: bottomListItems,
+              displayMode: PaneDisplayMode.auto,
+            ),
+            transitionBuilder: (child, animation) => EntrancePageTransition(
+              animation: animation,
+              startFrom: .015,
+              child: child,
+            ),
+            paneBodyBuilder: (item, child) {
+              final name = item?.key is ValueKey ? (item!.key as ValueKey).value : null;
+              return FocusTraversalGroup(
+                key: ValueKey('body$name'),
+                child: widget.child,
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -328,13 +342,13 @@ class _NavigationBarState extends State<NavigationBar> with ProtocolListener {
         title: Text(translate('$prefix.items.events')),
         onTap: () => _goto('events'),
       ),
-      //PaneItem(
-      //  key: const ValueKey('/map_rotation_creator'),
-      //  icon: const Icon(FluentIcons.edit_create),
-      //  body: const SizedBox.shrink(),
-      //  title: Text(translate('$prefix.items.map_rotation_creator')),
-      //  onTap: () => _goto('map_rotation_creator'),
-      //),
+      PaneItem(
+        key: const ValueKey('/map_rotation_creator'),
+        icon: const Icon(FluentIcons.edit_create),
+        body: const SizedBox.shrink(),
+        title: Text(translate('$prefix.items.map_rotation_creator')),
+        onTap: () => _goto('map_rotation_creator'),
+      ),
       PaneItemSeparator(),
       PaneItemHeader(header: Text(translate('navigation_bar.items.mod_profiles'))),
       PaneItem(
@@ -410,7 +424,7 @@ class WindowButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = FluentTheme.of(context);
+    final FluentThemeData theme = FluentTheme.of(context);
 
     return SizedBox(
       width: 138,
