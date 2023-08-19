@@ -49,5 +49,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /installers/
-/.local-chromium
-/.local-chrome
+/.local-chromium/
+/.local-chrome/
