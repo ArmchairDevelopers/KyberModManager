@@ -13,6 +13,7 @@ class DiscordEvents extends StatefulWidget {
   _DiscordEventsState createState() => _DiscordEventsState();
 }
 
+
 class _DiscordEventsState extends State<DiscordEvents> {
   @override
   void initState() {
@@ -21,42 +22,39 @@ class _DiscordEventsState extends State<DiscordEvents> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
-      header: PageHeader(
-        title: Text(translate('events.title')),
-      ),
-      content: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: BlocBuilder<EventCubic, EventCubicState>(
-          bloc: BlocProvider.of<EventCubic>(context),
-          builder: (context, state) {
-            if (state.events.isEmpty) {
-              return Center(
+    return BlocBuilder<EventCubic, EventCubicState>(
+      bloc: BlocProvider.of<EventCubic>(context),
+      builder: (context, state) {
+        return ScaffoldPage.scrollable(
+          header: PageHeader(
+            title: Text(translate('events.title')),
+          ),
+          children: [
+            if (state.events.isEmpty)
+              Center(
                 child: Text(translate('events.no_events')),
-              );
-            }
-
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return Card(
+              ),
+            if (state.events.isNotEmpty)
+              ...state.events.map(
+                    (e) => Card(
                   child: ListTile(
                     trailing: Row(
                       children: [
                         Button(
                           onPressed: () {
-                            launchUrlString("discord://-/events/305338604316655616/${state.events[index].id!}");
+                            launchUrlString("discord://-/events/305338604316655616/${e.id!}");
                           },
                           child: const Text("Open In Discord"),
                         )
                       ],
                     ),
-                    title: Text(state.events[index].name ?? ''),
+                    title: Text(e.name ?? ''),
                     subtitle: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Linkable(
-                          text: state.events[index].description ?? '',
+                          text: e.description ?? '',
                           linkColor: FluentTheme.of(context).accentColor.normal,
                           style: FluentTheme.of(context).typography.body,
                           textColor: FluentTheme.of(context).typography.body?.color,
@@ -64,13 +62,13 @@ class _DiscordEventsState extends State<DiscordEvents> {
                         Row(
                           children: [
                             Text(
-                              Jiffy.parseFromDateTime(state.events[index].scheduledStartTime!).fromNow(),
+                              Jiffy.parseFromDateTime(e.scheduledStartTime!).fromNow(),
                               style: FluentTheme.of(context).typography.body?.copyWith(
-                                    fontSize: 12,
-                                    color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
-                                  ),
+                                fontSize: 12,
+                                color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+                              ),
                             ),
-                            if (state.events[index].userCount != null) ...[
+                            if (e.userCount != null) ...[
                               Container(
                                 width: 1,
                                 height: 10,
@@ -78,14 +76,14 @@ class _DiscordEventsState extends State<DiscordEvents> {
                                 margin: const EdgeInsets.symmetric(horizontal: 5),
                               ),
                               Text(
-                                translate('events.interested', args: {'count': state.events[index].userCount ?? -1}),
+                                translate('events.interested', args: {'count': e.userCount ?? -1}),
                                 style: FluentTheme.of(context).typography.body?.copyWith(
-                                      fontSize: 12,
-                                      color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
-                                    ),
+                                  fontSize: 12,
+                                  color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+                                ),
                               ),
                             ],
-                            if (state.events[index].creator?.username != null) ...[
+                            if (e.creator?.username != null) ...[
                               Container(
                                 width: 1,
                                 height: 10,
@@ -93,11 +91,11 @@ class _DiscordEventsState extends State<DiscordEvents> {
                                 margin: const EdgeInsets.symmetric(horizontal: 5),
                               ),
                               Text(
-                                state.events[index].creator!.username!,
+                                e.creator!.username!,
                                 style: FluentTheme.of(context).typography.body?.copyWith(
-                                      fontSize: 12,
-                                      color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
-                                    ),
+                                  fontSize: 12,
+                                  color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+                                ),
                               ),
                             ],
                           ],
@@ -105,13 +103,11 @@ class _DiscordEventsState extends State<DiscordEvents> {
                       ],
                     ),
                   ),
-                );
-              },
-              itemCount: state.events.length,
-            );
-          },
-        ),
-      ),
+                ),
+              )
+          ],
+        );
+      },
     );
   }
 }
