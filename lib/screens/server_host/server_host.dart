@@ -262,265 +262,257 @@ class _ServerHostState extends State<ServerHost> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
-      header: PageHeader(
-        title: Text(translate('$prefix.title')),
-        commandBar: CommandBar(
-          mainAxisAlignment: MainAxisAlignment.end,
-          primaryItems: [
-            if (isHosting)
+    return Form(
+      key: _formKey,
+      child: ScaffoldPage.scrollable(
+        header: PageHeader(
+          title: Text(translate('$prefix.title')),
+          commandBar: CommandBar(
+            mainAxisAlignment: MainAxisAlignment.end,
+            primaryItems: [
+              if (isHosting)
+                CommandBarButton(
+                  onPressed: server == null
+                      ? null
+                      : () => showDialog(
+                            context: context,
+                            builder: (context) => HostingDialog(kyberServer: server, name: formattedServerName),
+                          ),
+                  icon: const Icon(FluentIcons.info),
+                  label: Text(
+                    translate('$prefix.buttons.server_info'),
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               CommandBarButton(
-                onPressed: server == null
+                onPressed: server == null && isHosting
                     ? null
-                    : () => showDialog(
-                          context: context,
-                          builder: (context) => HostingDialog(kyberServer: server, name: formattedServerName),
-                        ),
-                icon: const Icon(FluentIcons.info),
+                    : !disabled || isHosting && server != null
+                        ? () => host(isHosting)
+                        : null,
+                icon: Icon(
+                  isHosting ? FluentIcons.refresh : FluentIcons.play,
+                  color: Colors.white,
+                ),
                 label: Text(
-                  translate('$prefix.buttons.server_info'),
+                  isHosting
+                      ? server != null
+                          ? translate('$prefix.buttons.update_server')
+                          : translate('$prefix.buttons.server_is_starting')
+                      : translate('$prefix.buttons.host'),
                   style: const TextStyle(
                     fontSize: 14,
                   ),
                 ),
               ),
-            CommandBarButton(
-              onPressed: server == null && isHosting
-                  ? null
-                  : !disabled || isHosting && server != null
-                      ? () => host(isHosting)
-                      : null,
-              icon: Icon(
-                isHosting ? FluentIcons.refresh : FluentIcons.play,
-                color: Colors.white,
-              ),
-              label: Text(
-                isHosting
-                    ? server != null
-                        ? translate('$prefix.buttons.update_server')
-                        : translate('$prefix.buttons.server_is_starting')
-                    : translate('$prefix.buttons.host'),
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      content: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                InfoLabel(
-                  label: translate('$prefix.forms.name.header'),
-                  child: TextFormBox(
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return translate('$prefix.forms.name.error');
-                      }
-                      return null;
-                    },
-                    onChanged: (String? value) => saveData(),
-                    controller: _hostController,
-                    placeholder: translate('$prefix.forms.name.placeholder'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                InfoLabel(
-                  label: translate('$prefix.forms.password.header'),
-                  child: TextFormBox(
-                    validator: (String? value) {
-                      if (value == null) {
-                        return translate('$prefix.forms.password.error');
-                      }
-                      return null;
-                    },
-                    onChanged: (String? value) => saveData(),
-                    controller: _passwordController,
-                    placeholder: translate('$prefix.forms.password.placeholder'),
-                    //header: translate('$prefix.forms.password.header'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                InfoLabel(
-                  label: translate('$prefix.forms.description.header'),
-                  child: TextFormBox(
-                    minLines: 3,
-                    maxLines: 6,
-                    onChanged: (String? value) => saveData(),
-                    controller: _descriptionController,
-                    placeholder: translate('$prefix.forms.description.placeholder'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                InfoLabel(
-                  label: translate('$prefix.forms.game_mode.header'),
-                  child: ComboBox<String>(
-                    isExpanded: true,
-                    items: modes.map((e) => ComboBoxItem<String>(value: e.mode, child: Text(e.name))).toList(),
-                    value: mode,
-                    onChanged: (value) {
-                      saveData();
-                      setState(() {
-                        mode = value ?? '';
-                        _mapController.text = '';
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(height: 16),
-                InfoLabel(
-                  label: translate('$prefix.forms.map.header'),
-                  child: AutoSuggestBox.form(
-                    controller: _mapController,
-                    clearButtonEnabled: true,
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty || MapHelper.getMapsForMode(mode).where((element) => element.name == value).isEmpty) {
-                        return translate('$prefix.forms.map.map_not_found');
-                      }
-                      return null;
-                    },
-                    placeholder: translate('$prefix.forms.map.placeholder'),
-                    onChanged: (text, reason) => saveData(),
-                    items: MapHelper.getMapsForMode(mode).map((e) => AutoSuggestBoxItem(value: e.name, label: e.name)).toList(),
-                    onSelected: (text) {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    InfoLabel(
-                      label: translate('$prefix.forms.mod_profile.header'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: CustomTooltip(message: translate('$prefix.forms.mod_profile.tooltip')),
-                    )
-                  ],
-                ),
-                AutoSuggestBox.form(
-                  controller: _profileController,
-                  placeholder: translate('$prefix.forms.mod_profile.placeholder'),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty || !profiles.contains(value)) {
-                      return translate('$prefix.forms.mod_profile.no_profile_found');
-                    }
-                    return null;
-                  },
-                  onChanged: (String? value, TextChangedReason _) => value != null && value.isNotEmpty && _formKey.currentState!.validate(),
-                  items: profiles.map((e) => AutoSuggestBoxItem(value: e, label: e)).toList(),
-                  onSelected: (text) {
-                    box.put('lastProfile', text.value == translate('$prefix.forms.mod_profile.no_mods_profile') ? 'no_mods' : text.value);
-                    Timer.run(() => checkWarnings());
-                    FocusScope.of(context).unfocus();
-                  },
-                ),
-                const SizedBox(height: 16),
-                InfoLabel(
-                  label: 'Server Host Faction',
-                  child: ComboBox<int>(
-                    isExpanded: true,
-                    items: [0, 1].map((e) {
-                      return ComboBoxItem<int>(
-                        value: e,
-                        child: Text(translate("server_browser.join_dialog.team_selector.${e == 0 ? 'light_side' : 'dark_side'}")),
-                      );
-                    }).toList(),
-                    value: faction,
-                    onChanged: autoBalance
-                        ? null
-                        : (value) {
-                            setState(() => faction = value ?? 0);
-                          },
-                  ),
-                ),
-                const SizedBox(height: 16),
-                InfoLabel(
-                  label: translate('$prefix.forms.proxy.header'),
-                  child: ComboBox<String>(
-                    isExpanded: true,
-                    items: proxies?.map((e) {
-                          return ComboBoxItem<String>(
-                            value: e.ip,
-                            child: Text('${e.name} (${e.ping} ms)'),
-                          );
-                        }).toList() ??
-                        [const ComboBoxItem(value: null, child: Text(""))],
-                    value: proxy,
-                    onChanged: proxies == null
-                        ? null
-                        : (value) {
-                            box.put('proxy', value);
-                            setState(() => proxy = value ?? '');
-                          },
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Checkbox(
-                      checked: autoBalance,
-                      content: Text(translate('$prefix.forms.auto_balance.header')),
-                      onChanged: (value) {
-                        if (value! == true) {
-                          faction = 0;
-                        }
-
-                        setState(() => autoBalance = value!);
-                      },
-                    ),
-                    CustomTooltip(message: translate('$prefix.forms.auto_balance.tooltip'))
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Checkbox(
-                      checked: cosmetics,
-                      content: Text(translate('$prefix.forms.cosmetic_mods.header')),
-                      onChanged: (value) {
-                        setState(() => cosmetics = value!);
-                        box.put('enableCosmetics', value);
-                      },
-                    ),
-                    if (warning) ...[
-                      Tooltip(
-                        message: 'Cosmetic mods might cause crashes with your selected gameplay mods',
-                        child: Icon(FluentIcons.warning, color: Colors.yellow),
-                      ),
-                      const SizedBox(width: 4),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: 21),
-                Row(
-                  children: [
-                    Text(translate('$prefix.forms.max_players.header', args: {'0': maxPlayers.toStringAsFixed(0)})),
-                    CustomTooltip(message: translate('$prefix.forms.max_players.tooltip'))
-                  ],
-                ),
-                const SizedBox(height: 5),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: Slider(
-                    max: 64,
-                    min: 2,
-                    value: maxPlayers + 0.0,
-                    onChanged: (v) => setState(() => maxPlayers = int.parse(v.toString().split('.').first)),
-                  ),
-                ),
-                const SizedBox(height: 21),
-              ],
-            ),
+            ],
           ),
         ),
+        children: [
+          InfoLabel(
+            label: translate('$prefix.forms.name.header'),
+            child: TextFormBox(
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return translate('$prefix.forms.name.error');
+                }
+                return null;
+              },
+              onChanged: (String? value) => saveData(),
+              controller: _hostController,
+              placeholder: translate('$prefix.forms.name.placeholder'),
+            ),
+          ),
+          const SizedBox(height: 16),
+          InfoLabel(
+            label: translate('$prefix.forms.password.header'),
+            child: TextFormBox(
+              validator: (String? value) {
+                if (value == null) {
+                  return translate('$prefix.forms.password.error');
+                }
+                return null;
+              },
+              onChanged: (String? value) => saveData(),
+              controller: _passwordController,
+              placeholder: translate('$prefix.forms.password.placeholder'),
+              //header: translate('$prefix.forms.password.header'),
+            ),
+          ),
+          const SizedBox(height: 16),
+          InfoLabel(
+            label: translate('$prefix.forms.description.header'),
+            child: TextFormBox(
+              minLines: 3,
+              maxLines: 6,
+              onChanged: (String? value) => saveData(),
+              controller: _descriptionController,
+              placeholder: translate('$prefix.forms.description.placeholder'),
+            ),
+          ),
+          const SizedBox(height: 16),
+          InfoLabel(
+            label: translate('$prefix.forms.game_mode.header'),
+            child: ComboBox<String>(
+              isExpanded: true,
+              items: modes.map((e) => ComboBoxItem<String>(value: e.mode, child: Text(e.name))).toList(),
+              value: mode,
+              onChanged: (value) {
+                saveData();
+                setState(() {
+                  mode = value ?? '';
+                  _mapController.text = '';
+                });
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          InfoLabel(
+            label: translate('$prefix.forms.map.header'),
+            child: AutoSuggestBox.form(
+              controller: _mapController,
+              clearButtonEnabled: true,
+              validator: (String? value) {
+                if (value == null || value.isEmpty || MapHelper.getMapsForMode(mode).where((element) => element.name == value).isEmpty) {
+                  return translate('$prefix.forms.map.map_not_found');
+                }
+                return null;
+              },
+              placeholder: translate('$prefix.forms.map.placeholder'),
+              onChanged: (text, reason) => saveData(),
+              items: MapHelper.getMapsForMode(mode).map((e) => AutoSuggestBoxItem(value: e.name, label: e.name)).toList(),
+              onSelected: (text) {
+                FocusScope.of(context).unfocus();
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              InfoLabel(
+                label: translate('$prefix.forms.mod_profile.header'),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: CustomTooltip(message: translate('$prefix.forms.mod_profile.tooltip')),
+              )
+            ],
+          ),
+          AutoSuggestBox.form(
+            controller: _profileController,
+            placeholder: translate('$prefix.forms.mod_profile.placeholder'),
+            validator: (String? value) {
+              if (value == null || value.isEmpty || !profiles.contains(value)) {
+                return translate('$prefix.forms.mod_profile.no_profile_found');
+              }
+              return null;
+            },
+            onChanged: (String? value, TextChangedReason _) => value != null && value.isNotEmpty && _formKey.currentState!.validate(),
+            items: profiles.map((e) => AutoSuggestBoxItem(value: e, label: e)).toList(),
+            onSelected: (text) {
+              box.put('lastProfile', text.value == translate('$prefix.forms.mod_profile.no_mods_profile') ? 'no_mods' : text.value);
+              Timer.run(() => checkWarnings());
+              FocusScope.of(context).unfocus();
+            },
+          ),
+          const SizedBox(height: 16),
+          InfoLabel(
+            label: 'Server Host Faction',
+            child: ComboBox<int>(
+              isExpanded: true,
+              items: [0, 1].map((e) {
+                return ComboBoxItem<int>(
+                  value: e,
+                  child: Text(translate("server_browser.join_dialog.team_selector.${e == 0 ? 'light_side' : 'dark_side'}")),
+                );
+              }).toList(),
+              value: faction,
+              onChanged: autoBalance
+                  ? null
+                  : (value) {
+                      setState(() => faction = value ?? 0);
+                    },
+            ),
+          ),
+          const SizedBox(height: 16),
+          InfoLabel(
+            label: translate('$prefix.forms.proxy.header'),
+            child: ComboBox<String>(
+              isExpanded: true,
+              items: proxies?.map((e) {
+                    return ComboBoxItem<String>(
+                      value: e.ip,
+                      child: Text('${e.name} (${e.ping} ms)'),
+                    );
+                  }).toList() ??
+                  [const ComboBoxItem(value: null, child: Text(""))],
+              value: proxy,
+              onChanged: proxies == null
+                  ? null
+                  : (value) {
+                      box.put('proxy', value);
+                      setState(() => proxy = value ?? '');
+                    },
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Checkbox(
+                checked: autoBalance,
+                content: Text(translate('$prefix.forms.auto_balance.header')),
+                onChanged: (value) {
+                  if (value! == true) {
+                    faction = 0;
+                  }
+
+                  setState(() => autoBalance = value!);
+                },
+              ),
+              CustomTooltip(message: translate('$prefix.forms.auto_balance.tooltip'))
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Checkbox(
+                checked: cosmetics,
+                content: Text(translate('$prefix.forms.cosmetic_mods.header')),
+                onChanged: (value) {
+                  setState(() => cosmetics = value!);
+                  box.put('enableCosmetics', value);
+                },
+              ),
+              if (warning) ...[
+                Tooltip(
+                  message: 'Cosmetic mods might cause crashes with your selected gameplay mods',
+                  child: Icon(FluentIcons.warning, color: Colors.yellow),
+                ),
+                const SizedBox(width: 4),
+              ],
+            ],
+          ),
+          const SizedBox(height: 21),
+          Row(
+            children: [
+              Text(translate('$prefix.forms.max_players.header', args: {'0': maxPlayers.toStringAsFixed(0)})),
+              CustomTooltip(message: translate('$prefix.forms.max_players.tooltip'))
+            ],
+          ),
+          const SizedBox(height: 5),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Slider(
+              max: 64,
+              min: 2,
+              value: maxPlayers + 0.0,
+              onChanged: (v) => setState(() => maxPlayers = int.parse(v.toString().split('.').first)),
+            ),
+          ),
+          const SizedBox(height: 21),
+        ],
       ),
     );
   }
