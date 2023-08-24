@@ -56,11 +56,9 @@ class ApiService {
   }
 
   static Future<List<DiscordEvent>> getEvents() async {
-    final response = await get(
-      Uri.parse('$BACKEND_API_BASE_URL/events'),
-      headers: {'Accept': 'application/json'},
-    );
-    return (json.decode(response.body) as List<dynamic>).map((e) => DiscordEvent.fromJson(e)).toList();
+    final response = await Dio().get("$BACKEND_API_BASE_URL/events");
+
+    return (response.data as List<dynamic>).map((e) => DiscordEvent.fromJson(e)).toList();
   }
 
   static Future<List<FrostyVersion>> versionHashes() async {

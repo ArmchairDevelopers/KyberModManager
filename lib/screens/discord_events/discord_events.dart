@@ -1,9 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:kyber_mod_manager/logic/event_cubic.dart';
-import 'package:linkable/linkable.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DiscordEvents extends StatefulWidget {
@@ -12,7 +13,6 @@ class DiscordEvents extends StatefulWidget {
   @override
   _DiscordEventsState createState() => _DiscordEventsState();
 }
-
 
 class _DiscordEventsState extends State<DiscordEvents> {
   @override
@@ -36,7 +36,7 @@ class _DiscordEventsState extends State<DiscordEvents> {
               ),
             if (state.events.isNotEmpty)
               ...state.events.map(
-                    (e) => Card(
+                (e) => Card(
                   child: ListTile(
                     trailing: Row(
                       children: [
@@ -48,25 +48,44 @@ class _DiscordEventsState extends State<DiscordEvents> {
                         )
                       ],
                     ),
-                    title: Text(e.name ?? ''),
+                    title: Text(
+                      e.name ?? '',
+                      style: FluentTheme.of(context).typography.subtitle,
+                    ),
                     subtitle: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Linkable(
-                          text: e.description ?? '',
-                          linkColor: FluentTheme.of(context).accentColor.normal,
-                          style: FluentTheme.of(context).typography.body,
-                          textColor: FluentTheme.of(context).typography.body?.color,
+                        SizedBox(
+                          child: Markdown(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            data: e.description ?? "",
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            selectable: true,
+                            onTapLink: (text, href, title) async {
+                              if (href == null) {
+                                return;
+                              }
+
+                              final uri = Uri.parse(href);
+                              if (!(await canLaunchUrl(uri))) return;
+                              await launchUrl(uri);
+                            },
+                          ),
+                        ),
+                        const Divider(),
+                        const SizedBox(
+                          height: 12,
                         ),
                         Row(
                           children: [
                             Text(
                               Jiffy.parseFromDateTime(e.scheduledStartTime!).fromNow(),
                               style: FluentTheme.of(context).typography.body?.copyWith(
-                                fontSize: 12,
-                                color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
-                              ),
+                                    fontSize: 12,
+                                    color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+                                  ),
                             ),
                             if (e.userCount != null) ...[
                               Container(
@@ -78,9 +97,9 @@ class _DiscordEventsState extends State<DiscordEvents> {
                               Text(
                                 translate('events.interested', args: {'count': e.userCount ?? -1}),
                                 style: FluentTheme.of(context).typography.body?.copyWith(
-                                  fontSize: 12,
-                                  color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
-                                ),
+                                      fontSize: 12,
+                                      color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+                                    ),
                               ),
                             ],
                             if (e.creator?.username != null) ...[
@@ -93,9 +112,9 @@ class _DiscordEventsState extends State<DiscordEvents> {
                               Text(
                                 e.creator!.username!,
                                 style: FluentTheme.of(context).typography.body?.copyWith(
-                                  fontSize: 12,
-                                  color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
-                                ),
+                                      fontSize: 12,
+                                      color: FluentTheme.of(context).typography.body?.color?.withOpacity(.8),
+                                    ),
                               ),
                             ],
                           ],
