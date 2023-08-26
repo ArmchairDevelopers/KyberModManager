@@ -69,7 +69,7 @@ void main() async {
 
     CustomLogger.initialize();
     await StorageHelper.initializeHive();
-    await WindowHelper.initializeWindow(SchedulerBinding.instance.window.platformBrightness == Brightness.dark);
+    await WindowHelper.initializeWindow();
     await SystemTheme.accentColor.load();
     await protocolHandler.register(protocol);
     var delegate = await LocalizationDelegate.create(
@@ -99,18 +99,21 @@ class _AppState extends State<App> {
   @override
   void initState() {
     final window = WidgetsBinding.instance.window;
+    themeMode = WindowHelper.windowBrightness.isDark ? ThemeMode.dark : ThemeMode.light;
+
     window.onPlatformBrightnessChanged = () {
+      if (WindowHelper.windowBrightness != WindowBrightness.system) return;
+
       final brightness = window.platformBrightness;
 
       themeMode = brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
       WindowHelper.changeEffect(brightness == Brightness.dark).then((value) => setState(() => null));
     };
 
-    if (SchedulerBinding.instance.window.platformBrightness == Brightness.dark) {
-      themeMode = ThemeMode.dark;
-    } else {
-      themeMode = ThemeMode.light;
-    }
+    WindowHelper.windowBrightnessStream.listen((event) {
+      themeMode = event.isDark ? ThemeMode.dark : ThemeMode.light;
+      setState(() => null);
+    });
 
     subscription = SystemTheme.onChange.listen((event) async {
       await SystemTheme.accentColor.load();
@@ -144,12 +147,10 @@ class _AppState extends State<App> {
       color: SystemTheme.accentColor.accent.toAccentColor(),
       theme: FluentThemeData(
         accentColor: SystemTheme.accentColor.accent.toAccentColor(),
-        cardColor: null,
         brightness: Brightness.light,
       ),
       darkTheme: FluentThemeData(
         accentColor: SystemTheme.accentColor.accent.toAccentColor(),
-        cardColor: micaSupported ? Colors.white.withOpacity(.025) : null,
         brightness: Brightness.dark,
       ),
       themeMode: themeMode,

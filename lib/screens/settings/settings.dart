@@ -24,6 +24,7 @@ import 'package:kyber_mod_manager/utils/custom_logger.dart';
 import 'package:kyber_mod_manager/utils/helpers/origin_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/platform_helper.dart';
 import 'package:kyber_mod_manager/utils/helpers/storage_helper.dart';
+import 'package:kyber_mod_manager/utils/helpers/window_helper.dart';
 import 'package:kyber_mod_manager/utils/services/api_service.dart';
 import 'package:kyber_mod_manager/utils/services/notification_service.dart';
 import 'package:kyber_mod_manager/utils/services/rpc_service.dart';
@@ -149,6 +150,37 @@ class _SettingsState extends State<Settings> {
                       ],
                     ),
                   ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        SettingsCard(
+          icon: FluentIcons.locale_language,
+          title: Text(translate('$prefix.brightness.title')),
+          subtitle: Text(translate('$prefix.brightness.subtitle')),
+          child: SizedBox(
+            width: 250,
+            child: ComboBox<WindowBrightness>(
+              onChanged: (WindowBrightness? value) async {
+                if (value == null) return;
+                await box.put('brightness', value.index);
+                late bool dark;
+                if (value == WindowBrightness.system) {
+                  dark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+                } else {
+                  dark = value == WindowBrightness.dark;
+                }
+                WindowHelper.windowBrightness = value;
+                WindowHelper.changeEffect(dark);
+                setState(() => null);
+              },
+              isExpanded: true,
+              value: WindowHelper.windowBrightness,
+              items: [WindowBrightness.light, WindowBrightness.dark, WindowBrightness.system].map((e) {
+                return ComboBoxItem<WindowBrightness>(
+                  value: e,
+                  child: Text(translate('brightness.${e.toString().split('.').last}')),
                 );
               }).toList(),
             ),
