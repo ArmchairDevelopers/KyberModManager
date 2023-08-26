@@ -143,6 +143,16 @@ class FrostyProfileService {
       return [];
     }
 
+    if (!await (Directory(path).exists())) {
+      path = OriginHelper.getBattlefrontPath(force: true);
+      if (!Directory(path).existsSync()) {
+        throw Exception('Could not find Battlefront path');
+      }
+
+      OriginHelper.updateBattlefrontPath();
+      Logger.root.info('Battlefront path updated to $path');
+    }
+
     String basePath = !isPath ? '$path\\ModData\\$profile' : profile;
     File oldFile = File('$basePath\\patch\\mods.txt');
     File file = File('$basePath\\patch\\mods.json');

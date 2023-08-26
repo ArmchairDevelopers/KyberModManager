@@ -29,6 +29,16 @@ class ProfileService {
     }
 
     String battlefrontPath = OriginHelper.getBattlefrontPath();
+    if (!await (Directory(battlefrontPath).exists())) {
+      battlefrontPath = OriginHelper.getBattlefrontPath(force: true);
+      if (!await (Directory(battlefrontPath).exists())) {
+        return null;
+      }
+
+      OriginHelper.updateBattlefrontPath();
+      Logger.root.info('Updated Battlefront path');
+    }
+
     FrostyConfig config = FrostyService.getFrostyConfig();
     Directory dir = Directory('$battlefrontPath\\ModData\\KyberModManager');
     List<dynamic> convertedMods = mods.map((mod) => ModService.convertToFrostyMod(mod)).toList();
@@ -184,6 +194,17 @@ class ProfileService {
         return;
       }
 
+      if (!Directory(path).existsSync()) {
+        path = OriginHelper.getBattlefrontPath(force: true);
+        if (!Directory(path).existsSync()) {
+          Logger.root.severe('Could not find Battlefront path');
+          return;
+        }
+
+        OriginHelper.updateBattlefrontPath();
+        Logger.root.info('Updated Battlefront path');
+      }
+
       if (!_profileFile.existsSync()) {
         _profileFile.createSync(recursive: true);
         _profileFile.writeAsStringSync('[]');
@@ -197,6 +218,7 @@ class ProfileService {
     String battlefrontPath = OriginHelper.getBattlefrontPath();
     int size = 0;
     Directory dir = Directory('$battlefrontPath\\ModData\\$name');
+
     if (!dir.existsSync()) {
       return 0;
     }
@@ -260,13 +282,16 @@ class ProfileService {
       _profileFile.writeAsStringSync('[]');
       return [];
     }
+
     List<SavedProfile> profiles =
         await _profileFile.readAsString().then((value) => List<SavedProfile>.from(jsonDecode(value).map((element) => SavedProfile.fromJson(element)).toList()));
+
     List<SavedProfile> profilesToRemove = profiles.where((element) => !Directory(element.path).existsSync()).toList();
     profiles.removeWhere((element) => !Directory(element.path).existsSync());
     for (SavedProfile profile in profilesToRemove) {
       deleteProfile(profile.id);
     }
+
     return profiles;
   }
 

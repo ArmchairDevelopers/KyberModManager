@@ -17,4 +17,8 @@ class OriginHelper {
       return '';
     }
   }
+
+  static void updateBattlefrontPath() {
+    box.put('battlefrontPath', getBattlefrontPath(force: true));
+  }
 }

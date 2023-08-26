@@ -24,10 +24,19 @@ class PlatformHelper {
     },
   };
 
-  static void startBattlefront() {
-    String battlefrontPath = OriginHelper.getBattlefrontPath();
+  static Future<void> startBattlefront([bool forcing = false]) async {
+    String battlefrontPath = OriginHelper.getBattlefrontPath(force: forcing);
     String dataDir = '$battlefrontPath\\ModData\\KyberModData';
-    runExecutableArguments('$battlefrontPath\\starwarsbattlefrontii.exe', ['-datapath "$dataDir"']);
+    try {
+      await runExecutableArguments('$battlefrontPath\\starwarsbattlefrontii.exe', ['-datapath "$dataDir"']);
+    } catch (e) {
+      if (!forcing) {
+        return startBattlefront(true);
+      }
+
+      Logger.root.severe('Failed to start Battlefront II', e);
+      rethrow;
+    }
   }
 
   static bool isInstalled(Platform platform) {
