@@ -38,15 +38,11 @@ class _DiscordEventsState extends State<DiscordEvents> {
               ...state.events.map(
                 (e) => Card(
                   child: ListTile(
-                    trailing: Row(
-                      children: [
-                        Button(
-                          onPressed: () {
-                            launchUrlString("discord://-/events/305338604316655616/${e.id!}");
-                          },
-                          child: const Text("Open In Discord"),
-                        )
-                      ],
+                    trailing: HyperlinkButton(
+                      onPressed: () {
+                        launchUrlString("discord://-/events/305338604316655616/${e.id!}");
+                      },
+                      child: const Text("Open In Discord"),
                     ),
                     title: Text(
                       e.name ?? '',
