@@ -187,7 +187,7 @@ class _ServerDialogState extends State<ServerDialog> {
         BlocProvider.of<GameStatusCubic>(context).setProfile(path ?? profile ?? ProfileService.getProfilePath("KyberModManager"));
         try {
           Logger.root.info("Mods are already applied.");
-          PlatformHelper.startBattlefront();
+          await PlatformHelper.startBattlefront();
         } catch (e) {
           NotificationService.showNotification(message: e.toString());
         }
