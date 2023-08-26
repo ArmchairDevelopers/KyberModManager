@@ -32,6 +32,12 @@ class KyberApiService {
     }
 
     var mapsToDownload = allMaps.where((map) => !File('$applicationDocumentsDirectory/maps/$map.jpg').existsSync()).toList();
+
+    if (mapsToDownload.isEmpty) {
+      Logger.root.info("No missing map thumbnails found!");
+      return;
+    }
+
     Logger.root.info("Downloading ${mapsToDownload.length} missing map thumbnails...");
     await Future.forEach(mapsToDownload, (map) async {
       Logger.root.info("Downloading $map...");
@@ -49,6 +55,11 @@ class KyberApiService {
 
   static Future<List<KyberServer>> getAllServers() async {
     ServerResponse server = await getServers();
+
+    if (server.pageCount == 0) {
+      return server.servers;
+    }
+
     List<KyberServer> servers = [];
     await Future.wait(List.generate(server.pageCount, (i) => i + 1).map((e) async {
       ServerResponse server = await getServers(e);
