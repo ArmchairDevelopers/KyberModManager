@@ -81,7 +81,7 @@ material.DataRow Server(BuildContext context, KyberServer server) {
                         minFontSize: 10,
                         group: dataAutoSizeGroup,
                       ),
-                      SvgPicture.network("https://kyber.gg/logo.svg", width: 15, height: 15),
+                      SvgPicture.asset("assets/logos/kyber.svg", width: 15, height: 15),
                       const SizedBox(width: 4),
                       AutoSizeText(
                         'Kyber',
