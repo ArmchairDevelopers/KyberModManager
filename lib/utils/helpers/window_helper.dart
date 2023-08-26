@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:kyber_mod_manager/main.dart';
+import 'package:logging/logging.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WindowHelper {
@@ -18,6 +19,7 @@ class WindowHelper {
   }
 
   static Future<void> initializeWindow() async {
+    Logger.root.info('Initializing window');
     await Window.initialize();
 
     if (!micaSupported) {
