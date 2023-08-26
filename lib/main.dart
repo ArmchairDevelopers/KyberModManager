@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -13,6 +14,7 @@ import 'package:kyber_mod_manager/logic/game_status_cubic.dart';
 import 'package:kyber_mod_manager/logic/status_cubit.dart';
 import 'package:kyber_mod_manager/logic/widget_cubic.dart';
 import 'package:kyber_mod_manager/screens/cosmetic_mods/cosmetic_mods.dart';
+import 'package:kyber_mod_manager/screens/dedicated_server_manager/dedicated_server_manager.dart';
 import 'package:kyber_mod_manager/screens/discord_events/discord_events.dart';
 import 'package:kyber_mod_manager/screens/feedback.dart' as fb;
 import 'package:kyber_mod_manager/screens/installed_mods.dart';
@@ -64,9 +66,10 @@ void main() async {
       },
     );
     applicationDocumentsDirectory = (await getApplicationSupportDirectory()).path;
+
     CustomLogger.initialize();
     await StorageHelper.initializeHive();
-    await WindowHelper.initializeWindow();
+    await WindowHelper.initializeWindow(SchedulerBinding.instance.window.platformBrightness == Brightness.dark);
     await SystemTheme.accentColor.load();
     await protocolHandler.register(protocol);
     var delegate = await LocalizationDelegate.create(
@@ -90,8 +93,30 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  late ThemeMode themeMode;
+  StreamSubscription? subscription;
+
   @override
   void initState() {
+    final window = WidgetsBinding.instance.window;
+    window.onPlatformBrightnessChanged = () {
+      final brightness = window.platformBrightness;
+
+      themeMode = brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+      WindowHelper.changeEffect(brightness == Brightness.dark).then((value) => setState(() => null));
+    };
+
+    if (SchedulerBinding.instance.window.platformBrightness == Brightness.dark) {
+      themeMode = ThemeMode.dark;
+    } else {
+      themeMode = ThemeMode.light;
+    }
+
+    subscription = SystemTheme.onChange.listen((event) async {
+      await SystemTheme.accentColor.load();
+      setState(() => null);
+    });
+
     Timer.run(() async {
       ModService.watchDirectory();
       PuppeteerHelper.checkFiles();
@@ -105,6 +130,7 @@ class _AppState extends State<App> {
 
   @override
   void dispose() {
+    subscription?.cancel();
     super.dispose();
   }
 
@@ -118,9 +144,15 @@ class _AppState extends State<App> {
       color: SystemTheme.accentColor.accent.toAccentColor(),
       theme: FluentThemeData(
         accentColor: SystemTheme.accentColor.accent.toAccentColor(),
+        cardColor: null,
+        brightness: Brightness.light,
+      ),
+      darkTheme: FluentThemeData(
+        accentColor: SystemTheme.accentColor.accent.toAccentColor(),
         cardColor: micaSupported ? Colors.white.withOpacity(.025) : null,
         brightness: Brightness.dark,
       ),
+      themeMode: themeMode,
       localizationsDelegates: [
         TranslationDelegate(),
         GlobalMaterialLocalizations.delegate,
@@ -237,6 +269,11 @@ final router = GoRouter(
           path: '/map_rotation_creator',
           name: 'map_rotation_creator',
           builder: (context, state) => const MapRotationCreator(),
+        ),
+        GoRoute(
+          path: '/server_management',
+          name: 'server_management',
+          builder: (context, state) => const DedicatedServerManager(),
         ),
         GoRoute(
           path: '/mod_profiles',

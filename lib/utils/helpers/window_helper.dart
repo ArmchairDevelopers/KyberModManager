@@ -18,7 +18,15 @@ class WindowHelper {
     }
   }
 
-  static Future<void> initializeWindow() async {
+  static Future<void> changeEffect(bool dark) async {
+    await windowManager.setBackgroundColor(Colors.transparent);
+
+    if (micaSupported) {
+      await Window.setEffect(effect: WindowEffect.mica, dark: dark);
+    }
+  }
+
+  static Future<void> initializeWindow(bool dark) async {
     Logger.root.info('Initializing window');
     await Window.initialize();
 
@@ -39,10 +47,10 @@ class WindowHelper {
         await windowManager.setMinimumSize(_minimumSize);
         await windowManager.center();
         await windowManager.show();
-        await windowManager.setBackgroundColor(enabled ? Colors.transparent : FluentThemeData.dark().navigationPaneTheme.backgroundColor!);
+        await windowManager.setBackgroundColor(enabled ? Colors.transparent : (dark ? FluentThemeData.dark() : FluentThemeData.light()).navigationPaneTheme.backgroundColor!);
 
         if (enabled) {
-          await Window.setEffect(effect: WindowEffect.mica, dark: true);
+          await Window.setEffect(effect: WindowEffect.mica, dark: dark);
         }
       });
     }
