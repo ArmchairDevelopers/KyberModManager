@@ -61,6 +61,9 @@ class _SettingsState extends State<Settings> {
                   NotificationService.showNotification(message: translate('$prefix.check_for_updates.no_updates_available'));
                   return;
                 }
+
+                if (!mounted) return;
+
                 showDialog(context: context, builder: (c) => UpdateDialog(versionInfo: version));
               },
               icon: const Icon(FluentIcons.refresh),
@@ -366,7 +369,7 @@ class _SettingsState extends State<Settings> {
         ),
         const Center(
           child: Text(
-            'V1.0.11',
+            'V1.1.0-BETA',
             style: TextStyle(fontSize: 12),
           ),
         ),
